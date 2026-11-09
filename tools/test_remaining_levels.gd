@@ -25,7 +25,7 @@ func run() -> void:
 				await frames(170)
 				Input.action_release("climb_down")
 				check(level.player.position.y > 410, "Level %d descends first tier" % number)
-			if point.y > 600 and level.player.position.y < 600:
+			if point.y >= 550 and level.player.position.y < 550:
 				check(await move_to(308, 800, true), "Level %d reaches second ladder" % number)
 				Input.action_press("climb_down")
 				await frames(190)

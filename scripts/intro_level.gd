@@ -56,10 +56,11 @@ func _ready() -> void:
 		get_tree().call_deferred("change_scene_to_file", "res://scenes/levels/level_%02d.tscn" % launch_floor)
 
 func setup_inputs() -> void:
-	var bindings := {"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT], "climb_up": [KEY_W, KEY_UP], "climb_down": [KEY_S, KEY_DOWN], "jump": [KEY_SPACE], "dodge": [KEY_C], "attack": [KEY_1], "cloak": [KEY_2], "explosive": [KEY_3], "fire": [KEY_4], "interact": [KEY_E], "advance": [KEY_ENTER], "skip": [KEY_TAB], "pause_game": [KEY_ESCAPE], "retry": [KEY_R]}
+	var bindings := {"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT], "climb_up": [KEY_W, KEY_UP], "climb_down": [KEY_S, KEY_DOWN], "jump": [KEY_SPACE], "dodge": [KEY_C], "attack": [], "cloak": [], "explosive": [], "fire": [], "interact": [KEY_E], "advance": [KEY_ENTER], "skip": [KEY_TAB], "pause_game": [KEY_ESCAPE], "retry": [KEY_BACKSPACE]}
 	for action in bindings:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
+		InputMap.action_erase_events(action)
 		for key in bindings[action]:
 			var event := InputEventKey.new()
 			event.physical_keycode = key
@@ -67,7 +68,7 @@ func setup_inputs() -> void:
 				InputMap.action_add_event(action, event)
 
 func controls_locked() -> bool:
-	return is_instance_valid(player.pending_guard) or paused or not dialogue.is_empty() or completed or (is_instance_valid(world_features) and world_features.modal_open())
+	return (is_instance_valid(player.controls) and player.controls.locked()) or is_instance_valid(player.pending_guard) or paused or not dialogue.is_empty() or completed or (is_instance_valid(world_features) and world_features.modal_open())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_F10:
@@ -112,11 +113,9 @@ func _process(delta: float) -> void:
 			pursuing = pursuing or (guard.sees_player and guard.alert_state == IntroGuard.State.ALERT)
 			searching = searching or guard.alert_state == IntroGuard.State.SEARCH or guard.alert_state == IntroGuard.State.SUSPICIOUS
 	player.detection_state = "SPOTTED" if pursuing else ("HIDDEN" if player.is_concealed else ("SEARCHING / unseen" if searching else "UNSEEN"))
-	status_label.text = "MIRO   " + "♥ ".repeat(maxi(0, player.health)) + "    " + player.detection_state + "\n" + ("1 Shank   2 Blanket   3 C4 ×%d   %s" % [player.c4_count, "Key" if player.has_key else "—"]) if player.has_supplies else "MIRO   ♥ ♥ ♥    CELL 07"
-	if player.has_gun:
-		status_label.text += "  •  Gun ×%d" % player.ammunition
-	if player.suppressor_uses > 0:
-		status_label.text += " • Suppressor %d" % player.suppressor_uses
+	status_label.text = "MIRO   " + "♥ ".repeat(maxi(0, player.health)) + "    " + player.detection_state
+	if player.has_key:
+		status_label.text += " · KEY"
 	if player.has_supplies:
 		status_label.text += "\n" + player.stealth_status()
 	objective_label.text = objective()
@@ -134,11 +133,11 @@ func _process(delta: float) -> void:
 		speaker_portrait.speaker = line[0]
 	overlay.visible = paused or completed or player.is_dead
 	if completed:
-		overlay_label.text = "THE PRISONER\n\nThe first mark is set. Below, someone is coughing.\n\nEscape: %s   |   Casualties: %d\n\n[Enter] Descend to Level 2\n[R] Replay the floor" % [route, player.casualty_count]
+		overlay_label.text = "THE PRISONER\n\nThe first mark is set. Below, someone is coughing.\n\nEscape: %s   |   Casualties: %d\n\n[Enter] Descend to Level 2\n[Backspace] Replay the floor" % [route, player.casualty_count]
 	elif player.is_dead:
-		overlay_label.text = "THE TOWER KEEPS ITS PRISONERS\n\n[R] Retry from the cell\nTry cover, a quiet key theft, or dodge the wind-up."
+		overlay_label.text = "THE TOWER KEEPS ITS PRISONERS\n\n[Backspace] Retry from the cell\nTry cover, a quiet key theft, or dodge the wind-up."
 	elif paused:
-		overlay_label.text = "PAUSED\n\nA / D Move    Space Jump    W / S Ladders\nE Interact    C Dodge\n1 Shank    2 Stealth    3 C4    4 Gun\n\nStealth lasts 5s, slows movement, then recharges for 8s.\nGuard contact, attacks, damage or dodging reveal you.\n\n[Esc] Resume    [R] Restart"
+		overlay_label.text = "PAUSED\nA/D Move · W/S Ladders · Space twice Double jump\nC Dash · Left Ctrl Crouch · E Interact / recover C4\n1–5 Select · Q Blanket · N Inventory\nLeft click Use · Right click Focus / place C4\nR Reload · Hold gun key Attach suppressor\nBlanket: shadows only · 5s active / 8s cooldown\nEsc Resume · Backspace Retry · F10 Menu"
 		overlay_label.text += "\n[M] Sound: " + ("OFF" if get_node("/root/SoundFX").muted else "ON")
 	queue_redraw()
 
@@ -179,9 +178,15 @@ func guards() -> Array[Node]:
 	return get_tree().get_nodes_in_group("guards")
 
 func in_cover(point: Vector2) -> bool:
-	for area in areas.get_children():
-		if area.kind == "cover" and area.contains(point):
-			return true
+	var list := areas if is_instance_valid(areas) else get_node_or_null("Interactables")
+	if not list:
+		return false
+	for area in list.get_children():
+		if area.kind == "cover":
+			var rect: Rect2 = Rect2(area.global_position - area.area_size / 2, area.area_size)
+			var expanded := Rect2(rect.position.x - 6, rect.position.y - 45, rect.size.x + 12, rect.size.y + 45)
+			if expanded.has_point(point):
+				return true
 	return false
 
 func ladder_at(point: Vector2):
@@ -228,14 +233,14 @@ func context_hint() -> String:
 		return ""
 	if nearby("bed") and not player.has_supplies:
 		return "[E] Search beneath the bed"
-	var guard = closest_guard()
+	var guard = world_features.nearest_loot() if world_features.loot_takes_priority() else closest_guard()
 	if guard:
 		if guard.is_dead and (not guard.gun_taken or (guard.sick_guard and not guard.key_taken)):
 			return "[E] Search fallen Keeper"
 		if guard.sick_guard and not guard.key_taken:
-			return "[E] Pickpocket when he turns away   /   [1] Shank   /   [3] Breach"
+			return "[E] Pickpocket when he turns away   /   [1] Shank   /   [2] C4"
 	if nearby("door", 65) and not door_open:
-		return "[E] Unlock with key   /   [3] Breach with C4"
+		return "[E] Unlock with key   /   [2] C4 with C4"
 	if nearby("sigil"):
 		return "The mark is set." if sigil_placed else "[E] Set your mark on the support"
 	if nearby("exit", 65):
@@ -248,13 +253,26 @@ func context_hint() -> String:
 		return "Move carefully • touching a Keeper breaks stealth"
 	if ladder_at(player.global_position):
 		return "[W / S] Climb. Keepers cannot use ladders."
-	return "A / D  Move    Space  Jump    C  Dodge    Esc  Controls"
+	return "A / D  Move    Space  Jump    C  Dash    Esc  Controls"
 
 func interact() -> void:
 	if controls_locked() or player.is_dead:
 		return
+	if player.controls.recover_charge():
+		return
 	if world_features and world_features.try_interact():
 		return
+	
+	# Check for strangle opportunity from behind
+	var guard = closest_guard()
+	if guard and not guard.is_dead:
+		var diff = guard.global_position - player.global_position
+		if absf(diff.y) < 20 and diff.x * player.facing < -10:
+			if not guard.detect_player():
+				guard.strangle()
+				get_node("/root/Campaign").record_event("strangle")
+				return
+
 	var bed = nearby("bed")
 	if bed and not player.has_supplies:
 		player.has_supplies = true
@@ -264,10 +282,10 @@ func interact() -> void:
 		start_dialogue([
 			["MIRO", "Wire. Powder. Two charges, hidden beneath the bed.\nI've been building these in secret. My hands remember; I don't."],
 			["MIRO", "A sharpened spoon. My blanket. Something I scratched\non the wrapping: 'Leave a mark. Keep going down.'"],
-			["ESCAPE", "[E] Take the key while the Keeper faces away.\n[1] Shank him within reach, or [3] breach the lock.\nOne charge is reserved for the mark below."]
+			["ESCAPE", "[E] Take the key while the Keeper faces away.\n[1] selects shank. Left click attacks.\n[2] C4: right click places, left click detonates."]
 		])
 		return
-	var guard = closest_guard()
+	var guard = world_features.nearest_loot() if world_features.loot_takes_priority() else closest_guard()
 	if guard and ((guard.is_dead and (not guard.gun_taken or (guard.sick_guard and not guard.key_taken))) or (guard.sick_guard and not guard.key_taken)):
 		if not player.has_supplies:
 			notify("Gather your hidden supplies before leaving.")
@@ -275,6 +293,7 @@ func interact() -> void:
 		if guard.is_dead:
 			if guard.sick_guard and not guard.key_taken:
 				player.has_key = true
+				player.controls.collect_remote()
 				guard.key_taken = true
 				if route == "":
 					route = "shank"
@@ -284,6 +303,7 @@ func interact() -> void:
 				notify("Nothing else to take.")
 		elif guard.facing * (player.global_position.x - guard.global_position.x) < -6 and guard.alert_state != IntroGuard.State.ALERT:
 			guard.key_taken = true
+			player.controls.collect_remote()
 			player.has_key = true
 			route = "pickpocket"
 			notify("The key slips free. No one noticed. [E] at the lock to open it.")
@@ -293,9 +313,9 @@ func interact() -> void:
 	if nearby("door", 65) and not door_open:
 		if player.has_key:
 			open_door()
-			notify("A quiet click. Shadow alcoves can hide you: stand still and press 2.", 7)
+			notify("A quiet click. Shadow alcoves can hide you: select Q and click.", 7)
 		else:
-			notify("Locked. Steal the key, loot the Keeper, or use C4 [3].")
+			notify("Locked. Steal the key, loot the Keeper, or use C4 [2].")
 		return
 	if nearby("brother", 75) and not brother_heard:
 		start_brother()
@@ -397,14 +417,14 @@ func build_hud() -> void:
 	hud.layer = 20
 	add_child(hud)
 	var header := ColorRect.new()
-	header.size = Vector2(640, 65)
+	header.size = Vector2(640, 48)
 	header.color = Color(0.15, 0.15, 0.26, 0.92)
 	header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(header)
 	var inventory := Control.new()
 	inventory.set_script(preload("res://scripts/weapon_inventory.gd"))
 	inventory.player = player
-	inventory.position = Vector2(14, 70)
+	inventory.position = Vector2(14, 55)
 	inventory.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(inventory)
 	status_label = label_at(hud, Vector2(14, 10), Vector2(348, 50), 11)
@@ -420,7 +440,7 @@ func build_hud() -> void:
 	hint_label = label_at(hud, Vector2(42, 333), Vector2(584, 22), 11)
 	stealth_meter = Control.new()
 	stealth_meter.set_script(preload("res://scripts/stealth_meter.gd"))
-	stealth_meter.position = Vector2(245, 57)
+	stealth_meter.position = Vector2(245, 42)
 	stealth_meter.size = Vector2(104, 4)
 	hud.add_child(stealth_meter)
 	message_label = label_at(hud, Vector2(14, 295), Vector2(612, 34), 11)

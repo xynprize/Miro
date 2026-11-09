@@ -8,6 +8,7 @@ var section_id := ""
 var fade_progress := 1.0
 var duck_db := 0.0
 var review_override := false
+var unlocked_beats: Array[String] = []
 const FIRST := {1: "yz33", 2: "bobblehead", 3: "swag", 4: "plane_drums", 5: "shit_crashed"}
 const SECOND := {2: "dope2", 3: "sumcrazy", 4: "cyberpunk", 5: "robot_attack"}
 
@@ -67,6 +68,13 @@ func play_track(id: String) -> void:
 func silence() -> void:
 	track_id = ""
 	fade_progress = 0
+
+func unlock_achievement_beat(beat_id: String) -> void:
+	if beat_id == "": return
+	if not unlocked_beats.has(beat_id):
+		unlocked_beats.append(beat_id)
+		print("BEAT_UNLOCKED: ", beat_id)
+		# In a real implementation, this would add the track to the MP3 player's accessible list.
 
 func _process(delta: float) -> void:
 	if voices.is_empty() or get_tree().paused:

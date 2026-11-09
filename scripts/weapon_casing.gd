@@ -1,7 +1,7 @@
 extends Node2D
 var level: Node2D
 var velocity := Vector2.ZERO
-var lifetime := 1.2
+var lifetime := 0.45
 func _physics_process(delta: float) -> void:
 	if not is_instance_valid(level) or level.controls_locked():
 		return

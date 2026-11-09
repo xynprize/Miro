@@ -294,7 +294,7 @@
       "kind": "note",
       "position": [
         570,
-        220
+        180
       ],
       "size": [
         40,
@@ -371,7 +371,7 @@
       "name": "02_RankRecord",
       "position": [
         570,
-        230
+        180
       ],
       "purpose": "Inspect the former-rank record | draft story"
     },
@@ -443,7 +443,7 @@
       "title": "Inspect the former-rank record",
       "position": [
         570,
-        220
+        180
       ],
       "kind": "note",
       "objective": "Inspect the former-rank record",

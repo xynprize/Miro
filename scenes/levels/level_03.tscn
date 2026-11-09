@@ -132,7 +132,7 @@ kind = "note"
 area_size = Vector2(40, 54)
 
 [node name="RankRecord" type="Area2D" parent="Interactables" unique_id=324628574 instance=ExtResource("8_410tk")]
-position = Vector2(570, 220)
+position = Vector2(570, 180)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_kapun")
@@ -178,9 +178,9 @@ autowrap_mode = 3
 
 [node name="Label_RankRecord" type="Label" parent="." unique_id=111670220]
 offset_left = 520.0
-offset_top = 155.0
+offset_top = 115.0
 offset_right = 760.0
-offset_bottom = 187.0
+offset_bottom = 147.0
 theme_override_colors/font_color = Color(0.7764706, 0.62352943, 0.64705884, 1)
 theme_override_font_sizes/font_size = 9
 text = "Inspect the former-rank record"
@@ -242,7 +242,7 @@ position = Vector2(300, 230)
 metadata/purpose = "Disable the checkpoint controls | mechanic placeholder"
 
 [node name="02_RankRecord" type="Marker2D" parent="LevelPlan" unique_id=990584007]
-position = Vector2(570, 230)
+position = Vector2(570, 180)
 metadata/purpose = "Inspect the former-rank record | draft story"
 
 [node name="03_BrotherReveal" type="Marker2D" parent="LevelPlan" unique_id=1867699715]

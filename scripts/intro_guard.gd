@@ -196,6 +196,20 @@ func receive_shank() -> void:
 		facing = signf(last_known_position.x - global_position.x)
 		level.notify("The Keeper turns. One more hit; dodge his wind-up with C.")
 
+func strangle() -> void:
+	if is_dead:
+		return
+	# Non-lethal takedown
+	is_dead = true
+	death_recorded = true
+	sees_player = false
+	velocity = Vector2.ZERO
+	# No casualty count increase for strangles
+	# No blood effect
+	get_node("/root/Campaign").record_event("strangle")
+	level.notify("Guard neutralized quietly.")
+	queue_redraw()
+
 func die() -> void:
 	if death_recorded:
 		return
@@ -204,6 +218,22 @@ func die() -> void:
 	sees_player = false
 	velocity = Vector2.ZERO
 	level.player.casualty_count += 1
+
+	# Record the kill event in Campaign
+	var method := "gun" # Default
+	if level.player.active == "shank":
+		method = "shank"
+	elif level.player.active == "c4":
+		method = "c4"
+	
+	# Handle strangling as a non-lethal leave-on-floor state
+	# This is a separate action from the lethal 'die()' call
+	
+	get_node("/root/Campaign").record_event("keeper_killed", {
+		"method": method,
+		"named": guard_name != "Keeper"
+	})
+
 	level.emit_effect("blood", global_position + Vector2(0, 12))
 	level.notify("A body remains. Other Keepers may discover it. [E] Loot")
 	queue_redraw()

@@ -302,7 +302,7 @@
       "kind": "note",
       "position": [
         600,
-        414
+        376
       ],
       "size": [
         40,
@@ -338,7 +338,7 @@
       "kind": "note",
       "position": [
         430,
-        230
+        208
       ],
       "size": [
         30,
@@ -361,8 +361,8 @@
       "name": "WardChargeLower",
       "kind": "sigil",
       "position": [
-        450,
-        647
+        500,
+        656
       ],
       "size": [
         30,
@@ -415,7 +415,7 @@
       "name": "02_ContainmentEvidence",
       "position": [
         600,
-        425
+        376
       ],
       "purpose": "Examine the containment evidence | draft evidence; exact illness remains open"
     },
@@ -455,7 +455,7 @@
       "name": "WardRelease",
       "position": [
         430,
-        230
+        208
       ],
       "purpose": "Physical ward seal manual release after experiment records"
     }
@@ -495,7 +495,7 @@
       "title": "Release the ward seal",
       "position": [
         430,
-        230
+        208
       ],
       "kind": "note",
       "objective": "Release the ward seal",
@@ -519,7 +519,7 @@
       "title": "Examine the containment evidence",
       "position": [
         600,
-        414
+        376
       ],
       "kind": "note",
       "objective": "Examine the containment evidence",
@@ -590,8 +590,8 @@
       "id": "WardChargeLower",
       "title": "Plant 2 C4",
       "position": [
-        450,
-        647
+        500,
+        656
       ],
       "kind": "sigil",
       "objective": "Plant two C4 charges on the lower support",

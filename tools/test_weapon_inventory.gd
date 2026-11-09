@@ -25,21 +25,23 @@ func run() -> void:
 	p.fire_gun()
 	check(p.suppressor_uses == 3 and p.ammunition == 15, "Flamethrower consumes fuel but no suppressor charges")
 	p.select_gun(0)
+	p.suppressor_uses = 3 # Fixture: attach a fresh suppressor to this pistol.
 	check(p.ammunition == 2, "Switching restores independent pistol ammunition")
 	p.attack_cooldown = 0
 	p.fire_gun()
 	check(p.suppressor_uses == 2 and p.ammunition == 1, "Pistol consumes one suppressor use per round")
 	p.select_gun(1)
 	check(p.ammunition == 15, "Switching back preserves spent fuel")
-	# SMG fire remains loud and preserves suppressor charges.
+	# SMG supports the same three-shot suppressor.
 	p.equipped_gun = "smg"
+	p.suppressor_uses = 3 # Fresh attachment on the SMG, independent of the pistol.
 	p.ammunition = 12
 	p.attack_cooldown = 0
 	guards[0].position = Vector2(600, 236)
 	guards[0].sees_player = false
 	guards[0].alert_state = IntroGuard.State.PATROL
 	p.fire_gun()
-	check(p.ammunition == 11 and p.suppressor_uses == 2 and guards[0].alert_state == IntroGuard.State.SEARCH, "SMG uses ammunition, alerts guards and cannot use suppressor")
+	check(p.ammunition == 11 and p.suppressor_uses == 2 and guards[0].alert_state == IntroGuard.State.PATROL, "SMG consumes one suppressor charge and remains silent")
 	p.equipped_gun = "pistol"
 	p.ammunition = 4
 	p.suppressor_uses = 3

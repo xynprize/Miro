@@ -26,7 +26,7 @@ func follow_actor() -> void:
 	text_label.size.y = size.y - 14
 	var point := actor.get_global_transform_with_canvas().origin
 	var viewport := get_viewport_rect().size
-	position = Vector2(clampf(point.x - size.x / 2, 8, viewport.x - size.x - 8), clampf(point.y - size.y - 52, 114, viewport.y - size.y - 40))
+	position = Vector2(clampf(point.x - size.x / 2, 8, viewport.x - size.x - 8), clampf(point.y - size.y - 52, 124, viewport.y - size.y - 40))
 	queue_redraw()
 
 func _draw() -> void:

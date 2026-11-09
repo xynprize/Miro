@@ -172,7 +172,7 @@ kind = "brother"
 area_size = Vector2(44, 55)
 
 [node name="QuarantineOrder" type="Area2D" parent="Interactables" unique_id=311546092 instance=ExtResource("12_sg54v")]
-position = Vector2(870, 425)
+position = Vector2(870, 376)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_dryi7")

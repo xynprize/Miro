@@ -17,14 +17,16 @@ func check(value: bool, name: String) -> void:
 	if not value:
 		failures.append(name)
 	print("PASS: " if value else "FAIL: ", name, " at ", level.player.position)
-func walk(x: float, count: int = 650) -> void:
+func walk(x: float, count: int = 650, use_cover := false) -> void:
 	for i in range(count):
 		if absf(level.player.position.x - x) < 4 or level.player.is_dead:
 			break
+		if use_cover and level.in_cover(level.player.position) and not level.player.is_concealed and level.player.stealth_cooldown_left <= 0:
+			level.player.toggle_stealth()
 		var right: bool = x > level.player.position.x
 		Input.action_press("move_right" if right else "move_left")
 		Input.action_release("move_left" if right else "move_right")
-		if level.player.is_on_wall() and level.player.is_on_floor():
+		if (level.player.is_on_wall() and level.player.is_on_floor()) or (level.player.is_on_wall() and not level.player.is_on_floor() and level.player.jumps_used == 1 and level.player.velocity.y > -20):
 			Input.action_press("jump")
 		else:
 			Input.action_release("jump")
@@ -69,22 +71,28 @@ func run() -> void:
 		if guard.facing < 0 and guard.position.x < 575:
 			break
 		await tick()
-	if not level.player.is_concealed and level.player.stealth_cooldown_left <= 0:
-		level.player.toggle_stealth()
 	Input.action_press("jump")
 	await tick(1)
 	Input.action_release("jump")
-	await walk(660)
+	while not level.in_cover(level.player.position):
+		Input.action_press("move_right")
+		await tick()
+	if not level.player.is_concealed and level.player.stealth_cooldown_left <= 0:
+		level.player.toggle_stealth()
+	await walk(688)
 	for i in range(60):
 		if level.player.is_on_floor():
 			break
 		await tick()
-	if not level.player.is_concealed and level.player.stealth_cooldown_left <= 0:
-		level.player.toggle_stealth()
 	await tick(35)
 	level.interact()
 	level.finish_dialogue()
 	check(level.brother_heard, "Quiet route reaches mysterious voice")
+	for i in range(900):
+		var keeper = level.get_node("Guards/GalleryKeeper")
+		if keeper.alert_state == IntroGuard.State.PATROL and keeper.facing < 0:
+			break
+		await tick()
 	await walk(728)
 	Input.action_press("climb_down")
 	await tick(260)
@@ -120,6 +128,8 @@ func run() -> void:
 	await walk(850)
 	await tick(8)
 	check(level.player.position.y < 630, "Lower high route passes above guard")
+	while level.player.stealth_cooldown_left > 0:
+		await tick()
 	for i in range(600):
 		var guard = level.get_node("Guards/LowerKeeper")
 		if guard.facing < 0 and guard.position.x < 830:
@@ -128,7 +138,7 @@ func run() -> void:
 	Input.action_press("jump")
 	await tick(1)
 	Input.action_release("jump")
-	await walk(1030)
+	await walk(1030, 650, true)
 	level.interact()
 	check(level.completed, "Continuous nonlethal route reaches intro ending")
 	check(level.player.casualty_count == 0 and level.player.health == 3, "No casualties or damage on stealth route")

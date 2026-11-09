@@ -1,6 +1,7 @@
 extends RefCounted
 # Keep strong references: a texture loaded only inside _draw can be freed before rendering.
 const TEXTURES := {
+	"remote": preload("res://assets/weapons/remote.svg"),
 	"pistol": preload("res://assets/weapons/pistol.svg"),
 	"smg": preload("res://assets/weapons/smg.svg"),
 	"flamethrower": preload("res://assets/weapons/flamethrower.svg"),

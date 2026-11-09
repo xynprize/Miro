@@ -21,6 +21,10 @@ Ethan explicitly updated the story and combat scope. [Narrative update](NARRATIV
 
 Miro is immune to a sickness created by the tower. The tower imprisons and experiments on him to reproduce his resistance as a cure, while portraying his defiance as dangerous. This truth is revealed in Level 5. His brother is the tower physician: sincerely protective, complicit in the betrayal, and trapped in the institution’s account of his own purpose. Levels 1–2 introduce play and unease; Level 3 requires hacking; Level 4 places most of the C4; Level 5 contains the final confrontation.
 
+### Approved controls and traversal revision — 7 November 2026
+
+[Final controls and remote](CONTROLS_REMOTE_HANDOFF.md) and [Fran/traversal reconciliation](TRAVERSAL_FRAN_HANDOFF.md) record Ethan’s subsequent instructions. Q selects a shadow-only blanket; numbered slots are rearrangeable. Two jumps together reproduce Fran’s 65.17-pixel reference height at gravity 850. Optional timed trapdoors preserve ladder access and required story gates.
+
 ### Creative pillars
 
 1. **Descent reveals complicity.** Each floor exposes more of the institution’s crimes and the protagonist’s involvement.

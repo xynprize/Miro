@@ -26,6 +26,10 @@ var password_known := false
 var terminal_authenticated := false
 var config: Dictionary
 var case_anchor_index := -1
+var access_point := Vector2.ZERO
+var practice_camera: Node
+var early_authenticated := false
+var trapdoors: Array[Node2D] = []
 const NAMES := {1: ["Rowan", "Ivo", "Bram", "Seth"], 2: ["Alden", "Corin", "Dane", "Ellis"], 3: ["Marek", "Oren", "Pavel", "Silas"], 4: ["Tomas", "Ulric", "Venn", "Wren"], 5: ["Yorick", "Zane", "Arlen", "Beck"]}
 
 func setup(owner_level: Node2D, number: int) -> void:
@@ -77,8 +81,17 @@ func setup(owner_level: Node2D, number: int) -> void:
 		# Hold a conversation-ready pose; detection and damage still work.
 		first.conversation_hold = true
 		partner.conversation_hold = true
+	setup_trapdoors()
 	place_props_after_physics()
 	build_password_panel()
+	if number in [1, 2]:
+		access_point = Vector2(500, 432) if number == 1 else Vector2(440, 432)
+		spawn_prop(access_point, "access", "SERVICE PORT")
+		if number == 2:
+			practice_camera = load("res://scenes/security_camera.tscn").instantiate()
+			practice_camera.level = level
+			practice_camera.position = Vector2(720, 370)
+			level.add_child(practice_camera)
 
 func place_props_after_physics() -> void:
 	await get_tree().physics_frame
@@ -96,9 +109,9 @@ func add_props() -> void:
 			continue
 		var near_station := false
 		for node in level.areas.get_children():
-			if node.global_position.distance_to(point) < 70:
+			if node.global_position.distance_to(point) < 70 or (node.kind == "ladder" and Rect2(node.global_position - node.area_size / 2, node.area_size).grow(30).has_point(point)):
 				near_station = true
-		if not near_station:
+		if not near_station and placement_clear(point):
 			valid.append(point)
 	if not valid.is_empty():
 		var campaign = get_node("/root/Campaign")
@@ -110,7 +123,7 @@ func add_props() -> void:
 	for entry in [[Vector2(900, 432), "VENT"], [Vector2(420, 656), "CRAWLSPACE"]]:
 		var point: Vector2 = entry[0]
 		var clear: bool = not level.areas.get_children().any(func(area): return area.global_position.distance_to(point) < 70) and not props.any(func(prop): return prop.global_position.distance_to(point) < 70)
-		if clear and level.has_floor_below(point + Vector2(0, 13)):
+		if clear and placement_clear(point) and level.has_floor_below(point + Vector2(0, 13)):
 			spawn_prop(point, "hide", entry[1])
 
 func spawn_prop(point: Vector2, kind: String, title: String) -> void:
@@ -122,22 +135,101 @@ func spawn_prop(point: Vector2, kind: String, title: String) -> void:
 	add_child(prop)
 	props.append(prop)
 
+func reachable(point: Vector2, distance := 36.0) -> bool:
+	return level.player.global_position.distance_to(point) <= distance and level.clear_sight(level.player.global_position + Vector2(0, -8), point + Vector2(0, -8))
+
+func story_distance() -> float:
+	var closest := 48.0
+	for area in level.areas.get_children():
+		if area.kind in ["bed", "door", "sigil", "exit", "brother", "note"]:
+			closest = minf(closest, level.player.global_position.distance_to(area.global_position))
+	return closest
+
 func nearby_prop():
+	var best = null
+	var distance := minf(36, story_distance())
 	for prop in props:
-		if level.player.global_position.distance_to(prop.global_position) <= 36 and not (prop.kind == "case" and prop.used):
-			return prop
-	return null
+		var candidate: float = level.player.global_position.distance_to(prop.global_position)
+		if candidate < distance and reachable(prop.global_position) and not (prop.kind == "case" and prop.used):
+			best = prop
+			distance = candidate
+	return best
+
+func nearby_trapdoor():
+	var best = null
+	var distance := minf(38, story_distance())
+	var prop = nearby_prop()
+	if prop != null:
+		distance = minf(distance, level.player.global_position.distance_to(prop.global_position))
+	for trap in trapdoors:
+		var handle: Vector2 = trap.global_position + Vector2(0, -28)
+		var candidate: float = level.player.global_position.distance_to(handle)
+		if absf(level.player.global_position.x - handle.x) <= 16 and candidate < distance and reachable(handle, 38):
+			best = trap
+			distance = candidate
+	return best
+
+func setup_trapdoors() -> void:
+	var floor: TileMapLayer = level.get_node("StoneFloors")
+	for cell in floor.get_used_cells():
+		if floor.get_cell_source_id(cell) != 2:
+			continue
+		var point := floor.to_global(floor.map_to_local(cell))
+		# Do not put an opening through an authored ladder corridor.
+		var clear := true
+		for area in level.areas.get_children():
+			if area.kind == "ladder" and Rect2(area.global_position - area.area_size / 2, area.area_size).grow(18).intersects(Rect2(point - Vector2(14, 14), Vector2(28, 28))):
+				clear = false
+		if not clear:
+			continue
+		var trap := StaticBody2D.new()
+		trap.set_script(preload("res://scripts/trapdoor.gd"))
+		trap.level = level
+		var gates = level.get_node_or_null("Gates")
+		if gates != null:
+			for gate in gates.get_children():
+				if point.x < gate.global_position.x:
+					trap.route_gate = gate
+		trap.position = level.to_local(point)
+		level.add_child(trap)
+		trapdoors.append(trap)
+		floor.erase_cell(cell)
+
+func nearest_loot():
+	var best = null
+	var distance := 45.0
+	for guard in level.guards():
+		var candidate: float = guard.global_position.distance_to(level.player.global_position)
+		if guard.is_dead and not guard.gun_taken and candidate < distance and level.can_melee_reach(level.player.global_position, guard.global_position):
+			best = guard
+			distance = candidate
+	return best
 
 func loot_takes_priority() -> bool:
-	var guard = level.closest_guard()
-	return guard != null and guard.is_dead and not guard.gun_taken
+	var guard = nearest_loot()
+	if guard == null:
+		return false
+	var distance: float = guard.global_position.distance_to(level.player.global_position)
+	var prop = nearby_prop()
+	return distance <= story_distance() and (prop == null or distance <= prop.global_position.distance_to(level.player.global_position))
 
 func hint() -> String:
+	if level.controls_locked():
+		return ""
+	if level.player.controls.nearest_charge() != null:
+		return "[E] Recover C4"
 	if level.player.in_hiding_spot:
 		return "[E] Leave hiding spot • movement and attacks disabled inside"
 	if loot_takes_priority():
 		return ""
+	var trap = nearby_trapdoor()
+	if trap != null:
+		if not trap.available():
+			return "Trapdoor locked · open checkpoint / ward seal first"
+		return "Trapdoor open · closes when clear" if trap.is_open else "[E] Open trapdoor · 5 seconds"
 	var prop = nearby_prop()
+	if prop and prop.kind == "access":
+		return "[E] Service port · select remote to connect"
 	if prop:
 		return "[E] Take suppressor • 3 shots" if prop.kind == "case" else "[E] Hide in " + prop.title.to_lower()
 	return ""
@@ -147,15 +239,24 @@ func try_interact() -> bool:
 		level.player.in_hiding_spot = false
 		return true
 	if loot_takes_priority():
+		if floor_number > 1:
+			level.player.loot_weapon(nearest_loot())
+			return true
 		return false
+	var trap = nearby_trapdoor()
+	if trap != null:
+		trap.activate()
+		return true
 	var prop = nearby_prop()
 	if prop == null:
 		return false
+	if prop.kind == "access":
+		level.player.controls.open_remote()
+		return true
 	if prop.kind == "case":
 		prop.used = true
 		prop.queue_redraw()
-		level.player.suppressor_uses = 3
-		level.notify("Suppressor attached: next 3 fired shots are quieter. No weapon or ammo granted.")
+		level.player.controls.collect_suppressor()
 	else:
 		if level.player.detection_state == "SPOTTED" or level.guards().any(func(guard): return guard.detect_player()):
 			level.notify("Break sight before entering a hiding spot.")
@@ -338,3 +439,16 @@ func _exit_tree() -> void:
 		voice.stream = null
 	actors.clear()
 	voice_speaker = null
+
+func placement_clear(point: Vector2) -> bool:
+	for area in level.areas.get_children():
+		if area.kind == "ladder" and Rect2(area.global_position - area.area_size / 2, area.area_size).grow(30).has_point(point):
+			return false
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(12, 26)
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = Transform2D(0, point + Vector2(0, 1.5))
+	query.collision_mask = 1
+	query.margin = 0
+	return get_world_2d().direct_space_state.intersect_shape(query).is_empty()

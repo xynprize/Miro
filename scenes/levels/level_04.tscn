@@ -134,7 +134,7 @@ kind = "note"
 area_size = Vector2(40, 54)
 
 [node name="ContainmentEvidence" type="Area2D" parent="Interactables" unique_id=2072648392 instance=ExtResource("8_5q4vb")]
-position = Vector2(600, 414)
+position = Vector2(600, 376)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_fy4m5")
@@ -158,7 +158,7 @@ kind = "sigil"
 area_size = Vector2(40, 54)
 
 [node name="WardRelease" type="Area2D" parent="Interactables" unique_id=876273436 instance=ExtResource("8_5q4vb")]
-position = Vector2(430, 230)
+position = Vector2(430, 208)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_fy4m5")
@@ -174,7 +174,7 @@ kind = "sigil"
 area_size = Vector2(30, 50)
 
 [node name="WardChargeLower" type="Area2D" parent="Interactables" unique_id=218121813 instance=ExtResource("10_47boq")]
-position = Vector2(450, 647)
+position = Vector2(500, 656)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_fy4m5")
@@ -209,9 +209,9 @@ autowrap_mode = 3
 
 [node name="Label_WardRelease" type="Label" parent="." unique_id=2132160451]
 offset_left = 380.0
-offset_top = 165.0
+offset_top = 143.0
 offset_right = 548.0
-offset_bottom = 197.0
+offset_bottom = 175.0
 theme_override_colors/font_color = Color(0.7764706, 0.62352943, 0.64705884, 1)
 theme_override_font_sizes/font_size = 9
 text = "Release the ward seal"
@@ -220,9 +220,9 @@ autowrap_mode = 3
 
 [node name="Label_ContainmentEvidence" type="Label" parent="." unique_id=1803897225]
 offset_left = 550.0
-offset_top = 349.0
+offset_top = 311.0
 offset_right = 823.0
-offset_bottom = 381.0
+offset_bottom = 343.0
 theme_override_colors/font_color = Color(0.7764706, 0.62352943, 0.64705884, 1)
 theme_override_font_sizes/font_size = 9
 text = "Examine the containment evidence"
@@ -252,10 +252,10 @@ horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Label_WardChargeLower" type="Label" parent="." unique_id=768547153]
-offset_left = 400.0
-offset_top = 582.0
-offset_right = 500.0
-offset_bottom = 614.0
+offset_left = 450.0
+offset_top = 591.0
+offset_right = 550.0
+offset_bottom = 623.0
 theme_override_colors/font_color = Color(0.7764706, 0.62352943, 0.64705884, 1)
 theme_override_font_sizes/font_size = 9
 text = "Plant 2 C4"
@@ -306,7 +306,7 @@ position = Vector2(300, 230)
 metadata/purpose = "Inspect the experiment records | draft story"
 
 [node name="02_ContainmentEvidence" type="Marker2D" parent="LevelPlan" unique_id=75796136]
-position = Vector2(600, 425)
+position = Vector2(600, 376)
 metadata/purpose = "Examine the containment evidence | draft evidence; exact illness remains open"
 
 [node name="03_BrotherWarning" type="Marker2D" parent="LevelPlan" unique_id=120933664]
@@ -326,7 +326,7 @@ position = Vector2(830, 390)
 metadata/purpose = "Environmental evidence; no new enemy type required."
 
 [node name="WardRelease" type="Marker2D" parent="LevelPlan" unique_id=415609557]
-position = Vector2(430, 230)
+position = Vector2(430, 208)
 metadata/purpose = "Physical ward seal manual release after experiment records"
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1438070019 instance=ExtResource("17_lqu3g")]

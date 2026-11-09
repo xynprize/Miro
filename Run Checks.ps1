@@ -14,7 +14,13 @@ $checks = @(
     @('res://tools/test_timed_stealth.gd'),
     @('res://tools/test_dialogue_layout.gd'),
     @('res://tools/test_audio.gd'),
-    @('res://tools/test_music_and_world.gd')
+    @('res://tools/test_music_and_world.gd'),
+    @('res://tools/test_final_controls.gd'),
+    @('res://tools/test_remote.gd'),
+    @('res://tools/test_traversal_access.gd'),
+    @('res://tools/test_weapon_inventory.gd'),
+    @('res://tools/test_mouse_projectiles.gd'),
+    @('res://tools/test_narrative_bubbles.gd')
 )
 New-Item -ItemType Directory -Force (Join-Path $PSScriptRoot 'tmp') | Out-Null
 $index = 0

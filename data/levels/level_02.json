@@ -313,8 +313,8 @@
       "name": "TransferLedger",
       "kind": "note",
       "position": [
-        650,
-        414
+        658,
+        404
       ],
       "size": [
         40,
@@ -386,8 +386,8 @@
     {
       "name": "03_TransferLedger",
       "position": [
-        650,
-        425
+        658,
+        404
       ],
       "purpose": "Read the indiscriminate transfer order | draft story"
     },
@@ -458,8 +458,8 @@
       "id": "TransferLedger",
       "title": "Read the indiscriminate transfer order",
       "position": [
-        650,
-        414
+        658,
+        404
       ],
       "kind": "note",
       "objective": "Read the indiscriminate transfer order",

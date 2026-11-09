@@ -69,7 +69,7 @@ func run() -> void:
    if point.y > 300 and level.player.position.y < 300:
     check(await move_to(level.get_node("Interactables/FirstLadder").position.x, 800, true), "Reach first ladder")
     await descend(170)
-   if point.y > 600 and level.player.position.y < 600:
+   if point.y >= 550 and level.player.position.y < 550:
     check(await move_to(308, 800, true), "Reach second ladder")
     await descend(190)
    check(await move_to(point.x, 800, true), "Reach " + station.id)
@@ -102,7 +102,7 @@ func move_to(x: float, limit: int = 500, fight: bool = false) -> bool:
 		var right: bool = x > p.position.x
 		Input.action_press("move_right" if right else "move_left")
 		Input.action_release("move_left" if right else "move_right")
-		if p.is_on_wall() and p.is_on_floor():
+		if (p.is_on_wall() and p.is_on_floor()) or (p.is_on_wall() and not p.is_on_floor() and p.jumps_used == 1 and p.velocity.y > -20):
 			Input.action_press("jump")
 		else:
 			Input.action_release("jump")
@@ -116,6 +116,10 @@ func move_to(x: float, limit: int = 500, fight: bool = false) -> bool:
 	Input.action_release("move_left")
 	Input.action_release("move_right")
 	Input.action_release("jump")
+	for i in range(40):
+		if p.is_on_floor() or p.climbing:
+			break
+		await frames(1)
 	await frames(2)
 	print("MOVE target=", x, " actual=", p.position, " hp=", p.health)
 	return absf(p.position.x - x) <= 8

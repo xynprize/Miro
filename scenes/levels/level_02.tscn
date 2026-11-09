@@ -140,7 +140,7 @@ kind = "brother"
 area_size = Vector2(40, 54)
 
 [node name="TransferLedger" type="Area2D" parent="Interactables" unique_id=636433118 instance=ExtResource("8_lky54")]
-position = Vector2(650, 414)
+position = Vector2(658, 404)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_v5pqk")
@@ -187,9 +187,9 @@ autowrap_mode = 3
 
 [node name="Label_TransferLedger" type="Label" parent="." unique_id=1838010827]
 offset_left = 600.0
-offset_top = 349.0
+offset_top = 339.0
 offset_right = 898.0
-offset_bottom = 381.0
+offset_bottom = 371.0
 theme_override_colors/font_color = Color(0.7764706, 0.62352943, 0.64705884, 1)
 theme_override_font_sizes/font_size = 9
 text = "Read the indiscriminate transfer order"
@@ -244,7 +244,7 @@ position = Vector2(580, 226)
 metadata/purpose = "Listen to the surrender offer | draft story"
 
 [node name="03_TransferLedger" type="Marker2D" parent="LevelPlan" unique_id=576677517]
-position = Vector2(650, 425)
+position = Vector2(658, 404)
 metadata/purpose = "Read the indiscriminate transfer order | draft story"
 
 [node name="04_SecondSigil" type="Marker2D" parent="LevelPlan" unique_id=394243058]

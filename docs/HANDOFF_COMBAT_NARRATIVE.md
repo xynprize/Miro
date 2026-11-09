@@ -1,5 +1,7 @@
 # Combat and narrative review handoff — 6 November 2026
 
+**Superseded controls/attachments:** see [Final controls and remote](CONTROLS_REMOTE_HANDOFF.md). Q is blanket, 1–5 select rearrangeable items, R reloads, slot 5 starts as remote. SMGs support three-shot suppressors. Earlier controls below describe the previous increment.
+
 ## Delivered
 
 This increment completes the requested review implementation of the two-gun inventory, pistol/SMG/flamethrower guard loadouts, mouse aiming, swept projectiles, visible casings/flames, inventory icons and pistol-only three-shot suppressors. See WEAPON_UPGRADE_TASKS.md for controls, tuning and asset provenance.

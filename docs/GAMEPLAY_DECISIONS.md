@@ -1,5 +1,7 @@
 # Current gameplay decisions
 
+**Superseded controls/attachments:** see [Final controls and remote](CONTROLS_REMOTE_HANDOFF.md). Q is blanket, 1–5 select rearrangeable items, R reloads, slot 5 starts as remote. SMGs support three-shot suppressors. Earlier controls below describe the previous increment.
+
 ## Audio and stealth review — November 6, 2026
 
 See [the implemented review spec](AUDIO_AND_STEALTH_REVIEW.md) for soundtrack sections, restrained leveling/ducking, ElevenLabs guard exchanges, case-sensitive root login with fallback, three-shot suppressor cases, enclosed hiding props and the new start/review menu. These additions preserve the existing timed blanket and platform geometry. Musical scoring/unlocks, portable-player acquisition and a final outro track remain open. Current main scene is the menu; F10 returns to it. Earlier menu/audio status below is historical.

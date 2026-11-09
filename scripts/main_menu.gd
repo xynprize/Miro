@@ -55,16 +55,71 @@ func _ready() -> void:
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(slider)
 		slider.value_changed.connect(func(value): music.set_volume(bus, value))
+	# Achievements Section
+	var achievements_container := VBoxContainer.new()
+	box.add_child(achievements_container)
+	
+	var tab_row := HBoxContainer.new()
+	tab_row.add_theme_constant_override("separation", 10)
+	achievements_container.add_child(tab_row)
+	
+	var beats_view := VBoxContainer.new()
+	var art_view := VBoxContainer.new()
+	art_view.visible = false
+	achievements_container.add_child(beats_view)
+	achievements_container.add_child(art_view)
+	
+	var beats_tab := Button.new()
+	beats_tab.text = "Beats"
+	beats_tab.pressed.connect(func(): 
+		beats_view.visible = true
+		art_view.visible = false
+	)
+	tab_row.add_child(beats_tab)
+	
+	var art_tab := Button.new()
+	art_tab.text = "Artwork"
+	art_tab.pressed.connect(func(): 
+		beats_view.visible = false
+		art_view.visible = true
+	)
+	tab_row.add_child(art_tab)
+	
+	# Beats View (Filtered list)
 	var tracks := OptionButton.new()
-	tracks.add_item("Soundtrack review — choose a beat")
+	tracks.add_item("Choose a beat")
 	var ids: Array = music.catalog.keys()
+	var filtered_ids: Array = []
 	for id in ids:
-		tracks.add_item(music.catalog[id].title)
+		if id in ["yz33", "bobblehead", "swag", "plane_drums", "shit_crashed", "dope2", "sumcrazy", "cyberpunk", "robot_attack"] or id in music.unlocked_beats:
+			filtered_ids.append(id)
+			tracks.add_item(music.catalog[id].title)
 	tracks.item_selected.connect(func(index):
 		if index > 0:
 			music.review_override = true
-			music.play_track(ids[index - 1]))
-	box.add_child(tracks)
+			music.play_track(filtered_ids[index - 1]))
+	beats_view.add_child(tracks)
+	
+	# Artwork View (Gallery)
+	# Assuming artworks are defined in artspec/matrix; here we list them as a review
+	var art_list := VBoxContainer.new()
+	art_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	art_view.add_child(art_list)
+	
+	# In a full implementation, this would iterate over art_branch_matrix.json
+	# For now, we simulate the "viewed" status using Campaign.viewed_art
+	var campaign = get_node("/root/Campaign")
+	# Placeholder for artwork IDs from the spec (e.g., A01 to A27)
+	for i in range(1, 28):
+		var art_id = "A%02d" % i
+		var art_label := Label.new()
+		art_label.text = "Artwork %s" % art_id
+		if art_id in campaign.viewed_art:
+			art_label.modulate = Color.WHITE
+		else:
+			art_label.modulate = Color(0.4, 0.4, 0.4) # Greyed out
+		art_list.add_child(art_label)
+	
 	var note := Label.new()
 	note.text = "Music lowers during speech. Overheard lines have subtitles.\nLevel 3: listen for the terminal password, or inspect its slip."
 	note.add_theme_font_size_override("font_size", 11)

@@ -4,27 +4,14 @@ Open `scenes/intro.tscn` in Godot and press F5, or use the Miro Play desktop sho
 
 ## Play
 
-| Input | Action |
-| --- | --- |
-| A / D or arrows | Move |
-| Space | Jump |
-| W / S | Climb a ladder |
-| E | Interact, pickpocket, loot, unlock, advance dialogue |
-| Enter / Tab | Advance / skip dialogue |
-| 1 | Shank: one unaware hit, two alerted hits |
-| M | Mute/unmute sound effects |
-| 2 | Activate/cancel temporary stealth anywhere (5s active, 8s cooldown, 55% movement speed) |
-| 3 | Breach the cell lock using C4 |
-| 4 | Fire a looted Keeper weapon |
-| C | Short dodge; brief protection from melee |
-| Esc / R | Pause and controls / restart entire intro |
+The authoritative bindings are in [Final controls and remote](CONTROLS_REMOTE_HANDOFF.md). Default slots: 1 shank, 2 C4, 3–4 guns, 5 remote; Q selects blanket, left click uses, right click focuses (or places C4), R reloads, N rearranges inventory, Backspace retries. Space twice double-jumps; C dashes; Ctrl crouches.
 
 Miro wakes with amnesia in Cell 07. The corrupt Keeper extorts payment for medicine, then begins visibly coughing and hunching. Search the bed to retrieve the secretly assembled C4, shank, and blanket. His memory loss does not erase the practical skills in his hands. The opening deliberately leaves his identity, the illness, and the familiar voice unresolved.
 
 Escape choices:
 
-- **Quiet:** approach the bars, wait for the Keeper to turn away within reach, press E to take the key, then E to unlock. Hide in the first recess just outside the cell with 2. Wait for the search to end and the guard to face away before leaving. The next recess and elevated shelves give further opportunities to avoid patrols.
-- **Lethal:** face the nearby unaware Keeper and press 1, then E to loot the key and optional weapon; E unlocks the cell. The corpse remains discoverable.
+- **Quiet:** approach the bars, wait for the Keeper to turn away within reach, press E to take the key, then E to unlock. Hide in the first recess just outside the cell by selecting Q and clicking. Wait for the search to end and the guard to face away before leaving. The next recess and elevated shelves give further opportunities to avoid patrols.
+- **Lethal:** face the nearby unaware Keeper and select 1 and left-click, then E to loot the key and optional weapon; E unlocks the cell. The corpse remains discoverable.
 - **Loud:** use 3 near the lock. The breach opens the door and draws investigation. It does not automatically kill the guard. One C4 charge is always reserved for the objective below.
 
 Follow the upper gallery to the barred voice encounter, descend the ladder, cross the middle passage, descend again, set the sigil at the lower support, and reach the lower-right gate. Raised shelves provide alternatives to walking through guards. The intro ends with the escape route and casualty count; Level 2 is deliberately not implemented.

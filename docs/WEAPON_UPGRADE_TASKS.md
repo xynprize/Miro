@@ -1,5 +1,7 @@
 # Weapon upgrade tasks
 
+**Superseded controls/attachments:** see [Final controls and remote](CONTROLS_REMOTE_HANDOFF.md). Q is blanket, 1–5 select rearrangeable items, R reloads, slot 5 starts as remote. SMGs support three-shot suppressors. Earlier controls below describe the previous increment.
+
 Requested after updating the organization repository to `8de4093`.
 
 ## Meeting notes received

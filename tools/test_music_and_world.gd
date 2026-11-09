@@ -67,9 +67,22 @@ func run() -> void:
 	level.player.detection_state = "UNSEEN"
 	var ammo: int = level.player.ammunition
 	world.try_interact()
-	check(level.player.suppressor_uses == 3 and case.used and level.player.ammunition == ammo, "Case grants exactly three charges, no ammunition")
+	check(level.player.controls.spares == 1 and case.used and level.player.ammunition == ammo, "Case stores one three-shot suppressor without granting ammunition")
 	world.try_interact()
-	check(level.player.suppressor_uses == 3, "Used case cannot refill charges")
+	check(level.player.controls.spares == 1, "Used case cannot duplicate spare attachments")
+	level.player.has_gun = true
+	level.player.guns.append("pistol")
+	level.player.controls.sync_slots()
+	var press := InputEventKey.new()
+	press.physical_keycode = KEY_3
+	press.pressed = true
+	Input.parse_input_event(press)
+	await frames(65)
+	press = InputEventKey.new()
+	press.physical_keycode = KEY_3
+	press.pressed = false
+	Input.parse_input_event(press)
+	check(level.player.suppressor_uses == 3 and level.player.controls.spares == 0, "Hold gun key attaches stored suppressor")
 	level.player.position = hide.global_position
 	world.try_interact()
 	check(level.player.in_hiding_spot and not level.player.is_concealed, "Enclosed hide works separately from blanket")

@@ -29,6 +29,6 @@ All five floors now have editable scene scaffolds. See [Level 1 sources and auth
 
 Playable milestone: linked five-floor progression, Level 3 sweeping cameras and one-second hacking, Level 5 two-attack boss and a skippable in-engine ending. Art remains provisional; see the per-floor guide for remaining work.
 
-Latest controls: press **2** for 5-second mobile stealth (8-second cooldown, 55% speed); contact with a living guard reveals Miro. Dialogue uses a simpler bottom text/speaker panel. See [current decisions](docs/GAMEPLAY_DECISIONS.md). Build with `Build Windows.ps1`, then validate standalone startup using `Check Windows Build.ps1`.
+Latest controls: **1–5 select items, Q selects blanket, left click uses, N opens inventory, R reloads, C dashes, Ctrl crouches, Space twice double-jumps**. See [final controls and remote](docs/CONTROLS_REMOTE_HANDOFF.md). Blanket use requires shadows, with 5-second stealth and an 8-second cooldown; leaving cover or guard contact reveals Miro. The two jumps together reach approximately 65.17 pixels. See the [traversal handoff](docs/TRAVERSAL_FRAN_HANDOFF.md) for trapdoors and Fran’s playtest fixes. Dialogue uses a simpler bottom text/speaker panel. See [current decisions](docs/GAMEPLAY_DECISIONS.md). Build with `Build Windows.ps1`, then validate standalone startup using `Check Windows Build.ps1`.
 
 Press **M** to toggle sound effects. `Check Exported Playthrough.ps1` verifies a continuous five-floor run in a separate QA export (64 checks), including the boss and watched ending.

@@ -238,7 +238,7 @@ position = Vector2(650, 423)
 metadata/purpose = "Test the boss encounter handoff | boss placeholder; not combat"
 
 [node name="04_DyingExchange" type="Marker2D" parent="LevelPlan" unique_id=1604591421]
-position = Vector2(410, 423)
+position = Vector2(410, 414)
 metadata/purpose = "Review the fatal exchange | scripted exchange placeholder"
 
 [node name="05_ForestViewpoint" type="Marker2D" parent="LevelPlan" unique_id=917119852]

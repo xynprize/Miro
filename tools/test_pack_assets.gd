@@ -5,7 +5,7 @@ func run() -> void:
 	var failures: Array[String] = []
 	if not FileAccess.file_exists("res://data/inner_dialogue.json"):
 		failures.append("Missing inner dialogue")
-	for path in ["res://assets/weapons/smg.svg", "res://assets/weapons/flamethrower.svg", "res://assets/weapons/flame.svg", "res://assets/audio/flame.wav"]:
+	for path in ["res://assets/weapons/remote.svg", "res://scripts/trapdoor.gd", "res://scripts/player_controls.gd", "res://assets/weapons/smg.svg", "res://assets/weapons/flamethrower.svg", "res://assets/weapons/flame.svg", "res://assets/audio/flame.wav"]:
 		if not ResourceLoader.exists(path):
 			failures.append("Missing combat asset: " + path)
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/music/runtime_catalog.json"))
