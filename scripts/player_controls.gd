@@ -33,6 +33,7 @@ var progress := 0.0
 var has_guitar := false
 var strum_cooldown := 0.0
 var strum_flash := 0.0
+var strum_visual_reach := 120.0
 const STRUM_RADIUS := 120.0
 const STRUM_RADIUS_ON_BEAT := 170.0
 
@@ -278,6 +279,7 @@ func strum() -> int:
 	strum_flash = 0.35
 	var on_beat: bool = get_node("/root/MusicDirector").is_on_beat(0.12)
 	var radius := STRUM_RADIUS_ON_BEAT if on_beat else STRUM_RADIUS
+	strum_visual_reach = radius
 	var affected := 0
 	get_node("/root/SoundFX").play_sound("sigil", -14, 1.6 if on_beat else 1.3)
 	player.level.emit_effect("hit", player.global_position + Vector2(0, -8))

@@ -52,10 +52,10 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(136, 96), "Take %s? Carry limit: two guns." % player.pending_guard.weapon_kind.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
 		draw_string(ThemeDB.fallback_font, Vector2(136, 119), ("[%s] Replace %s   [%s] Replace %s" % ["L1" if controls.pad_prompts else "Z", player.guns[0], "R1" if controls.pad_prompts else "X", player.guns[1]]), HORIZONTAL_ALIGNMENT_LEFT, -1, 12)
 		draw_string(ThemeDB.fallback_font, Vector2(136, 145), "[Circle] Keep current guns" if controls.pad_prompts else "[Esc] Keep current guns", HORIZONTAL_ALIGNMENT_LEFT, -1, 12)
-## Placeholder guitar icon. Hook: drop art at res://assets/weapons/guitar.png and it is used instead.
+## Placeholder guitar icon. Hook: drop art at res://assets/weapons/guitar_red_v2.png and it is used instead.
 func draw_guitar(center: Vector2, color: Color) -> void:
-	if ResourceLoader.exists("res://assets/weapons/guitar.png"):
-		draw_texture_rect(load("res://assets/weapons/guitar.png"), Rect2(center - Vector2(13, 13), Vector2(27, 27)), false)
+	if ResourceLoader.exists("res://assets/weapons/guitar_red_v2.png"):
+		draw_texture_rect(ART.TEXTURES.guitar, Rect2(center - Vector2(13, 13), Vector2(27, 27)), false)
 		return
 	draw_circle(center + Vector2(-4, 5), 6, color)
 	draw_circle(center + Vector2(-1, -1), 4.5, color)
