@@ -270,12 +270,20 @@ func _physics_process(delta: float) -> void:
 			velocity.x = facing * chase_speed
 	elif alert_state == State.SEARCH:
 		search_left -= delta
-		if absf(last_known_position.x - global_position.x) > 12:
-			facing = signf(last_known_position.x - global_position.x)
+		var search_target_x: float = last_known_position.x
+		var guard_index := 0
+		if is_instance_valid(level):
+			guard_index = level.guards().find(self)
+		if guard_index >= 0:
+			search_target_x += ((guard_index % 3) - 1) * 32.0
+		if absf(search_target_x - global_position.x) > 16:
+			facing = signf(search_target_x - global_position.x)
 			velocity.x = facing * (chase_speed if pursuing else 42.0)
 		else:
 			pursuing = false
-			facing = 1.0 if int(time) % 2 == 0 else -1.0
+			if int(time * 0.8) % 2 == 0:
+				facing = 1.0 if (int(time * 0.4) + guard_index) % 2 == 0 else -1.0
+			velocity.x = facing * 20.0
 		if search_left <= 0:
 			alert_state = State.PATROL
 			suspicion = 0
@@ -296,9 +304,30 @@ func _physics_process(delta: float) -> void:
 				turn_wait = beat_wait(1.0)
 			facing = -1
 		if turn_wait <= 0:
+			if is_instance_valid(level):
+				for other in level.guards():
+					if other == self or not is_instance_valid(other) or other.is_dead or other.asleep or other.conversation_hold:
+						continue
+					if absf(other.global_position.y - global_position.y) < 16.0:
+						var gap: float = other.global_position.x - global_position.x
+						if absf(gap) < 28.0 and facing * gap > 0:
+							facing *= -1
+							turn_wait = beat_wait(0.6)
+							break
 			velocity.x = facing * movement_speed * stride()
 	if ladder_follow(delta) or ladder_search(delta):
 		return
+	if is_on_floor() and not conversation_hold and is_instance_valid(level):
+		for other in level.guards():
+			if other == self or not is_instance_valid(other) or other.is_dead or other.asleep or other.conversation_hold:
+				continue
+			var dy: float = other.global_position.y - global_position.y
+			if absf(dy) < 16.0:
+				var dx: float = global_position.x - other.global_position.x
+				var dist: float = absf(dx)
+				if dist < 22.0:
+					var push_dir: float = signf(dx) if dist > 0.1 else (1.0 if get_instance_id() > other.get_instance_id() else -1.0)
+					velocity.x += push_dir * (22.0 - dist) * 2.0
 	# Do not walk off a floor or chase between tiers (ladders are followed above).
 	var foot := global_position + Vector2(signf(velocity.x) * 15, 12)
 	var chasing := velocity.x != 0 and (alert_state == State.ALERT or pursuing)

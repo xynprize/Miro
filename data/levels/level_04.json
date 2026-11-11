@@ -705,20 +705,7 @@
     }
   ],
   "scope": "Playable five-floor game; narrative updated to the approved immunity/tower-origin reveal. See docs/NARRATIVE_UPDATE.md for review status.",
-  "gates": [
-    {
-      "name": "WardSeal",
-      "position": [
-        854.0,
-        560.0
-      ],
-      "size": [
-        18,
-        168
-      ],
-      "unlock_milestone": "WardRelease"
-    }
-  ],
+  "gates": [],
   "props": [
     {
       "name": "IsolationChamber",

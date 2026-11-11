@@ -12,28 +12,22 @@ func run() -> void:
 		level.finish_dialogue()
 		for guard in level.guards():
 			guard.set_physics_process(false)
-		var gate = level.get_node("Gates").get_child(0)
-		var west: Vector2 = gate.position + Vector2(-36, 0)
-		var east: Vector2 = gate.position + Vector2(36, 0)
-		check(not gate.is_open and not level.clear_sight(west, east), "Floor %d seal physically blocks passage" % number)
-		if number == 4:
-			level.player.position = level.areas.get_node("WardRelease").position + Vector2(0, 8)
-			level.interact()
-			check(level.dialogue.is_empty() and not gate.is_open, "Ward release requires the records")
-		level.player.position = level.areas.get_node("RemoteTerminal" if number == 3 else "ExperimentRecords").position + Vector2(0, 8)
-		level.interact()
 		if number == 3:
+			var gate = level.get_node("Gates").get_child(0)
+			var west: Vector2 = gate.position + Vector2(-36, 0)
+			var east: Vector2 = gate.position + Vector2(36, 0)
+			check(not gate.is_open and not level.clear_sight(west, east), "Floor %d seal physically blocks passage" % number)
+			level.player.position = level.areas.get_node("RemoteTerminal").position + Vector2(0, 8)
+			level.interact()
 			level.world_features.submit_password("root")
 			await frames(65)
-		level.finish_dialogue()
-		if number == 4:
-			level.player.position = level.areas.get_node("WardRelease").position + Vector2(0, 8)
-			level.interact()
 			level.finish_dialogue()
-		await frames(2)
-		check(gate.is_open and level.clear_sight(west, east), "Floor %d release clears collision" % number)
-		level.player.position = Vector2(west.x, gate.position.y + gate.gate_size.y / 2 - 14)
-		check(await move_to(east.x, 300, false), "Player crosses opened seal")
+			await frames(2)
+			check(gate.is_open and level.clear_sight(west, east), "Floor %d release clears collision" % number)
+			level.player.position = Vector2(west.x, gate.position.y + gate.gate_size.y / 2 - 14)
+			check(await move_to(east.x, 300, false), "Player crosses opened seal")
+		else:
+			check(level.get_node("Gates").get_child_count() == 0, "Floor 4 has no checkpoint gate")
 	# Later-floor loot uses the same limited ammunition/noise rules as the intro.
 	var guard = level.guards()[0]
 	guard.position = Vector2(900, 430)

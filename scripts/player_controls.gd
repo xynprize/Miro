@@ -854,9 +854,12 @@ const THROW_SPEED := 190.0
 const BLAST_RADIUS := 130.0
 
 func drop_charge() -> void:
+	if not player.has_supplies or player.c4_count <= 0:
+		player.level.notify("Out of C4.")
+		return
 	# Reserve authored charges so optional explosives cannot soft-lock the story.
 	var reserve := 1
-	if get_node("/root/Campaign").current_floor == 4:
+	if get_node("/root/Campaign").current_floor == 4 and player.level.get("definition") != null:
 		reserve = 0
 		for station in player.level.definition.stations:
 			if station.kind == "sigil" and not player.level.milestones.has(station.id):
@@ -901,11 +904,12 @@ func nearest_charge():
 
 func recover_charge() -> bool:
 	var charge = nearest_charge()
-	if charge == null:
+	if charge == null or not is_instance_valid(charge):
 		return false
 	planted.erase(charge)
+	var was_inventory := bool(charge.get_meta("inventory_charge", true))
 	charge.queue_free()
-	if bool(charge.get_meta("inventory_charge", true)):
+	if was_inventory:
 		player.c4_count += 1
 	player.level.notify("C4 recovered.")
 	return true

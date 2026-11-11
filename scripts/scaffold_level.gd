@@ -297,7 +297,8 @@ func apply_carried_kit() -> void:
 	player.gun_ammo = Dictionary(kit.get("gun_ammo", {})).duplicate()
 	player.equipped_gun = str(kit.get("equipped_gun", player.equipped_gun))
 	player.ammunition = int(kit.get("ammunition", 0))
-	player.c4_count = maxi(player.c4_count, int(kit.get("c4_count", 0)))
+	if kit.has("c4_count"):
+		player.c4_count = maxi(int(definition.get("demolition_charges", 1)), int(kit.get("c4_count", 0)))
 	c.reserves = Dictionary(kit.get("reserves", {})).duplicate()
 	player.health = clampi(int(kit.get("health", player.health)), 1, player.max_health)
 	c.sync_slots()
@@ -621,6 +622,11 @@ func interact() -> void:
 		if flow != null and station.id in ["FinalOffer", "BrotherEncounter", "DefeatExchange"]:
 			notify("Niro will come to you.")
 			return
+		if station.kind == "sigil":
+			var needed: int = int(station.get("charge_count", 1))
+			if player.c4_count < needed:
+				notify("Not enough C4. Recover placed charges first.")
+				return
 		pending_milestone = station.id
 		if station.id == "ForestViewpoint":
 			pending_milestone = ""

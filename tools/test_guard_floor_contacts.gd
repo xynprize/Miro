@@ -49,7 +49,7 @@ func run() -> void:
 		current_scene=null
 		await frames(4)
 	var file:=FileAccess.open("user://guard-floor-contacts.json",FileAccess.WRITE)
-	file.store_string(JSON.stringify({"samples":samples,"overlaps":overlaps},"\t"))
+	if file: file.store_string(JSON.stringify({"samples":samples,"overlaps":overlaps},"\t"))
 	print("GUARD_FLOOR_CONTACT_RESULT: samples=",samples," solid_penetrations_over_1px=",overlaps.size())
 	if not overlaps.is_empty(): push_error("FAIL: "+JSON.stringify(overlaps.slice(0,10)))
 	quit(0 if overlaps.is_empty() else 1)

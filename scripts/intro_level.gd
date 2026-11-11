@@ -449,10 +449,14 @@ func show_card(mode: String, heading: String, title_text: String, detail := "", 
 ## The cinematic between floors (scripts/interlude_cinematic.gd), then the next scene.
 func kit_snapshot() -> Dictionary:
 	var c = player.controls
+	var carried_c4 := player.c4_count
+	for charge in c.planted:
+		if is_instance_valid(charge) and bool(charge.get_meta("inventory_charge", true)):
+			carried_c4 += 1
 	return {
 		"has_supplies": player.has_supplies, "has_gun": player.has_gun, "guns": Array(player.guns),
 		"gun_ammo": player.gun_ammo.duplicate(), "equipped_gun": player.equipped_gun, "ammunition": player.ammunition,
-		"c4_count": player.c4_count, "reserves": c.reserves.duplicate(), "health": player.health,
+		"c4_count": carried_c4, "reserves": c.reserves.duplicate(), "health": player.health,
 	}
 
 func play_interlude(floor_done: int, next_scene: String) -> void:
@@ -735,6 +739,8 @@ func plant_c4() -> void:
 		get_node("/root/SoundFX").play_sound("collapse", -20)
 		make_noise(player.global_position, 700)
 		notify("The lock bursts. Keepers heard it! Find shadow or fight your way through.", 7)
+	else:
+		notify("Keep the remaining charge. Find the marked support below.")
 
 func open_door() -> void:
 	get_node("/root/SoundFX").play_sound("gate", -17)

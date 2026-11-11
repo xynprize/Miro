@@ -44,7 +44,9 @@ var equipped_gun := "pistol"
 var pending_guard: IntroGuard
 var in_hiding_spot := false
 var ammunition: int = 0
-var c4_count: int = 0
+var c4_count: int = 0:
+	set(value):
+		c4_count = maxi(0, value)
 var attack_cooldown: float = 0.0
 var dodge_left: float = 0.0
 var dodge_cooldown: float = 0.0

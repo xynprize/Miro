@@ -10,8 +10,6 @@
 [ext_resource type="PackedScene" path="res://scenes/voice_gate.tscn" id="8_5q4vb"]
 [ext_resource type="PackedScene" path="res://scenes/sigil_anchor.tscn" id="9_eqf4o"]
 [ext_resource type="PackedScene" path="res://scenes/level_exit.tscn" id="10_47boq"]
-[ext_resource type="PackedScene" path="res://scenes/progress_gate.tscn" id="11_8m3pt"]
-[ext_resource type="Script" path="res://scripts/progress_gate.gd" id="12_vwuh2"]
 [ext_resource type="PackedScene" path="res://scenes/story_prop.tscn" id="13_ec0pt"]
 [ext_resource type="Script" path="res://scripts/story_prop.gd" id="14_uu5oa"]
 [ext_resource type="PackedScene" path="res://scenes/guard.tscn" id="15_i7p7m"]
@@ -268,13 +266,6 @@ kind = "exit"
 area_size = Vector2(46, 60)
 
 [node name="Gates" type="Node2D" parent="." unique_id=24229320]
-
-[node name="WardSeal" type="StaticBody2D" parent="Gates" unique_id=1563327011 instance=ExtResource("11_8m3pt")]
-position = Vector2(854, 560)
-collision_mask = 6
-script = ExtResource("12_vwuh2")
-unlock_milestone = "WardRelease"
-gate_size = Vector2(18, 168)
 
 [node name="StoryProps" type="Node2D" parent="." unique_id=1074709850]
 

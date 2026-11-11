@@ -12,15 +12,23 @@ func run() -> void:
  var level=load("res://scenes/levels/level_04.tscn").instantiate();root.add_child(level);current_scene=level;await frames();level.finish_dialogue()
  for guard in level.guards():guard.set_physics_process(false)
  level.player.set_physics_process(false)
- var gate=level.get_node("Gates/WardSeal")
- check(not gate.is_open,"Ward seal begins locked")
- level.player.global_position=gate.global_position+Vector2(0,68)
- check("Manual release" in level.context_hint(),"Locked seal explains where to release it")
- level.milestones["ExperimentRecords"]=true
- level.player.global_position=level.areas.get_node("WardRelease").global_position
- check(level.station_nearby().get("id","")=="WardRelease","Release is a usable interaction")
- level.interact();level.finish_dialogue();await frames()
- check(level.milestones.has("WardRelease") and gate.is_open and gate.collision_layer==0 and gate.get_node("CollisionShape2D").disabled,"Manual release removes gate collision")
+ var gate=level.get_node_or_null("Gates/WardSeal")
+ if gate:
+  check(not gate.is_open,"Ward seal begins locked")
+  level.player.global_position=gate.global_position+Vector2(0,68)
+  check("Manual release" in level.context_hint(),"Locked seal explains where to release it")
+  level.milestones["ExperimentRecords"]=true
+  level.player.global_position=level.areas.get_node("WardRelease").global_position
+  check(level.station_nearby().get("id","")=="WardRelease","Release is a usable interaction")
+  level.interact();level.finish_dialogue();await frames()
+  check(level.milestones.has("WardRelease") and gate.is_open and gate.collision_layer==0 and gate.get_node("CollisionShape2D").disabled,"Manual release removes gate collision")
+ else:
+  check(true,"Unintended Level 4 checkpoint gate removed")
+  level.milestones["ExperimentRecords"]=true
+  level.player.global_position=level.areas.get_node("WardRelease").global_position
+  check(level.station_nearby().get("id","")=="WardRelease","Release is a usable interaction")
+  level.interact();level.finish_dialogue();await frames()
+  check(level.milestones.has("WardRelease"),"Manual release sets milestone")
  level.queue_free();await frames()
  root.get_node("Campaign").checkpoint.clear()
  level=load("res://scenes/levels/level_03.tscn").instantiate();root.add_child(level);current_scene=level;await frames();level.finish_dialogue()
