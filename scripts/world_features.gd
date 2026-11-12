@@ -49,6 +49,7 @@ var thought_voice: AudioStreamPlayer
 const CAMERA_HACK_HINT := "Maybe I can hack the cameras from a terminal, or use my MP3 nearby."
 const TURRET_HINT := "Maybe I can hack that turret from a terminal, or use my MP3 nearby. C4 would work too."
 var turret_hinted := false
+var vent_network: Node
 ## Individual Keeper profiles and authored casting (data/guard_roster.json).
 var roster: Dictionary = {}
 ## Extra overheard scenes after the main conversation: huddles and add_casual_lines().
@@ -186,6 +187,9 @@ func place_props_after_physics() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	add_props()
+	vent_network = preload("res://scripts/vent_network.gd").new()
+	add_child(vent_network)
+	vent_network.call_deferred("setup",self)
 
 func add_props() -> void:
 	call_deferred("convert_cover_zones")
@@ -200,9 +204,13 @@ func convert_cover_zones() -> void:
 		if piece.kind != "ward_chamber":continue
 		var table_at := Vector2(piece.position[0], piece.position[1])
 		spawn_red_flask(table_at + Vector2(10, -25))
+		var bottle: Node2D = spawn_prop(table_at+Vector2(-10,-25),"potion","TONIC")
+		bottle.set_meta("lab_bottle",true)
+		bottle.set_meta("heal_amount",1)
 		for decoration in level.find_children("*", "", true, false):
 			if decoration.get_script() == preload("res://scripts/story_prop.gd") and decoration.position.distance_to(table_at) < 1.0:
 				decoration.set_meta("collectible_flask", true)
+				decoration.set_meta("collectible_bottle", true)
 				decoration.queue_redraw()
 	if floor_number == 4:
 		var carts: Array = preload("res://scripts/scaffold_art.gd").CART_X
@@ -341,12 +349,15 @@ func spawn_crate(point: Vector2) -> void:
 	add_child(body)
 
 func spawn_prop(point: Vector2, kind: String, title: String) -> Node2D:
+	if kind == "hide":title = "VENT"
 	if kind in ["case", "hide", "crate"]:
 		point = free_spot(point, kind)
+	if kind == "hide" and not vent_wall_clear(point):return null
 	var prop := Node2D.new()
 	prop.set_script(load("res://scripts/review_prop.gd"))
 	prop.position = point
 	prop.kind = kind
+	prop.z_index = -1 # Dressing sits behind characters, never over their bodies.
 	prop.title = title
 	add_child(prop)
 	props.append(prop)
@@ -527,7 +538,7 @@ func strangle_target():
 	for guard in level.guards():
 		if guard.is_dead or guard.asleep or guard.has_method("begin_recovery"):
 			continue
-		if guard.get("sick_guard") and not guard.get("key_taken"):
+		if floor_number == 1 and guard.get("sick_guard") and not guard.get("key_taken"):
 			continue  # Judas keeps his own pickpocket
 		var gap: Vector2 = level.player.global_position - guard.global_position
 		var behind: bool = gap.x * guard.facing < -4.0 or (absf(gap.x) <= 6.0 and level.player.facing == guard.facing)
@@ -554,7 +565,7 @@ func loot_takes_priority() -> bool:
 		return false
 	var distance: float = guard.global_position.distance_to(level.player.global_position)
 	var prop = nearby_prop()
-	return not (prop != null and prop.kind == "access") and distance <= story_distance() and (prop == null or distance <= prop.global_position.distance_to(level.player.global_position))
+	return not (prop != null and prop.kind == "access") and distance <= story_distance() and (prop == null or (prop.kind == "hide" and distance <= 24.0) or distance <= prop.global_position.distance_to(level.player.global_position))
 
 func hint() -> String:
 	if level.controls_locked():
@@ -591,6 +602,7 @@ func try_interact() -> bool:
 		return true
 	if level.player.in_hiding_spot:
 		level.player.in_hiding_spot = false
+		if is_instance_valid(vent_network):vent_network.current=null
 		return true
 	if loot_takes_priority():
 		if floor_number > 1:
@@ -635,6 +647,9 @@ user: keeper    password: root
 	else:
 		level.player.end_stealth()
 		level.player.in_hiding_spot = true
+		if is_instance_valid(vent_network):
+			vent_network.current=null
+			if prop.kind == "hide":vent_network.enter(prop)
 		level.player.velocity = Vector2.ZERO
 		level.notify("Hidden in " + prop.title.to_lower() + ". [E] Leave")
 	return true
@@ -645,6 +660,8 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(level) or level.paused:
 		return
 	update_strangle(delta)
+	if is_instance_valid(vent_network):vent_network.tick()
+	update_turret_hint()
 	thought_voice.stream_paused = level.controls_locked() or level.player.is_dead or voice_audible()
 	if is_instance_valid(voice_speaker):
 		voice.global_position = voice_speaker.global_position
@@ -957,9 +974,29 @@ func update_bubbles(delta: float) -> void:
 			think(entry.text, "thought_%d_%s" % [floor_number, entry.id])
 			break
 
-## Called only when Miro asks for a hint [Z]. Devices never announce these automatically.
+## Turrets retain their first encounter tutorial; camera advice stays on demand.
+func update_turret_hint() -> void:
+	if turret_hinted or thought_seen.has("turret_hint") or level.controls_locked() or level.player.is_dead:
+		return
+	for turret in get_tree().get_nodes_in_group("tower_turrets"):
+		if not level.is_ancestor_of(turret) or turret.is_in_group("security_cameras") or turret.health <= 0 or turret.disabled:
+			continue
+		if turret.target_point().distance_to(level.player.global_position) < 230.0:
+			thought_seen["turret_hint"] = true
+			turret_hinted = true
+			think(TURRET_HINT)
+			return
+
+## Called when Miro asks for a hint [Z]. Prefer a nearby turret to camera advice.
 func security_hint() -> String:
 	var connected := level.player.controls.connection_target() != null
+	if not turret_hinted and not thought_seen.has("turret_hint"):
+		for turret in get_tree().get_nodes_in_group("tower_turrets"):
+			if not level.is_ancestor_of(turret) or turret.is_in_group("security_cameras") or turret.health <= 0 or turret.disabled:continue
+			if turret.target_point().distance_to(level.player.global_position) < 230.0:
+				thought_seen["turret_hint"] = true
+				turret_hinted = true
+				return TURRET_HINT
 	if not thought_seen.has("camera_hack_hint"):
 		for camera in get_tree().get_nodes_in_group("security_cameras"):
 			if not level.is_ancestor_of(camera) or not camera.is_active:continue
@@ -967,14 +1004,6 @@ func security_hint() -> String:
 			if nearby or connected:
 				thought_seen["camera_hack_hint"] = true
 				return CAMERA_HACK_HINT
-	if not thought_seen.has("turret_hint"):
-		for turret in get_tree().get_nodes_in_group("tower_turrets"):
-			if not level.is_ancestor_of(turret) or turret.is_in_group("security_cameras") or turret.health <= 0 or turret.disabled:continue
-			var nearby: bool = turret.target_point().distance_to(level.player.global_position) < 230.0
-			if nearby or connected:
-				thought_seen["turret_hint"] = true
-				turret_hinted = true
-				return TURRET_HINT
 	return ""
 
 ## Thoughts queue: a new one waits for the one on screen to finish (and be heard in full)
@@ -1095,7 +1124,7 @@ func free_spot(point: Vector2, kind := "") -> Vector2:
 			if step == 0 and direction == -1:
 				continue
 			var candidate := point + Vector2(direction * step * 16.0, 0)
-			if spot_taken(candidate, kind):
+			if spot_taken(candidate, kind) or not placement_clear(candidate) or (kind == "hide" and not vent_wall_clear(candidate)):
 				continue
 			if step > 0 and not level.has_floor_below(candidate + Vector2(0, 13)):
 				continue
@@ -1211,3 +1240,18 @@ func _draw() -> void:
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_WM_WINDOW_FOCUS_OUT, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_PAUSED] and strangle_requires_hold and strangle_active():
 		cancel_strangle()
+
+func vent_wall_clear(point: Vector2) -> bool:
+	var rect := Rect2(point-Vector2(30,48),Vector2(60,68))
+	for piece in level.definition.get("props",[]) if level.get("definition") != null else []:
+		if rect.intersects(Rect2(Vector2(piece.position[0],piece.position[1])-Vector2(68,72),Vector2(136,96))):return false
+	for decoration in level.get_children():
+		if decoration.get_script() == preload("res://scripts/inner_conflict.gd") and is_instance_valid(decoration.frame):
+			if rect.intersects(Rect2(decoration.frame.global_position-Vector2(36,74),Vector2(72,68))):return false
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(52,60)
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape=shape
+	query.transform=Transform2D(0,point+Vector2(0,-16))
+	query.collision_mask=1
+	return get_world_2d().direct_space_state.intersect_shape(query).is_empty()

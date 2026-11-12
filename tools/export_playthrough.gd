@@ -133,14 +133,19 @@ func move_to(x: float, limit: int = 500, fight: bool = false) -> bool:
 
 func fight_brother(until_retreat := false) -> void:
  var boss = level.brother
- level.player.controls.select_item("shank")
+ level.player.controls.select_item("guitar")
  for tick in range(2400):
   if not is_instance_valid(boss) or boss.is_dead or level.player.is_dead or (until_retreat and boss.current_phase == boss.Phase.RETREAT):
    break
+  Input.action_press("focus_item")
+  level.player.controls.focus = true
+  level.player.facing = signf(boss.position.x - level.player.position.x)
   var offset: float = boss.position.x - level.player.position.x
   Input.action_release("move_left")
   Input.action_release("move_right")
   if boss.is_vulnerable:
+   if absf(offset)<=120 and level.player.controls.strum_cooldown<=0:
+    level.player.controls.strum()
    if absf(offset) > 32 or absf(boss.position.y-level.player.position.y)>=24:
     Input.action_press("move_right" if (offset>0 or (absf(offset)<4 and level.player.facing>0)) else "move_left")
    level.player.facing = signf(offset)
@@ -152,6 +157,11 @@ func fight_brother(until_retreat := false) -> void:
     Input.action_press("jump")
   if boss.projectile_live and boss.projectile.distance_to(level.player.position) < 100:
    Input.action_press("jump")
+  # Jump floor hazards rather than walking the automated fighter through lethal spikes.
+  for spike in get_tree().get_nodes_in_group("lethal_spikes"):
+   if absf(spike.global_position.y-level.player.position.y)<50 and absf(spike.global_position.x-level.player.position.x)<85:
+    if level.player.is_on_floor() or (level.player.jumps_used==1 and level.player.velocity.y>-20):
+     Input.action_press("jump")
   # The fight can move across raised cover. Use the same real jumps as the walking route.
   var p=level.player
   if boss.is_vulnerable and absf(offset)>32 and ((p.is_on_wall() and p.is_on_floor()) or (p.is_on_wall() and p.jumps_used==1 and p.velocity.y>-20)):
@@ -160,6 +170,7 @@ func fight_brother(until_retreat := false) -> void:
   Input.action_release("jump")
  Input.action_release("move_left")
  Input.action_release("move_right")
+ Input.action_release("focus_item")
  check(not level.player.is_dead and (until_retreat or boss.is_dead), "Beat Niro back using movement and shank")
 
 ## Level 5: guitar > waves > Niro x3 > final fight, with real movement, ladders and shank.
@@ -174,16 +185,16 @@ func foundation_run() -> void:
  check(level.player.controls.has_guitar, "Guitar taken")
  var ladders := [[728, 170], [308, 190], [952, 200]]
  for engagement in range(1, 5):
-  for wait in range(900):
+  for wait in range(1500):
    if is_instance_valid(level.brother) and not level.brother.is_dead and level.brother.engagement >= engagement:
     break
    if flow.step == flow.Step.WAVE:
     for guard in flow.wave_guards:
      if is_instance_valid(guard) and not guard.is_dead and not guard.asleep:
       # Never teleport the wave handler into terrain: wall-origin queries now block correctly.
-      for side in [-40.0, 40.0, -20.0, 20.0, 0.0]:
+      for side in [-100.0, 100.0, -70.0, 70.0, -40.0, 40.0]:
        var stand:Vector2=guard.position+Vector2(side,0)
-       if level.world_features.placement_clear(stand) and level.clear_sight(stand,guard.position):
+       if level.has_floor_below(stand+Vector2(0,13)) and level.world_features.placement_clear(stand) and level.clear_sight(stand,guard.position) and not get_tree().get_nodes_in_group("lethal_spikes").any(func(spike):return spike.global_position.distance_to(stand)<80.0):
         level.player.position=stand
         level.player.velocity=Vector2.ZERO
         break

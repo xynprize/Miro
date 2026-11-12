@@ -282,6 +282,20 @@ func find_spot(point: Vector2) -> Vector2:
 	return Vector2.INF
 
 func spot_clear(stand: Vector2) -> bool:
+	# Check the full frame, including its border, against raised map geometry.
+	var frame_shape := RectangleShape2D.new()
+	frame_shape.size = Vector2(64, 64)
+	var frame_query := PhysicsShapeQueryParameters2D.new()
+	frame_query.shape = frame_shape
+	frame_query.transform = Transform2D(0, stand + Vector2(0,-40))
+	frame_query.collision_mask = 1
+	if not level.get_world_2d().direct_space_state.intersect_shape(frame_query).is_empty():
+		return false
+	var frame_rect := Rect2(stand + Vector2(-32,-72), Vector2(64,64))
+	for dressing in level.get_children():
+		if dressing.get_script() == preload("res://scripts/scaffold_art.gd"):
+			for furniture: Rect2 in dressing.furniture_rects.values():
+				if frame_rect.intersects(furniture):return false
 	var poster = level.get("poster")
 	if is_instance_valid(poster) and poster.global_position.distance_to(stand + Vector2(0, -44)) < 72.0:
 		return false

@@ -11764,27 +11764,27 @@
     "voice_id": "2EiwWnXFnvU5JabPnv8n",
     "voice_name": "Clyde (premade)",
     "model_id": "eleven_v3",
-    "text": "Bram? Bram, get up. This isn't funny.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [gruff]",
-    "signature": "71bc28f99315b1805a7e0eacab7a29e534817827538ae68560f473aea43beb9c",
+    "signature": "11824929eb232ea4836411217e6fce0bec7839a8525a883d007545732731e8ea",
     "leveling": {
-      "source_sha256": "bc5c77c724359eaa7b079d7a2f4b0d2c94a82c77f8b4f7158a4e5e6ca87f2522",
+      "source_sha256": "8ebce2b7c7bcd0d2c5a0de791b54b0827caca42dc0a43232d3433a99d79ff24e",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-15.02",
-        "input_tp": "-1.06",
-        "input_lra": "0.40",
-        "input_thresh": "-25.75",
-        "output_i": "-16.67",
-        "output_tp": "-2.82",
+        "input_i": "-15.85",
+        "input_tp": "-1.14",
+        "input_lra": "0.00",
+        "input_thresh": "-26.56",
+        "output_i": "-17.99",
+        "output_tp": "-3.29",
         "output_lra": "0.00",
-        "output_thresh": "-27.28",
-        "normalization_type": "dynamic",
-        "target_offset": "-1.33"
+        "output_thresh": "-28.70",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
       },
       "output_lufs": "-18.00",
-      "output_true_peak_dbtp": "-4.08"
+      "output_true_peak_dbtp": "-3.30"
     }
   },
   "pell_body": {
@@ -16720,24 +16720,24 @@
     "voice_id": "SAz9YHcvj6GT2YYXdXww",
     "voice_name": "River (premade, terminal guard)",
     "model_id": "eleven_v3",
-    "text": "Dara's down. Somebody tell the desk, they'll want the keys.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [stern]",
-    "signature": "f967757a9a9a5e7c067047a5a3abc410474207b55d9c61bab515171e779cb34c",
+    "signature": "05012b5b4928ab3df2247f5594fa87861b928ab2e1224b4bac2e269cda7aaf42",
     "leveling": {
-      "source_sha256": "023f3e39f373858c49fcc440839056190357d623b1916a0bc2b44576202e2b22",
+      "source_sha256": "082e58519f5721ad65376a915acf1e1f5a29a311628771029a8564859496e07e",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-17.68",
-        "input_tp": "-2.36",
-        "input_lra": "0.30",
-        "input_thresh": "-27.82",
-        "output_i": "-17.81",
-        "output_tp": "-2.59",
+        "input_i": "-18.87",
+        "input_tp": "-3.55",
+        "input_lra": "0.00",
+        "input_thresh": "-29.11",
+        "output_i": "-18.02",
+        "output_tp": "-2.68",
         "output_lra": "0.00",
-        "output_thresh": "-27.95",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.19"
+        "output_thresh": "-28.25",
+        "normalization_type": "linear",
+        "target_offset": "0.02"
       },
       "output_lufs": "-18.01",
       "output_true_peak_dbtp": "-2.69"
@@ -16916,27 +16916,27 @@
     "voice_id": "9BWtsMINqrJLrRacOk9x",
     "voice_name": "Aria (premade, terminal guard)",
     "model_id": "eleven_v3",
-    "text": "Fenna's down. The file stays closed.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [firm]",
-    "signature": "2632c6ced6ca14c5396920d1cb1d2c0dec2ae3444e15c365787df251c22bf260",
+    "signature": "0917608cce570616c3a07af8cafc236a3fa084bab5a3ca7cf6a9012685faf067",
     "leveling": {
-      "source_sha256": "478fa93863e0bf240a95d864c59dd39875f9adc83d7074568393e3c7513bb894",
+      "source_sha256": "c82113520f5f0f3af9dcd230ffed45f2e80d9571528b271c3fd02093660b9ca8",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-14.46",
-        "input_tp": "-0.82",
-        "input_lra": "0.70",
-        "input_thresh": "-24.60",
-        "output_i": "-17.91",
-        "output_tp": "-4.50",
+        "input_i": "-13.98",
+        "input_tp": "-1.18",
+        "input_lra": "0.00",
+        "input_thresh": "-23.98",
+        "output_i": "-18.01",
+        "output_tp": "-5.21",
         "output_lra": "0.00",
-        "output_thresh": "-28.04",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.09"
+        "output_thresh": "-28.01",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
       },
-      "output_lufs": "-18.00",
-      "output_true_peak_dbtp": "-4.40"
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-5.02"
     }
   },
   "marl_body": {
@@ -16972,27 +16972,27 @@
     "voice_id": "EXAVITQu4vr4xnSDxMaL",
     "voice_name": "Sarah (premade, terminal guard)",
     "model_id": "eleven_v3",
-    "text": "Pru? Somebody get the nurse, now!",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [urgent]",
-    "signature": "2230d599e5dfdaa70dd9e1f6ac27528e8a557d6791a5640ca1c23e295d93ecd1",
+    "signature": "3f616926fca4eb7eeeb4552f82faa6f2af7e59a4e85e076e9e946f450ba1fea7",
     "leveling": {
-      "source_sha256": "d47394a40a58e7dc82d682ea367f26667ec1e0a1a4b57db86392b2841001abc5",
+      "source_sha256": "c3d6e308bed0af0ea804430be077de99b68bee128194bd8525ec06852f00b098",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-9.84",
-        "input_tp": "-0.27",
+        "input_i": "-12.27",
+        "input_tp": "-0.43",
         "input_lra": "0.00",
-        "input_thresh": "-20.42",
-        "output_i": "-17.99",
-        "output_tp": "-8.43",
+        "input_thresh": "-22.27",
+        "output_i": "-18.01",
+        "output_tp": "-6.16",
         "output_lra": "0.00",
-        "output_thresh": "-28.57",
+        "output_thresh": "-28.01",
         "normalization_type": "linear",
-        "target_offset": "-0.01"
+        "target_offset": "0.01"
       },
-      "output_lufs": "-17.99",
-      "output_true_peak_dbtp": "-8.34"
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-6.14"
     }
   },
   "dara_idle_1": {
@@ -18512,27 +18512,27 @@
     "voice_id": "2ajXGJNYBR0iNHpS4VZb",
     "voice_name": "Rob - Tough & Calloused (Level 5 terminal guard)",
     "model_id": "eleven_v3",
-    "text": "Garrick down at the foundation! Send the doctor!",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [gruff]",
-    "signature": "0dc939ae04e5cb5b78c86ba1d8aadcafe0180f81a2bae5bf3c39d37895b8b096",
+    "signature": "6a0991426827bb5598732f114368ab344530d787c6a3b64fde889fd7e284cdcd",
     "leveling": {
-      "source_sha256": "99989946330548b922a63125d2f788f41ae5532c3153609e376c826ea170b1bb",
+      "source_sha256": "a39e2f2d2fb31b1ba0beb2fdd5c525bd08a5d801e9ab1cdcb0a542c894d73e85",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-12.75",
-        "input_tp": "-0.32",
-        "input_lra": "0.70",
-        "input_thresh": "-23.24",
-        "output_i": "-17.34",
-        "output_tp": "-5.17",
+        "input_i": "-20.92",
+        "input_tp": "-1.31",
+        "input_lra": "0.00",
+        "input_thresh": "-31.38",
+        "output_i": "-21.62",
+        "output_tp": "-2.00",
         "output_lra": "0.00",
-        "output_thresh": "-27.83",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.66"
+        "output_thresh": "-32.08",
+        "normalization_type": "linear",
+        "target_offset": "3.62"
       },
-      "output_lufs": "-17.99",
-      "output_true_peak_dbtp": "-5.44"
+      "output_lufs": "-21.63",
+      "output_true_peak_dbtp": "-1.19"
     }
   },
   "garrick_idle_1": {
@@ -18680,27 +18680,27 @@
     "voice_id": "TxWZERZ5Hc6h9dGxVmXa",
     "voice_name": "Brandt (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Brandt is down! Medic, move!",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [commanding]",
-    "signature": "bc3d94a12b6c6a7d5a009d3f991eba069aa6b398a8166807e330da6b3f7001d7",
+    "signature": "40394d8a66e76e39bfe588dae28e51e0ba0fe493e462192d3f73a5f9c10c9a31",
     "leveling": {
-      "source_sha256": "caa1cd44eafc53df9b35d1f910d1690973d32725731e102333e6e6ca452bd960",
+      "source_sha256": "ecbe86e6a4870ab561644fb0af6b3f2e222c9521ea760ab728a1f28936d6c873",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-15.37",
-        "input_tp": "-3.09",
+        "input_i": "-16.11",
+        "input_tp": "-3.37",
         "input_lra": "0.00",
-        "input_thresh": "-25.58",
-        "output_i": "-18.01",
-        "output_tp": "-5.72",
+        "input_thresh": "-26.11",
+        "output_i": "-17.99",
+        "output_tp": "-5.26",
         "output_lra": "0.00",
-        "output_thresh": "-28.22",
+        "output_thresh": "-27.99",
         "normalization_type": "linear",
-        "target_offset": "0.01"
+        "target_offset": "-0.01"
       },
-      "output_lufs": "-18.01",
-      "output_true_peak_dbtp": "-5.76"
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-5.58"
     }
   },
   "sable_body": {
@@ -18708,27 +18708,27 @@
     "voice_id": "XEoBW4iDmiawQP72xnAF",
     "voice_name": "Sable (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Sable down. Somebody log that, and fetch the nurse.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [dry]",
-    "signature": "d4678becc4be7d7549f2e147d86365ae2664d63fb28c6bb8c6b2a35740f65634",
+    "signature": "34915f507bbdfdaa95dce9e9dae431ade6bd0980ae69dea4580b424db9c35887",
     "leveling": {
-      "source_sha256": "dd3942d6feece67d7024911c84dbb3c3699d7f29b6ca83d4a39d70cb87077084",
+      "source_sha256": "adb9321f20e152c05eaa6ed1a97285fc1015075bd030ab1050012611bd38481e",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-16.90",
-        "input_tp": "-0.77",
-        "input_lra": "0.90",
-        "input_thresh": "-27.75",
-        "output_i": "-17.00",
-        "output_tp": "-2.00",
-        "output_lra": "0.50",
-        "output_thresh": "-27.68",
-        "normalization_type": "dynamic",
-        "target_offset": "-1.00"
+        "input_i": "-15.53",
+        "input_tp": "-0.47",
+        "input_lra": "0.00",
+        "input_thresh": "-26.99",
+        "output_i": "-18.00",
+        "output_tp": "-2.94",
+        "output_lra": "0.00",
+        "output_thresh": "-29.24",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
       },
-      "output_lufs": "-18.00",
-      "output_true_peak_dbtp": "-1.98"
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-2.87"
     }
   },
   "tolliver_body": {
@@ -18736,27 +18736,27 @@
     "voice_id": "7squ7rvxEIZ2rYy7KYPP",
     "voice_name": "Tolliver (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Tolliver is hurt. Keep it quiet, and get help.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [whispers]",
-    "signature": "cc08c83bf4fafd8776219da92a2aa30565d0436336dcfdafec7b0648aea1e0d0",
+    "signature": "c861b27d17ff57525caa6ac5333855b800a4c04dbc1a05cb6c1916296ad8169d",
     "leveling": {
-      "source_sha256": "c9dd7be210cb32cf87d68adf915a7b0b6e0a8c6ae5f6ebbc20a92ce1461af5bd",
+      "source_sha256": "538dadfb26858b66cf46f9ad1dc2c0c5a481510e3fa9c890cfb7957ce009aa63",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-18.56",
-        "input_tp": "-1.82",
-        "input_lra": "0.60",
-        "input_thresh": "-28.71",
-        "output_i": "-17.40",
-        "output_tp": "-2.00",
+        "input_i": "-16.60",
+        "input_tp": "-2.06",
+        "input_lra": "0.00",
+        "input_thresh": "-26.83",
+        "output_i": "-18.00",
+        "output_tp": "-3.45",
         "output_lra": "0.00",
-        "output_thresh": "-27.65",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.60"
+        "output_thresh": "-28.23",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
       },
-      "output_lufs": "-18.31",
-      "output_true_peak_dbtp": "-1.97"
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-3.42"
     }
   },
   "brandt_idle_1": {
@@ -19016,27 +19016,27 @@
     "voice_id": "psJnoAClXdhH5gn8uKNb",
     "voice_name": "Maren (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Maren is down. Somebody wake the doctor.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [tired]",
-    "signature": "9339a60d6f027b5578971a5a17253bdf6ba0251251db03a9c8cd98d6ca3731b9",
+    "signature": "d82300cca4ca476fa52990f5a5eb5743cbd0e175bba4925eff5df882090b7d1f",
     "leveling": {
-      "source_sha256": "b42cd92b9b840c7fae0196c840126684842dbb2dba2e3ab0ff8969850b60f46a",
+      "source_sha256": "e0a19d2011754e81f00995e6cfbe1ef965365235bc47d0d300e4653be77d55ef",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-14.39",
-        "input_tp": "-1.35",
-        "input_lra": "0.50",
-        "input_thresh": "-24.85",
-        "output_i": "-17.59",
-        "output_tp": "-4.71",
+        "input_i": "-12.84",
+        "input_tp": "-1.08",
+        "input_lra": "0.00",
+        "input_thresh": "-23.00",
+        "output_i": "-17.99",
+        "output_tp": "-6.24",
         "output_lra": "0.00",
-        "output_thresh": "-28.06",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.41"
+        "output_thresh": "-28.16",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
       },
-      "output_lufs": "-18.00",
-      "output_true_peak_dbtp": "-5.01"
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-6.23"
     }
   },
   "voss_alert": {
@@ -19072,27 +19072,27 @@
     "voice_id": "2vubyVoGjNJ5HPga4SkV",
     "voice_name": "Voss - Chris (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Voss is down. Great. Somebody bring a stretcher.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [sarcastic]",
-    "signature": "eca17b3877ea27f4d065aeeff35cf7f5f9a6502f0a9d0d267887bfff72396313",
+    "signature": "a7a1823ac7b1007976e2cd11ee4331cbbf3a67be4c667c98b4cc786b64f28d39",
     "leveling": {
-      "source_sha256": "944d75ceb304f52582c8d397942660c65635534fe5d0e2776ead73685c35d7a8",
+      "source_sha256": "b49bfe77294a0ca5a7d2c0fcc054905f510d1cf9d636d0bb461a18c8f8eef6c9",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-14.71",
-        "input_tp": "-0.61",
-        "input_lra": "0.80",
-        "input_thresh": "-25.65",
-        "output_i": "-16.56",
-        "output_tp": "-2.65",
-        "output_lra": "0.30",
-        "output_thresh": "-27.18",
-        "normalization_type": "dynamic",
-        "target_offset": "-1.44"
+        "input_i": "-16.01",
+        "input_tp": "-1.09",
+        "input_lra": "0.00",
+        "input_thresh": "-26.44",
+        "output_i": "-17.99",
+        "output_tp": "-3.08",
+        "output_lra": "0.00",
+        "output_thresh": "-28.42",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
       },
       "output_lufs": "-17.98",
-      "output_true_peak_dbtp": "-3.80"
+      "output_true_peak_dbtp": "-2.94"
     }
   },
   "voss_idle_1": {
@@ -19408,27 +19408,27 @@
     "voice_id": "mSOmKHC6GZcZbSTGlqHO",
     "voice_name": "Hobb (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Hobb's down. Somebody tell my wife I tried.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [grumbling]",
-    "signature": "244126fb0260ad9cd6f20e4d22f15c003ec2a0abb228d0ae527aa4cf2c43aaef",
+    "signature": "24a56f3e83cefb543168fa8740c5ad7ee38dda127389755b787e8d6b0eea957a",
     "leveling": {
-      "source_sha256": "ae3206609ad72e1531af31d919ce7fcd820637c548b22ee4c97e92123b50f9cc",
+      "source_sha256": "16163dcbaf076379bfd69f8ed4817ac9bb6730f2a55da63bff180c7e0361396c",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-25.27",
-        "input_tp": "-6.55",
-        "input_lra": "0.50",
-        "input_thresh": "-35.70",
-        "output_i": "-18.51",
+        "input_i": "-19.03",
+        "input_tp": "-1.28",
+        "input_lra": "0.00",
+        "input_thresh": "-29.03",
+        "output_i": "-19.74",
         "output_tp": "-2.00",
         "output_lra": "0.00",
-        "output_thresh": "-28.77",
-        "normalization_type": "dynamic",
-        "target_offset": "0.51"
+        "output_thresh": "-29.74",
+        "normalization_type": "linear",
+        "target_offset": "1.74"
       },
-      "output_lufs": "-18.09",
-      "output_true_peak_dbtp": "-1.79"
+      "output_lufs": "-19.71",
+      "output_true_peak_dbtp": "-1.88"
     }
   },
   "tamsin_body": {
@@ -19436,27 +19436,27 @@
     "voice_id": "y3UNfL9XC5Bb5htg8B0q",
     "voice_name": "Tamsin (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Tamsin is down. Lucky punch. Get the medic.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [confident]",
-    "signature": "0ffe1e9fa5b449b64567de5236824b712765ce1a3be51dbd0801e3ba68a2e3c4",
+    "signature": "f7a798a0fea02b5ce672e5045c6463c53c814645f09e32a56d79f9a4c6e5f0b2",
     "leveling": {
-      "source_sha256": "bc0140489c51e95f268d291f3e5a5a60c84c6adea42379e4467484b0f8715455",
+      "source_sha256": "ef53be209720cf6ca1cb4d3c1737b67c90899b01afb46fedf42d7b4ac2269ad7",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-17.90",
-        "input_tp": "-2.44",
-        "input_lra": "0.80",
-        "input_thresh": "-28.17",
-        "output_i": "-17.58",
-        "output_tp": "-2.52",
+        "input_i": "-18.70",
+        "input_tp": "-2.30",
+        "input_lra": "0.00",
+        "input_thresh": "-29.17",
+        "output_i": "-18.40",
+        "output_tp": "-2.00",
         "output_lra": "0.00",
-        "output_thresh": "-27.83",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.42"
+        "output_thresh": "-28.87",
+        "normalization_type": "linear",
+        "target_offset": "0.40"
       },
-      "output_lufs": "-17.98",
-      "output_true_peak_dbtp": "-2.51"
+      "output_lufs": "-18.40",
+      "output_true_peak_dbtp": "-1.97"
     }
   },
   "corvin_body": {
@@ -19464,27 +19464,27 @@
     "voice_id": "h1IssowVS2h4nL5ZbkkK",
     "voice_name": "Corvin (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Corvin is down. Section four needs relief.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [clipped]",
-    "signature": "0d799d0780969ce469f0d2777ebd3a6fdc76ad27318d8a9181b9de908040de46",
+    "signature": "350e2686fb94ef05b30c8a60467bdf3b3aa4d7323c19df105e3a98806f32bc9c",
     "leveling": {
-      "source_sha256": "6c8137ed4eaebde56f6da9f94091975881c4fd44a72096c71d2621d83b04de53",
+      "source_sha256": "f67867b9869a94483d708045f4c7bff17f816aed836e98e664160c52961bd400",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-14.24",
-        "input_tp": "-0.92",
+        "input_i": "-14.75",
+        "input_tp": "-0.88",
         "input_lra": "0.00",
-        "input_thresh": "-24.60",
+        "input_thresh": "-24.99",
         "output_i": "-18.00",
-        "output_tp": "-4.69",
+        "output_tp": "-4.13",
         "output_lra": "0.00",
-        "output_thresh": "-28.35",
+        "output_thresh": "-28.24",
         "normalization_type": "linear",
-        "target_offset": "-0.00"
+        "target_offset": "0.00"
       },
-      "output_lufs": "-17.97",
-      "output_true_peak_dbtp": "-4.68"
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-4.09"
     }
   },
   "ilka_body": {
@@ -19492,27 +19492,27 @@
     "voice_id": "TNI5EQSCUrYwvhb2wpzt",
     "voice_name": "Ilka (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Ilka is down. Quietly, now. Get help.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [calm]",
-    "signature": "c426f0cb053258af0bf4ff42809d3d751e91086a352ca0a57092c001d7b11678",
+    "signature": "85f2537d8afc3ced5dbbbff91349a955bc5b91309f86d537206e83b90406b8be",
     "leveling": {
-      "source_sha256": "673876c2295df8de9239de9414df66cfcbe043fe54657647a50e70b6aa99b839",
+      "source_sha256": "90a06fff37c86107724d901b42f2ae55703dee7cf4dcfa35ffe3a9929280dd8d",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-15.74",
-        "input_tp": "-0.84",
-        "input_lra": "4.00",
-        "input_thresh": "-27.78",
-        "output_i": "-17.85",
-        "output_tp": "-3.09",
-        "output_lra": "4.30",
-        "output_thresh": "-29.90",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.15"
+        "input_i": "-14.65",
+        "input_tp": "-0.88",
+        "input_lra": "0.00",
+        "input_thresh": "-25.06",
+        "output_i": "-18.01",
+        "output_tp": "-4.23",
+        "output_lra": "0.00",
+        "output_thresh": "-28.41",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
       },
       "output_lufs": "-17.99",
-      "output_true_peak_dbtp": "-2.76"
+      "output_true_peak_dbtp": "-4.13"
     }
   },
   "dunmore_body": {
@@ -19520,27 +19520,27 @@
     "voice_id": "GLSWsaquVBsIPLPPRi2s",
     "voice_name": "Dunmore (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Dunmore is hit. Tell the others I held the line.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [gruff]",
-    "signature": "ac9a0d4b49f6ceeb6ff56092158085a280e06556749fc0b6bbc8b460a299ec06",
+    "signature": "1403faa28d17ea3f7a90d79a3cf41c9870516ab2ea093bf4e448f426d6043d80",
     "leveling": {
-      "source_sha256": "a90643ad1a2aa20a63f39bf6d7a416c47037b7a7e6844ff41985411a486bdd95",
+      "source_sha256": "4a9dd0753324ac0eb819954e20575f2647f066db88a37bbd7e054608d53e378d",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-19.69",
-        "input_tp": "-2.05",
-        "input_lra": "0.70",
-        "input_thresh": "-30.04",
-        "output_i": "-17.86",
+        "input_i": "-20.00",
+        "input_tp": "-2.64",
+        "input_lra": "0.00",
+        "input_thresh": "-30.41",
+        "output_i": "-19.36",
         "output_tp": "-2.00",
         "output_lra": "0.00",
-        "output_thresh": "-28.21",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.14"
+        "output_thresh": "-29.77",
+        "normalization_type": "linear",
+        "target_offset": "1.36"
       },
-      "output_lufs": "-18.08",
-      "output_true_peak_dbtp": "-1.80"
+      "output_lufs": "-19.35",
+      "output_true_peak_dbtp": "-2.03"
     }
   },
   "perrin_body": {
@@ -19548,27 +19548,27 @@
     "voice_id": "YEkUdc7PezGaXaRslSHB",
     "voice_name": "Perrin (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Perrin's down. Tell my mama it was quick.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [drawling]",
-    "signature": "5891c1d96feb28b7414bacdf8dc7bedd8c7df280cd71017f94480d7523505744",
+    "signature": "ff1cb88473337aaaba04d2fc3512ea245ca5047d2caec416c84e060403f835e6",
     "leveling": {
-      "source_sha256": "daf556b4f143be09bf0741f12c8068f33179c5af3c3f6dd0e6e074a7a795e03e",
+      "source_sha256": "4337dcef19ad00a2a0055f926beaab8f94860b0748941a69446fc84e43d2dabe",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-15.32",
-        "input_tp": "-0.59",
-        "input_lra": "1.20",
-        "input_thresh": "-25.89",
-        "output_i": "-17.79",
-        "output_tp": "-3.33",
+        "input_i": "-12.65",
+        "input_tp": "-0.33",
+        "input_lra": "0.10",
+        "input_thresh": "-23.40",
+        "output_i": "-16.87",
+        "output_tp": "-4.63",
         "output_lra": "0.00",
-        "output_thresh": "-28.19",
+        "output_thresh": "-27.56",
         "normalization_type": "dynamic",
-        "target_offset": "-0.21"
+        "target_offset": "-1.13"
       },
-      "output_lufs": "-17.99",
-      "output_true_peak_dbtp": "-3.22"
+      "output_lufs": "-18.03",
+      "output_true_peak_dbtp": "-5.49"
     }
   },
   "yara_body": {
@@ -19576,27 +19576,27 @@
     "voice_id": "gDQfVolj9RbmXgumLcOq",
     "voice_name": "Yara (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Yara is down. Somebody fetch the doctor, now.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [stern]",
-    "signature": "54bab229332ea23f9575caf74960ec8f54ce668166ce29f59e7499cb022a523e",
+    "signature": "72a060a39be58898812c09827248c419a0f06e2ded83abbba693dae434979ee3",
     "leveling": {
-      "source_sha256": "46ac6cef07a5643ef9ad91fc5dbf1dd49092ae6a03fe4af4b45a923af0282664",
+      "source_sha256": "4c8da14b4bac241333ce9c3f73e881e43bfceb37fdd3cf7c21f4760455414ebe",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-13.90",
-        "input_tp": "-0.52",
-        "input_lra": "1.00",
-        "input_thresh": "-24.59",
-        "output_i": "-17.46",
-        "output_tp": "-4.47",
-        "output_lra": "0.90",
-        "output_thresh": "-27.96",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.54"
+        "input_i": "-13.70",
+        "input_tp": "-0.34",
+        "input_lra": "0.00",
+        "input_thresh": "-23.92",
+        "output_i": "-18.00",
+        "output_tp": "-4.64",
+        "output_lra": "0.00",
+        "output_thresh": "-28.22",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
       },
-      "output_lufs": "-18.00",
-      "output_true_peak_dbtp": "-4.42"
+      "output_lufs": "-18.01",
+      "output_true_peak_dbtp": "-4.71"
     }
   },
   "hobb_idle_1": {
@@ -20052,27 +20052,27 @@
     "voice_id": "ICwKbPHDHAM3eal5tHEZ",
     "voice_name": "Rocco - Tony (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Rocco's down! Somebody get the doctor!",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [cocky]",
-    "signature": "6d8ed703725d5eab7197289f39c78486be8683537111736a86c2558442d73555",
+    "signature": "1e3d491b4acfb68d7a807533d6af4e8eff48f9ac1c53ff981734641517d8d879",
     "leveling": {
-      "source_sha256": "f9800979b6db91cf6c5edabe561889f69210eeb788609287f61c2b11b0a9e76c",
+      "source_sha256": "88987ec410d1bb57e0f25df24638fa1ba513ba568c24d436d69ca9c84f925dd2",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-17.70",
-        "input_tp": "-1.42",
+        "input_i": "-19.71",
+        "input_tp": "-2.75",
         "input_lra": "0.00",
-        "input_thresh": "-27.70",
-        "output_i": "-18.28",
+        "input_thresh": "-29.97",
+        "output_i": "-18.96",
         "output_tp": "-2.00",
         "output_lra": "0.00",
-        "output_thresh": "-28.28",
+        "output_thresh": "-29.23",
         "normalization_type": "linear",
-        "target_offset": "0.28"
+        "target_offset": "0.96"
       },
-      "output_lufs": "-18.27",
-      "output_true_peak_dbtp": "-1.87"
+      "output_lufs": "-18.96",
+      "output_true_peak_dbtp": "-1.97"
     }
   },
   "rocco_idle_1": {
@@ -20192,27 +20192,27 @@
     "voice_id": "7rQX8r6PVq3gfJ8rZzyE",
     "voice_name": "Ormond - John North (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Ormond's down! Somebody put the kettle on and fetch a medic!",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [chatty]",
-    "signature": "ffd8dd83e202b8bdbafc0675735e129b5cacbc4e7fa89c3c27b0a7227f4dc20a",
+    "signature": "15c5930023d3d71f7c636d54b39ca47d7cbfe87cad15c3d0cd1b46f14b0605f0",
     "leveling": {
-      "source_sha256": "60dc0814b652e470749774541257effc0e76eb63968ec6df08a305f169aea04c",
+      "source_sha256": "90a1e1b4f5cd1c7e12270526fded8b9d16b7b76853d1a4fe2fe45f331a5e8b8d",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-16.36",
-        "input_tp": "-2.14",
-        "input_lra": "0.50",
-        "input_thresh": "-26.50",
-        "output_i": "-17.67",
-        "output_tp": "-3.73",
+        "input_i": "-15.88",
+        "input_tp": "-2.93",
+        "input_lra": "0.00",
+        "input_thresh": "-25.88",
+        "output_i": "-17.98",
+        "output_tp": "-5.05",
         "output_lra": "0.00",
-        "output_thresh": "-27.79",
-        "normalization_type": "dynamic",
-        "target_offset": "-0.33"
+        "output_thresh": "-27.98",
+        "normalization_type": "linear",
+        "target_offset": "-0.02"
       },
-      "output_lufs": "-18.00",
-      "output_true_peak_dbtp": "-3.85"
+      "output_lufs": "-17.98",
+      "output_true_peak_dbtp": "-4.95"
     }
   },
   "delphine_body": {
@@ -20220,27 +20220,27 @@
     "voice_id": "esy0r39YPLQjOczyOib8",
     "voice_name": "Delphine - Britney (extra guard)",
     "model_id": "eleven_v3",
-    "text": "Delphine is down. The tower will remember this.",
+    "text": "A Keeper is down. Get help.",
     "delivery": "[shocked] [cold]",
-    "signature": "a41927231c38c2b0537df961ec9b290df225761c3a816d6154c6fe681bb02673",
+    "signature": "eefe9262fc3e7b2b9897c01c435ce46c73d81d0e08c807f34d2df3f208b806b8",
     "leveling": {
-      "source_sha256": "91c97b53fc6015a85640d753f49a2150093618dd504e7bae8484ff6f957b0544",
+      "source_sha256": "9d90fcfccef767d95f8aad1d7c1af4f2967e5ac6b3c683695d513e9128cf7f06",
       "target_lufs": -18,
       "true_peak_target_dbtp": -2,
       "input": {
-        "input_i": "-19.94",
-        "input_tp": "-1.00",
-        "input_lra": "6.30",
-        "input_thresh": "-31.80",
-        "output_i": "-18.80",
-        "output_tp": "-2.00",
-        "output_lra": "3.50",
-        "output_thresh": "-30.43",
-        "normalization_type": "dynamic",
-        "target_offset": "0.80"
+        "input_i": "-15.45",
+        "input_tp": "-0.61",
+        "input_lra": "0.00",
+        "input_thresh": "-26.35",
+        "output_i": "-18.00",
+        "output_tp": "-3.16",
+        "output_lra": "0.00",
+        "output_thresh": "-28.90",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
       },
-      "output_lufs": "-19.01",
-      "output_true_peak_dbtp": "-1.88"
+      "output_lufs": "-17.97",
+      "output_true_peak_dbtp": "-3.02"
     }
   },
   "ormond_idle_1": {
@@ -26485,6 +26485,1854 @@
       },
       "output_lufs": "-17.99",
       "output_true_peak_dbtp": "-2.76"
+    }
+  },
+  "dane_victim_bram": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Bram is dead.",
+    "delivery": "",
+    "signature": "67f0bef2f8d0c594f405903624c99808885e88b8bbcb4471fcf6dd7e5b20fa17",
+    "leveling": {
+      "source_sha256": "4e36f3e40592947087bf3343554e0b206e4d2888e6414ed1843f67635409b437",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.68",
+        "input_tp": "-3.31",
+        "input_lra": "0.00",
+        "input_thresh": "-28.49",
+        "output_i": "-18.01",
+        "output_tp": "-3.63",
+        "output_lra": "0.00",
+        "output_thresh": "-28.83",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-3.51"
+    }
+  },
+  "dane_victim_crane": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Crane is dead.",
+    "delivery": "",
+    "signature": "26730e632d378f6014b2428d74d5a86b70f74d904836809ae1a5c0247036e443",
+    "leveling": {
+      "source_sha256": "643d0a107fa1bac1ba73b0b0f0c6155b9472cee5b3701ff4e13e0494ab67f6d4",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.75",
+        "input_tp": "-1.61",
+        "input_lra": "0.00",
+        "input_thresh": "-28.24",
+        "output_i": "-18.13",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.62",
+        "normalization_type": "linear",
+        "target_offset": "0.13"
+      },
+      "output_lufs": "-18.13",
+      "output_true_peak_dbtp": "-1.99"
+    }
+  },
+  "dane_victim_dara": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Dara is dead.",
+    "delivery": "",
+    "signature": "f53c373d5587c5a7f1fc1619046da543a59ac57031bbece828ca067bed0ffd3e",
+    "leveling": {
+      "source_sha256": "a13f2b955dba6b3f6e1f2bdb1252e3656378050211244ebceaccbedc681fdcdf",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.89",
+        "input_tp": "-3.42",
+        "input_lra": "0.00",
+        "input_thresh": "-26.89",
+        "output_i": "-17.99",
+        "output_tp": "-4.54",
+        "output_lra": "0.00",
+        "output_thresh": "-27.99",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-4.48"
+    }
+  },
+  "dane_victim_holt": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Holt is dead.",
+    "delivery": "",
+    "signature": "fa156733b2b9efd246d46ec67c4bbc9f88655586e97ed3c2ae729f46d5cb68e9",
+    "leveling": {
+      "source_sha256": "2d1100789306065fdd07f2767b948b9a995fd5a2c794eccbcf09cce054493980",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.37",
+        "input_tp": "-2.36",
+        "input_lra": "0.00",
+        "input_thresh": "-29.37",
+        "output_i": "-18.99",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.99",
+        "normalization_type": "linear",
+        "target_offset": "0.99"
+      },
+      "output_lufs": "-18.99",
+      "output_true_peak_dbtp": "-2.04"
+    }
+  },
+  "dane_victim_ivo": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Ivo is dead.",
+    "delivery": "",
+    "signature": "e67886d677b4a5156d671c0f745305d63b103929275f27b4604f11a1f4a1b9eb",
+    "leveling": {
+      "source_sha256": "5a6d7c4ae6eada214a2a45f70c276d2c26c1fdc850021d12d8aa717561f5d92a",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.43",
+        "input_tp": "-0.99",
+        "input_lra": "0.00",
+        "input_thresh": "-26.66",
+        "output_i": "-17.99",
+        "output_tp": "-2.56",
+        "output_lra": "0.00",
+        "output_thresh": "-28.23",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-2.71"
+    }
+  },
+  "dane_victim_judas": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Judas is dead.",
+    "delivery": "",
+    "signature": "6ab15b3094b39a5148d880c620cc1a3a4df2d9a2799c2147800f391386fb3457",
+    "leveling": {
+      "source_sha256": "e790419e91f982a68681b7a70843b115bf39a71c42852ed629745872252fe1a3",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.49",
+        "input_tp": "-0.91",
+        "input_lra": "0.00",
+        "input_thresh": "-28.02",
+        "output_i": "-18.85",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.11",
+        "normalization_type": "linear",
+        "target_offset": "0.85"
+      },
+      "output_lufs": "-18.89",
+      "output_true_peak_dbtp": "-1.75"
+    }
+  },
+  "dane_victim_mott": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Mott is dead.",
+    "delivery": "",
+    "signature": "2cb9d619f8beb1494d6219f5bf6bab94b0b2b457488f937300da54c6bef59692",
+    "leveling": {
+      "source_sha256": "24f6a4814fdca27152b9d66f922712a4ba30e45eb98402aed4675f12eeda848f",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.14",
+        "input_tp": "-4.91",
+        "input_lra": "0.00",
+        "input_thresh": "-29.14",
+        "output_i": "-18.00",
+        "output_tp": "-3.77",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-17.97",
+      "output_true_peak_dbtp": "-3.64"
+    }
+  },
+  "dane_victim_rook": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Rook is dead.",
+    "delivery": "",
+    "signature": "31c96494575b875489bf6f825d452d97373ad62ff230a027f934e30009a86789",
+    "leveling": {
+      "source_sha256": "b623c91e28550cd8b1ef1bb09c86bfe72bb45ad334e022dad573951ee4074d8d",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.08",
+        "input_tp": "-3.12",
+        "input_lra": "0.00",
+        "input_thresh": "-29.62",
+        "output_i": "-17.99",
+        "output_tp": "-2.04",
+        "output_lra": "0.00",
+        "output_thresh": "-28.54",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
+      },
+      "output_lufs": "-17.97",
+      "output_true_peak_dbtp": "-2.05"
+    }
+  },
+  "dane_victim_rowan": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Rowan is dead.",
+    "delivery": "",
+    "signature": "9505d51f846d73ff8c38399dd239c0be43c10f27e235c4fb30407b8f1fb63a78",
+    "leveling": {
+      "source_sha256": "9bd8222695dd4e09a8c78a8bf16a4b3968aec8a538a7b8fbf152cee4a83f8bb4",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.85",
+        "input_tp": "-3.61",
+        "input_lra": "0.00",
+        "input_thresh": "-30.71",
+        "output_i": "-18.00",
+        "output_tp": "-2.77",
+        "output_lra": "0.00",
+        "output_thresh": "-29.87",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.04",
+      "output_true_peak_dbtp": "-2.78"
+    }
+  },
+  "dane_victim_stroud": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Stroud is dead.",
+    "delivery": "",
+    "signature": "7566f3b3c61444780d7544288c967560284e551853d0b2a3bc5f943aba4fac16",
+    "leveling": {
+      "source_sha256": "11e4afa1b5a2e3501862a4add452e9b4dbc8d7ba6fde0f58efeb9c6a5b005bad",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.36",
+        "input_tp": "-1.63",
+        "input_lra": "0.00",
+        "input_thresh": "-28.13",
+        "output_i": "-18.02",
+        "output_tp": "-2.27",
+        "output_lra": "0.00",
+        "output_thresh": "-28.78",
+        "normalization_type": "linear",
+        "target_offset": "0.02"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-2.25"
+    }
+  },
+  "dane_victim_thane": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Thane is dead.",
+    "delivery": "",
+    "signature": "03c79c0cbf8217d30f3bc044f54d0557bf64ec46aa17d3baa8e04f1b331ee297",
+    "leveling": {
+      "source_sha256": "5d4d215dcd7903955ab8ad1f5adb5e913790117d7bbf8f45d2b91c31a960f94d",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.38",
+        "input_tp": "-1.11",
+        "input_lra": "0.00",
+        "input_thresh": "-27.64",
+        "output_i": "-18.27",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.53",
+        "normalization_type": "linear",
+        "target_offset": "0.27"
+      },
+      "output_lufs": "-18.27",
+      "output_true_peak_dbtp": "-2.04"
+    }
+  },
+  "dane_victim_vesna": {
+    "provider": "ElevenLabs",
+    "voice_id": "ib8aaABAPZQpTo6hx8Jr",
+    "voice_name": "Severin - Powerful & Commanding",
+    "model_id": "eleven_v3",
+    "text": "Vesna is dead.",
+    "delivery": "",
+    "signature": "45a17f6aa237bc35d2c4205553052f58ab9ded0ef7063caf07cace89de0ed1a4",
+    "leveling": {
+      "source_sha256": "dd4a53f5b4cb6700039d168bbfaea79b7313b9f8f0b7be209551de10da7d5551",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.49",
+        "input_tp": "-1.55",
+        "input_lra": "0.00",
+        "input_thresh": "-29.74",
+        "output_i": "-19.93",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.18",
+        "normalization_type": "linear",
+        "target_offset": "1.93"
+      },
+      "output_lufs": "-19.90",
+      "output_true_peak_dbtp": "-2.07"
+    }
+  },
+  "oren_victim_alden": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Alden is dead.",
+    "delivery": "",
+    "signature": "9b001fa92c6f22b06badfc1384a1cc02928e2647f36addb89e302b6136dde5dc",
+    "leveling": {
+      "source_sha256": "8d8802f33de8958f082a7b6564a8d086e9531cc2750c9e6f780d816f70837fd1",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.55",
+        "input_tp": "-1.05",
+        "input_lra": "0.00",
+        "input_thresh": "-29.02",
+        "output_i": "-19.54",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.01",
+        "normalization_type": "linear",
+        "target_offset": "1.54"
+      },
+      "output_lufs": "-19.54",
+      "output_true_peak_dbtp": "-1.96"
+    }
+  },
+  "oren_victim_bryn": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Bryn is dead.",
+    "delivery": "",
+    "signature": "154dbadb541093d43335910c3190bc287e5decc9dca43e943a97dc2bf55da495",
+    "leveling": {
+      "source_sha256": "d2fe1c8649854e53fc5b2943d4cd699c9f3b414e179725498ba84952a4812bc7",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-21.60",
+        "input_tp": "-1.19",
+        "input_lra": "0.00",
+        "input_thresh": "-32.56",
+        "output_i": "-22.42",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-33.37",
+        "normalization_type": "linear",
+        "target_offset": "4.42"
+      },
+      "output_lufs": "-22.43",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_calla": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Calla is dead.",
+    "delivery": "",
+    "signature": "c20c71b2c0d2e8b0a7830fc43406c937cc01a6bf4836e9ac4d9cd048cea6d987",
+    "leveling": {
+      "source_sha256": "96a5d010428e741b9da303e305f037eedfd6475f0db7197cbf0ea566e927bd85",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.59",
+        "input_tp": "-0.61",
+        "input_lra": "0.00",
+        "input_thresh": "-27.59",
+        "output_i": "-18.97",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.97",
+        "normalization_type": "linear",
+        "target_offset": "0.97"
+      },
+      "output_lufs": "-18.97",
+      "output_true_peak_dbtp": "-1.98"
+    }
+  },
+  "oren_victim_corin": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Corin is dead.",
+    "delivery": "",
+    "signature": "ad78711212b96e04b031431e4cef5ccd5799736d75870cdc4ffeefa2a2f0994d",
+    "leveling": {
+      "source_sha256": "eac7181419ec181fd14fcb7bafe2603e01855c463601f25f8743f0f1cf92d560",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.64",
+        "input_tp": "-1.08",
+        "input_lra": "0.00",
+        "input_thresh": "-30.64",
+        "output_i": "-21.56",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-31.56",
+        "normalization_type": "linear",
+        "target_offset": "3.56"
+      },
+      "output_lufs": "-21.55",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_dane": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Dane is dead.",
+    "delivery": "",
+    "signature": "3814ed6aa20eff0b7534762ca9d2316ae57f8bc0adf50618ea3388a27a7f4f02",
+    "leveling": {
+      "source_sha256": "8d82ceb58c1deb88c00dc5853521838a2abec74f70e8abb3e0860d3c45063dfd",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.17",
+        "input_tp": "-1.91",
+        "input_lra": "0.00",
+        "input_thresh": "-30.60",
+        "output_i": "-20.26",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.69",
+        "normalization_type": "linear",
+        "target_offset": "2.26"
+      },
+      "output_lufs": "-20.27",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_ellis": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Ellis is dead.",
+    "delivery": "",
+    "signature": "82fd7038d283f75eabc58e848ed27d8142ae079e5fa0ee11365bae3a9a50c4b3",
+    "leveling": {
+      "source_sha256": "19e03a791529294ac13444504dc2880454a3ec65bf525f3a809ae7a837463115",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.51",
+        "input_tp": "-0.81",
+        "input_lra": "0.00",
+        "input_thresh": "-29.51",
+        "output_i": "-20.71",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.71",
+        "normalization_type": "linear",
+        "target_offset": "2.71"
+      },
+      "output_lufs": "-20.73",
+      "output_true_peak_dbtp": "-1.99"
+    }
+  },
+  "oren_victim_ewan": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Ewan is dead.",
+    "delivery": "",
+    "signature": "6b85887ef8a1eaabf68463608397a78232edde6a758f07dea816905abc272fe4",
+    "leveling": {
+      "source_sha256": "23dc7c037fba58c8233e021581cbccfb20ef08a4dee428f3607217900793bfd1",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.16",
+        "input_tp": "-1.68",
+        "input_lra": "0.00",
+        "input_thresh": "-28.64",
+        "output_i": "-18.52",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.00",
+        "normalization_type": "linear",
+        "target_offset": "0.52"
+      },
+      "output_lufs": "-18.48",
+      "output_true_peak_dbtp": "-1.99"
+    }
+  },
+  "oren_victim_garrow": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Garrow is dead.",
+    "delivery": "",
+    "signature": "2de7d1c8b00ad251bec3132451c606e3b49619ee0d89ada0d2b4b542c1cd3e76",
+    "leveling": {
+      "source_sha256": "bbe521534d2376c0db54f5a3617bcf0f36243cef95d4dc401d96fa207a7f1d15",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.20",
+        "input_tp": "-1.02",
+        "input_lra": "0.00",
+        "input_thresh": "-30.59",
+        "output_i": "-21.20",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-31.59",
+        "normalization_type": "linear",
+        "target_offset": "3.20"
+      },
+      "output_lufs": "-21.19",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_garth": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Garth is dead.",
+    "delivery": "",
+    "signature": "583abb843fa818a99fc84a17bb1ce1f51601a9d9b3f9261f47dff3726246a4a9",
+    "leveling": {
+      "source_sha256": "7e94e38a52a06e413a7d60f2ba0d46fcb94de2d7b1a95e0683699281baa53d6c",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.85",
+        "input_tp": "-0.94",
+        "input_lra": "0.00",
+        "input_thresh": "-30.07",
+        "output_i": "-19.93",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-31.14",
+        "normalization_type": "linear",
+        "target_offset": "1.93"
+      },
+      "output_lufs": "-19.93",
+      "output_true_peak_dbtp": "-1.89"
+    }
+  },
+  "oren_victim_hale": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Hale is dead.",
+    "delivery": "",
+    "signature": "7077904177c536a4dc045a45ddb9c4b4cc2d68992aa6bd612a412e36a054f553",
+    "leveling": {
+      "source_sha256": "cc886a315ffffdcc22d8150c43ac4533d0e8963e4498218e16f7468e5c24015a",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.13",
+        "input_tp": "-0.78",
+        "input_lra": "0.00",
+        "input_thresh": "-29.55",
+        "output_i": "-20.33",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.75",
+        "normalization_type": "linear",
+        "target_offset": "2.33"
+      },
+      "output_lufs": "-20.33",
+      "output_true_peak_dbtp": "-1.98"
+    }
+  },
+  "oren_victim_hollis": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Hollis is dead.",
+    "delivery": "",
+    "signature": "642aea6eca1fe3b2917dc143201386ab25b4e7e7d95e9b3101be7427b0e241f0",
+    "leveling": {
+      "source_sha256": "9b6046e7a8ff9b29c32a92c232f39bb8abaca05382c6b5f10e213d79f6e3d21b",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.33",
+        "input_tp": "-1.02",
+        "input_lra": "0.00",
+        "input_thresh": "-30.33",
+        "output_i": "-21.31",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-31.31",
+        "normalization_type": "linear",
+        "target_offset": "3.31"
+      },
+      "output_lufs": "-21.32",
+      "output_true_peak_dbtp": "-1.96"
+    }
+  },
+  "oren_victim_ilse": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Ilse is dead.",
+    "delivery": "",
+    "signature": "eed625ffb8bb7e896a14c14fc6b778c4271fbeca74d6a443979d1bc3a003a4bf",
+    "leveling": {
+      "source_sha256": "e5b896fd6b3a76802396c1b911f6e50c714d7794d72955204136c387576f2997",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.45",
+        "input_tp": "-1.52",
+        "input_lra": "0.00",
+        "input_thresh": "-28.45",
+        "output_i": "-18.92",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.92",
+        "normalization_type": "linear",
+        "target_offset": "0.92"
+      },
+      "output_lufs": "-18.94",
+      "output_true_peak_dbtp": "-2.02"
+    }
+  },
+  "oren_victim_ingrid": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Ingrid is dead.",
+    "delivery": "",
+    "signature": "3e86d49da0a22e2ec2154e97ff07a8c193536f981d4ea25655a586a68bb94d6d",
+    "leveling": {
+      "source_sha256": "715b13af1254832a4e301234aead2063c1327f7c7e0cadbac6bfeac2bf2afb19",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-14.90",
+        "input_tp": "-0.66",
+        "input_lra": "0.00",
+        "input_thresh": "-24.90",
+        "output_i": "-18.00",
+        "output_tp": "-3.76",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-3.58"
+    }
+  },
+  "oren_victim_jory": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Jory is dead.",
+    "delivery": "",
+    "signature": "5dffefa55793d1f57bb1959e7c393b9c0e049fccb696fd1d5d5c606bcdd7877d",
+    "leveling": {
+      "source_sha256": "b2a48ffd5110af309779d06f18890509bffe6f0f41e7503ad6b486532abedfbe",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.94",
+        "input_tp": "-1.86",
+        "input_lra": "0.00",
+        "input_thresh": "-29.94",
+        "output_i": "-20.06",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.06",
+        "normalization_type": "linear",
+        "target_offset": "2.06"
+      },
+      "output_lufs": "-20.07",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_kell": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Kell is dead.",
+    "delivery": "",
+    "signature": "99844fff93cc7482c130c213eac0a5da9d26124ad5c09b9717cc0f3ad1e53018",
+    "leveling": {
+      "source_sha256": "675b8785bf6cc9629e4c7340eade72edcb43e531c3ca646e3b19c00948182ea0",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.26",
+        "input_tp": "-1.19",
+        "input_lra": "0.00",
+        "input_thresh": "-28.26",
+        "output_i": "-19.06",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.06",
+        "normalization_type": "linear",
+        "target_offset": "1.06"
+      },
+      "output_lufs": "-19.08",
+      "output_true_peak_dbtp": "-2.04"
+    }
+  },
+  "oren_victim_lusk": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Lusk is dead.",
+    "delivery": "",
+    "signature": "d9a6c79b544ad2095a3a5c0b796f33526060461af1c17be155e458c51d6f8701",
+    "leveling": {
+      "source_sha256": "f29fee11b7d78ac3bfca1133c75914753d310b256612d6080538e18bad3a3e70",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.05",
+        "input_tp": "-1.78",
+        "input_lra": "0.00",
+        "input_thresh": "-28.05",
+        "output_i": "-18.25",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.25",
+        "normalization_type": "linear",
+        "target_offset": "0.25"
+      },
+      "output_lufs": "-18.24",
+      "output_true_peak_dbtp": "-2.04"
+    }
+  },
+  "oren_victim_marta": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Marta is dead.",
+    "delivery": "",
+    "signature": "203c8c897712d971e7c0821a668473dc06c7ef4b7cea69644bf1fb4e9b50f267",
+    "leveling": {
+      "source_sha256": "5e205c307bdb561f094b709d6fc714c63b6c33477de775b921094a1badad21d7",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-15.93",
+        "input_tp": "-0.77",
+        "input_lra": "0.00",
+        "input_thresh": "-26.89",
+        "output_i": "-18.02",
+        "output_tp": "-2.84",
+        "output_lra": "0.00",
+        "output_thresh": "-28.98",
+        "normalization_type": "linear",
+        "target_offset": "0.02"
+      },
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-2.75"
+    }
+  },
+  "oren_victim_moss": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Moss is dead.",
+    "delivery": "",
+    "signature": "a414e60b434dd5b0c9ee2e56fbab32ca5e161bb614ccad254d886287ef736225",
+    "leveling": {
+      "source_sha256": "b9e70e93bcb5d1b71228bb5f28aa013a2f21dca83cdebf86c029f48d35e904c7",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.69",
+        "input_tp": "-1.09",
+        "input_lra": "0.00",
+        "input_thresh": "-28.69",
+        "output_i": "-19.61",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.61",
+        "normalization_type": "linear",
+        "target_offset": "1.61"
+      },
+      "output_lufs": "-19.60",
+      "output_true_peak_dbtp": "-1.90"
+    }
+  },
+  "oren_victim_noor": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Noor is dead.",
+    "delivery": "",
+    "signature": "b25d50624d1c6386e0935ba98ee697788b5750819f1bf7b9ac2556d1c3b5e7d9",
+    "leveling": {
+      "source_sha256": "decb12d1e7a3098018b8fe5b57fde9e0b276570e9b633ac6ea56246341cc4fdc",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.63",
+        "input_tp": "-1.52",
+        "input_lra": "0.00",
+        "input_thresh": "-29.59",
+        "output_i": "-19.09",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.04",
+        "normalization_type": "linear",
+        "target_offset": "1.09"
+      },
+      "output_lufs": "-19.06",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_odell": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Odell is dead.",
+    "delivery": "",
+    "signature": "dde10dfc313e63b87ba43dbcc9c06544182661b762fa4e68556ea94651113336",
+    "leveling": {
+      "source_sha256": "ed45ffdf8dc6720035748b7aa7a5e7b23b4ee7406c8154eb2474d1e250c261eb",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.20",
+        "input_tp": "-1.85",
+        "input_lra": "0.00",
+        "input_thresh": "-27.20",
+        "output_i": "-18.00",
+        "output_tp": "-2.65",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-2.67"
+    }
+  },
+  "oren_victim_odette": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Odette is dead.",
+    "delivery": "",
+    "signature": "72db0de5d9fd5776890308d239d41883c5680529aca6d2f9bc979cba8e4513c9",
+    "leveling": {
+      "source_sha256": "83b4e8a3ad386bd03039045221ec78e216af2e03a53051e1eb8c04c777c117be",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.80",
+        "input_tp": "-2.46",
+        "input_lra": "0.00",
+        "input_thresh": "-29.80",
+        "output_i": "-19.36",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.36",
+        "normalization_type": "linear",
+        "target_offset": "1.36"
+      },
+      "output_lufs": "-19.38",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_pell": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Pell is dead.",
+    "delivery": "",
+    "signature": "ef8aae7b612ae25fc32aba618c44f548bc6ecfd1caaf033569f9c32d1140387f",
+    "leveling": {
+      "source_sha256": "7f0222c2aa3588e98a8373971ccd16b187e8b9b3f4246e8218381cf12fe89934",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.52",
+        "input_tp": "-1.21",
+        "input_lra": "0.00",
+        "input_thresh": "-26.52",
+        "output_i": "-18.00",
+        "output_tp": "-2.69",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-2.67"
+    }
+  },
+  "oren_victim_pike": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Pike is dead.",
+    "delivery": "",
+    "signature": "3f0222bf20c508c312a57916630397288bb4ecd69e63eee8641a67044a4cd781",
+    "leveling": {
+      "source_sha256": "b8cdc5915d7fb156621142953f4399808f19a50363f4ef4176da8ff33b7c8ca0",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.99",
+        "input_tp": "-0.84",
+        "input_lra": "0.00",
+        "input_thresh": "-31.84",
+        "output_i": "-22.14",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-33.00",
+        "normalization_type": "linear",
+        "target_offset": "4.14"
+      },
+      "output_lufs": "-22.15",
+      "output_true_peak_dbtp": "-1.98"
+    }
+  },
+  "oren_victim_rhea": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Rhea is dead.",
+    "delivery": "",
+    "signature": "5a785c4ab4d6504b0f84e126ef50abd8cd016e782577f585c6d98309714d8a67",
+    "leveling": {
+      "source_sha256": "d3b72e80de1c064682326be84c94ff4bc8cf0e35d830cab575956a9b2471d5e8",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.10",
+        "input_tp": "-2.06",
+        "input_lra": "0.00",
+        "input_thresh": "-30.10",
+        "output_i": "-20.04",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-30.04",
+        "normalization_type": "linear",
+        "target_offset": "2.04"
+      },
+      "output_lufs": "-20.04",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "oren_victim_sunniva": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Sunniva is dead.",
+    "delivery": "",
+    "signature": "fc7e275b33af2fd7dada2abd3df08421c8f29bfcdf79f36d2b3519419accdb1e",
+    "leveling": {
+      "source_sha256": "cebe0a94cdbfb3875fab36d1a61ba3e8c73e0c3c910f78e7c20877faa0ad5f71",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.52",
+        "input_tp": "-1.22",
+        "input_lra": "0.00",
+        "input_thresh": "-28.94",
+        "output_i": "-19.32",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.74",
+        "normalization_type": "linear",
+        "target_offset": "1.32"
+      },
+      "output_lufs": "-19.31",
+      "output_true_peak_dbtp": "-1.95"
+    }
+  },
+  "oren_victim_tarin": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Tarin is dead.",
+    "delivery": "",
+    "signature": "798e21985fdb457b702aebcad9b7428ab491d2f020705d18fc84d616f8a7f3a4",
+    "leveling": {
+      "source_sha256": "3a2f696b6e10e52654946bc5627c27b847ff5e30271d1b9aca74fa12e264298e",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.48",
+        "input_tp": "-1.02",
+        "input_lra": "0.00",
+        "input_thresh": "-27.48",
+        "output_i": "-18.47",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.47",
+        "normalization_type": "linear",
+        "target_offset": "0.47"
+      },
+      "output_lufs": "-18.43",
+      "output_true_peak_dbtp": "-1.94"
+    }
+  },
+  "oren_victim_tibb": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Tibb is dead.",
+    "delivery": "",
+    "signature": "b14f6288501436806778f1fa116ebd28bc035d9fca2d46d905e95fdf00f3d964",
+    "leveling": {
+      "source_sha256": "5cd76c012e8b9c012d55326da45f92f1e7b7c0050affdd0a59fd3976c782d0e9",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.79",
+        "input_tp": "-0.83",
+        "input_lra": "0.00",
+        "input_thresh": "-30.90",
+        "output_i": "-20.96",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-32.07",
+        "normalization_type": "linear",
+        "target_offset": "2.96"
+      },
+      "output_lufs": "-20.96",
+      "output_true_peak_dbtp": "-2.02"
+    }
+  },
+  "oren_victim_wick": {
+    "provider": "ElevenLabs",
+    "voice_id": "goT3UYdM9bhm0n2lmKQx",
+    "voice_name": "Edward - British, Dark, Seductive, Low",
+    "model_id": "eleven_v3",
+    "text": "Wick is dead.",
+    "delivery": "",
+    "signature": "acdbb392532bb13a0428e4beb516ef6b3ee570be0053e8a69db23bbc2023d582",
+    "leveling": {
+      "source_sha256": "54d12601be39eb0e6e7d1be595ee8201d6b9538c93ec3276918fe8a471775658",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-20.89",
+        "input_tp": "-1.15",
+        "input_lra": "0.00",
+        "input_thresh": "-30.89",
+        "output_i": "-21.73",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-31.73",
+        "normalization_type": "linear",
+        "target_offset": "3.73"
+      },
+      "output_lufs": "-21.74",
+      "output_true_peak_dbtp": "-2.01"
+    }
+  },
+  "tomas_victim_ames": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Ames is dead.",
+    "delivery": "",
+    "signature": "0a9fe6a096819fa7947df07e62ebe66d4ca29d7b5ad3bb13b7aa779faeac565c",
+    "leveling": {
+      "source_sha256": "354ab7b29b38d0faa54c8be39db8a54a40b1fdca9fa2d23e92e367c0aca602a9",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.80",
+        "input_tp": "-3.03",
+        "input_lra": "0.00",
+        "input_thresh": "-28.80",
+        "output_i": "-18.00",
+        "output_tp": "-3.22",
+        "output_lra": "0.00",
+        "output_thresh": "-29.00",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-3.18"
+    }
+  },
+  "tomas_victim_ansel": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Ansel is dead.",
+    "delivery": "",
+    "signature": "b326bd9bf4654b4e47c5f746721901a61b9e37247dc70577e1043dc724cf4ee8",
+    "leveling": {
+      "source_sha256": "0ee3751eeb95a1b851ffcf5e1441cfc66b7d5fa0d793f89dd51d379c9accf673",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.88",
+        "input_tp": "-2.14",
+        "input_lra": "0.00",
+        "input_thresh": "-27.28",
+        "output_i": "-18.00",
+        "output_tp": "-3.26",
+        "output_lra": "0.00",
+        "output_thresh": "-28.40",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-3.18"
+    }
+  },
+  "tomas_victim_brandt": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Brandt is dead.",
+    "delivery": "",
+    "signature": "87bd3bf53cde39c6298c2e1c39263cf7a72711d6db4845962bda83234d3525d1",
+    "leveling": {
+      "source_sha256": "07574759d63f17fff35b696737a65801d477d398fdc692f32aa354d111d2de56",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.02",
+        "input_tp": "-3.15",
+        "input_lra": "0.00",
+        "input_thresh": "-28.68",
+        "output_i": "-17.97",
+        "output_tp": "-3.13",
+        "output_lra": "0.00",
+        "output_thresh": "-28.64",
+        "normalization_type": "linear",
+        "target_offset": "-0.03"
+      },
+      "output_lufs": "-17.98",
+      "output_true_peak_dbtp": "-3.14"
+    }
+  },
+  "tomas_victim_brin": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Brin is dead.",
+    "delivery": "",
+    "signature": "44b1fe25e5bff63ebdf58c1c222eb091c6c20096838587b2c80a66055f5c471c",
+    "leveling": {
+      "source_sha256": "77d54dd8988040175aacc4859ff0012544e5a96fa4311c4cdbf2b1756ccd30a6",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.69",
+        "input_tp": "-3.47",
+        "input_lra": "0.00",
+        "input_thresh": "-27.69",
+        "output_i": "-18.00",
+        "output_tp": "-3.79",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-3.90"
+    }
+  },
+  "tomas_victim_cato": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Cato is dead.",
+    "delivery": "",
+    "signature": "9988cb22eb961f62ce345050b15735bcbce9f7d5ff222793ab9f434c38035b7c",
+    "leveling": {
+      "source_sha256": "e62f7c1918baed2308c793c85485c357c51ace85e51d52eecd335a2ac006ac10",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.80",
+        "input_tp": "-3.55",
+        "input_lra": "0.00",
+        "input_thresh": "-26.80",
+        "output_i": "-18.00",
+        "output_tp": "-4.75",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-4.69"
+    }
+  },
+  "tomas_victim_corra": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Corra is dead.",
+    "delivery": "",
+    "signature": "f0320d5010b88c4d0bd38843df7a8ceedb1c8258f5e5b14ee682ad167ca66848",
+    "leveling": {
+      "source_sha256": "24b5e0a354197c3ebd6d75a25ce9565cfe8b64f8f58b50eefb6cccb95f0cfcb2",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.35",
+        "input_tp": "-4.42",
+        "input_lra": "0.00",
+        "input_thresh": "-29.23",
+        "output_i": "-18.01",
+        "output_tp": "-4.07",
+        "output_lra": "0.00",
+        "output_thresh": "-28.89",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-4.06"
+    }
+  },
+  "tomas_victim_corvin": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Corvin is dead.",
+    "delivery": "",
+    "signature": "56098c64194f8b3445448707900c71c6e842781e244c7e38611cff76373084bc",
+    "leveling": {
+      "source_sha256": "dbfd77483b1709722355bdab9ce0969d2b99d2f6d128566c6e7e880ff598427d",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.59",
+        "input_tp": "-3.91",
+        "input_lra": "0.00",
+        "input_thresh": "-27.59",
+        "output_i": "-17.99",
+        "output_tp": "-4.32",
+        "output_lra": "0.00",
+        "output_thresh": "-27.99",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-4.31"
+    }
+  },
+  "tomas_victim_delphine": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Delphine is dead.",
+    "delivery": "",
+    "signature": "61907917bfebb1a01d48bd4dacee06401f2b30e58228c40a4d931bed41127dec",
+    "leveling": {
+      "source_sha256": "69e6885ee748ec111b001b7f7c2a9fd134553b0ad13344289bc99fea739a4f55",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.52",
+        "input_tp": "-1.82",
+        "input_lra": "0.00",
+        "input_thresh": "-27.52",
+        "output_i": "-18.01",
+        "output_tp": "-2.30",
+        "output_lra": "0.00",
+        "output_thresh": "-28.01",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
+      },
+      "output_lufs": "-18.01",
+      "output_true_peak_dbtp": "-2.16"
+    }
+  },
+  "tomas_victim_dov": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Dov is dead.",
+    "delivery": "",
+    "signature": "d312d23cd1098258443e1ca70a57a861d7ba840e7e97bb0078632fe6c4573281",
+    "leveling": {
+      "source_sha256": "e6ab58507a4730c41575bba646963a51b64556c79a2e08b8bbe168dcbf619e0e",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.00",
+        "input_tp": "-4.23",
+        "input_lra": "0.00",
+        "input_thresh": "-29.50",
+        "output_i": "-18.00",
+        "output_tp": "-3.23",
+        "output_lra": "0.00",
+        "output_thresh": "-28.50",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-3.19"
+    }
+  },
+  "tomas_victim_fenna": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Fenna is dead.",
+    "delivery": "",
+    "signature": "23ffafbc732d5b0ad9f0e554f6cdbb6e78361980b1080a9ff604f0cff88e7a83",
+    "leveling": {
+      "source_sha256": "85257296ae19b946418f7a7b7a790c0276fef4891d68ae04e1ffd2770c51cd17",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.06",
+        "input_tp": "-2.55",
+        "input_lra": "0.00",
+        "input_thresh": "-28.06",
+        "output_i": "-17.99",
+        "output_tp": "-2.49",
+        "output_lra": "0.00",
+        "output_thresh": "-27.99",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
+      },
+      "output_lufs": "-17.96",
+      "output_true_peak_dbtp": "-2.48"
+    }
+  },
+  "tomas_victim_hobb": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Hobb is dead.",
+    "delivery": "",
+    "signature": "b74726fb4a0ed47dea0aaae6c11938982f20450cef41d9164e109c7a4de012ce",
+    "leveling": {
+      "source_sha256": "d2bc716e398ab30f219aaa68c7267b1ec43b8b4f7ed17eabe024f6a869ac2b6a",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.47",
+        "input_tp": "-2.06",
+        "input_lra": "0.00",
+        "input_thresh": "-29.25",
+        "output_i": "-18.40",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.17",
+        "normalization_type": "linear",
+        "target_offset": "0.40"
+      },
+      "output_lufs": "-18.38",
+      "output_true_peak_dbtp": "-2.01"
+    }
+  },
+  "tomas_victim_ilka": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Ilka is dead.",
+    "delivery": "",
+    "signature": "5419303e15235e072b36205b0bf9cff98454ed7fd8cf60086f9fb1260b59c08f",
+    "leveling": {
+      "source_sha256": "0c7e728c03485591817452f385865d425b6f8da233541a6cdc99253b7ff7c4d6",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.02",
+        "input_tp": "-1.03",
+        "input_lra": "0.00",
+        "input_thresh": "-28.02",
+        "output_i": "-19.00",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.00",
+        "normalization_type": "linear",
+        "target_offset": "1.00"
+      },
+      "output_lufs": "-18.97",
+      "output_true_peak_dbtp": "-1.99"
+    }
+  },
+  "tomas_victim_marek": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Marek is dead.",
+    "delivery": "",
+    "signature": "06f8e56222306259578eb1592194ccbd85cf12df7e74255f3e78fed93255c008",
+    "leveling": {
+      "source_sha256": "e6ba1e94ba25434ba1173a0baf54ffa0c478a4c8c47207fb64cda8139b8becd7",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.62",
+        "input_tp": "-3.04",
+        "input_lra": "0.00",
+        "input_thresh": "-28.29",
+        "output_i": "-18.01",
+        "output_tp": "-3.43",
+        "output_lra": "0.00",
+        "output_thresh": "-28.69",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-3.28"
+    }
+  },
+  "tomas_victim_niall": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Niall is dead.",
+    "delivery": "",
+    "signature": "933b5018cff6f57415fdf10c56aecc628d9b3a403c777b1454695f56576ae7d5",
+    "leveling": {
+      "source_sha256": "63cbd9f3261ebc34ded2247f2a1444267228389904cff420e8a1c2b166ed969f",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.56",
+        "input_tp": "-3.35",
+        "input_lra": "0.00",
+        "input_thresh": "-28.56",
+        "output_i": "-18.02",
+        "output_tp": "-2.79",
+        "output_lra": "0.00",
+        "output_thresh": "-28.02",
+        "normalization_type": "linear",
+        "target_offset": "0.02"
+      },
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-2.53"
+    }
+  },
+  "tomas_victim_oren": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Oren is dead.",
+    "delivery": "",
+    "signature": "e5147aa76d628a8e30f9b94ebbaa43b5112cd1140a62e0bc28b3f431c4b19b95",
+    "leveling": {
+      "source_sha256": "71848f8f486ae3dabe5210e0528432df2ac0c0a9426f2b46962c67e3f72d7194",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.30",
+        "input_tp": "-3.64",
+        "input_lra": "0.00",
+        "input_thresh": "-28.30",
+        "output_i": "-18.00",
+        "output_tp": "-3.34",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-3.35"
+    }
+  },
+  "tomas_victim_ormond": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Ormond is dead.",
+    "delivery": "",
+    "signature": "fa96f568e0eba6fb84e06df5fb4a52e832d01dc3de11c117c1cc665da4819c89",
+    "leveling": {
+      "source_sha256": "206f582a0f722180821493e112834dc483a4bf5154cfa88ee9ca6f5da939cabb",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.24",
+        "input_tp": "-4.94",
+        "input_lra": "0.00",
+        "input_thresh": "-28.77",
+        "output_i": "-18.00",
+        "output_tp": "-4.70",
+        "output_lra": "0.00",
+        "output_thresh": "-28.53",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.01",
+      "output_true_peak_dbtp": "-4.63"
+    }
+  },
+  "tomas_victim_pavel": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Pavel is dead.",
+    "delivery": "",
+    "signature": "d01345e002078522d597d0c37443708f6d111769207de154394e2948c600e749",
+    "leveling": {
+      "source_sha256": "1f90edf274cfd7569dde6e17a9c25ceb19a5b48ea9f1d95801acdba540aab0c0",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-17.92",
+        "input_tp": "-2.12",
+        "input_lra": "0.00",
+        "input_thresh": "-27.92",
+        "output_i": "-18.00",
+        "output_tp": "-2.21",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-2.29"
+    }
+  },
+  "tomas_victim_rusk": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Rusk is dead.",
+    "delivery": "",
+    "signature": "58c149f439a022cdb778cb2c87875cc3c1f8136b4cdb5fe647b684fba5940e5c",
+    "leveling": {
+      "source_sha256": "8ab86191db94ab902b44a61c876ec3621c51f4f9523309af80177e1c86f1e2fb",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.54",
+        "input_tp": "-3.60",
+        "input_lra": "0.00",
+        "input_thresh": "-29.36",
+        "output_i": "-17.98",
+        "output_tp": "-3.05",
+        "output_lra": "0.00",
+        "output_thresh": "-28.79",
+        "normalization_type": "linear",
+        "target_offset": "-0.02"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-3.00"
+    }
+  },
+  "tomas_victim_sable": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Sable is dead.",
+    "delivery": "",
+    "signature": "ddc125b31b6d3990bc50f75b57e88d3cca763058ddea3288c58fe736692914a9",
+    "leveling": {
+      "source_sha256": "1ebdc3b20040ca30d224be064750106e1981ae483084f5b990c883569c10a5e0",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.19",
+        "input_tp": "-3.77",
+        "input_lra": "0.00",
+        "input_thresh": "-28.87",
+        "output_i": "-18.00",
+        "output_tp": "-3.58",
+        "output_lra": "0.00",
+        "output_thresh": "-28.68",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.01",
+      "output_true_peak_dbtp": "-3.46"
+    }
+  },
+  "tomas_victim_silas": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Silas is dead.",
+    "delivery": "",
+    "signature": "82c7657913f8514e10afe9a606bf51146660ccaf27435168ecbef5c14ba8b174",
+    "leveling": {
+      "source_sha256": "02556158565a04a4c9dc68a6e5c29c9af90a90b3608ad29a6a4d8702f81b1429",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-19.71",
+        "input_tp": "-3.07",
+        "input_lra": "0.00",
+        "input_thresh": "-30.25",
+        "output_i": "-18.65",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-29.18",
+        "normalization_type": "linear",
+        "target_offset": "0.65"
+      },
+      "output_lufs": "-18.63",
+      "output_true_peak_dbtp": "-2.00"
+    }
+  },
+  "tomas_victim_tamsin": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Tamsin is dead.",
+    "delivery": "",
+    "signature": "c193f02820329b4c0e2458a2b0437a3b7461450fc4208585dcab14a4c62ed69a",
+    "leveling": {
+      "source_sha256": "7eeee9b9a09cc0d65b13b96a685fa3283c915d61aecefeee64caf1717650b4a8",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.53",
+        "input_tp": "-3.92",
+        "input_lra": "0.00",
+        "input_thresh": "-27.06",
+        "output_i": "-17.98",
+        "output_tp": "-5.40",
+        "output_lra": "0.00",
+        "output_thresh": "-28.51",
+        "normalization_type": "linear",
+        "target_offset": "-0.02"
+      },
+      "output_lufs": "-17.96",
+      "output_true_peak_dbtp": "-5.43"
+    }
+  },
+  "tomas_victim_teodor": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Teodor is dead.",
+    "delivery": "",
+    "signature": "b94c9f6117726bfb17b86ddb721470f5a318ef73ab9a87d6f5243ab4efdff838",
+    "leveling": {
+      "source_sha256": "fb8506f2757cfa1ec8649ad750d7fa327ef0d117353cdaa746eda8333ad13650",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.40",
+        "input_tp": "-4.33",
+        "input_lra": "0.00",
+        "input_thresh": "-28.40",
+        "output_i": "-18.00",
+        "output_tp": "-3.93",
+        "output_lra": "0.00",
+        "output_thresh": "-28.00",
+        "normalization_type": "linear",
+        "target_offset": "-0.00"
+      },
+      "output_lufs": "-18.02",
+      "output_true_peak_dbtp": "-3.99"
+    }
+  },
+  "tomas_victim_voss": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Voss is dead.",
+    "delivery": "",
+    "signature": "e112a12bec4cf9aee679be2fc9c5afdfe271d5a3eeffb23f5ac7d1f3cfd2e53e",
+    "leveling": {
+      "source_sha256": "34f47d6442a9dfe16e88028a06310c9ae3df2babe9f5f9436e7f985bddba4dae",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.88",
+        "input_tp": "-3.46",
+        "input_lra": "0.00",
+        "input_thresh": "-27.72",
+        "output_i": "-17.99",
+        "output_tp": "-4.58",
+        "output_lra": "0.00",
+        "output_thresh": "-28.83",
+        "normalization_type": "linear",
+        "target_offset": "-0.01"
+      },
+      "output_lufs": "-17.99",
+      "output_true_peak_dbtp": "-4.76"
+    }
+  },
+  "tomas_victim_wren2": {
+    "provider": "ElevenLabs",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "voice_name": "Bill - Wise, Mature, Balanced",
+    "model_id": "eleven_v3",
+    "text": "Wren2 is dead.",
+    "delivery": "",
+    "signature": "508b3731ef21249ecce906b3761d617b9b79ee63874b3e7e77d9eac44fd34e2d",
+    "leveling": {
+      "source_sha256": "a29c6aa897f3f9431ba61534ed4dc7dd1c2421db0188471be90c8d0414943d10",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.18",
+        "input_tp": "-3.36",
+        "input_lra": "0.00",
+        "input_thresh": "-28.43",
+        "output_i": "-18.00",
+        "output_tp": "-3.18",
+        "output_lra": "0.00",
+        "output_thresh": "-28.25",
+        "normalization_type": "linear",
+        "target_offset": "0.00"
+      },
+      "output_lufs": "-18.00",
+      "output_true_peak_dbtp": "-3.16"
+    }
+  },
+  "niro_be0cb72322": {
+    "provider": "ElevenLabs",
+    "voice_id": "iX1zz6Y13Hsin5IIccLG",
+    "voice_name": "Niro (designed voice, preview 1)",
+    "model_id": "eleven_v3",
+    "text": "That was someone's daughter, Miro.",
+    "delivery": "[intense]",
+    "signature": "e8b9777668b28b56d0164d0668bc0f4ab369d6f21c5774a1a90326e08baf702d",
+    "leveling": {
+      "source_sha256": "928eca16381913910851fb30fe28bd6bfe6a09d51192da92464fc6b48ed15e4b",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-18.00",
+        "input_tp": "-1.91",
+        "input_lra": "0.00",
+        "input_thresh": "-28.00",
+        "output_i": "-18.09",
+        "output_tp": "-2.00",
+        "output_lra": "0.00",
+        "output_thresh": "-28.09",
+        "normalization_type": "linear",
+        "target_offset": "0.09"
+      },
+      "output_lufs": "-18.05",
+      "output_true_peak_dbtp": "-2.16"
+    }
+  },
+  "niro_2b9756db54": {
+    "provider": "ElevenLabs",
+    "voice_id": "iX1zz6Y13Hsin5IIccLG",
+    "voice_name": "Niro (designed voice, preview 1)",
+    "model_id": "eleven_v3",
+    "text": "That was someone's child, Miro.",
+    "delivery": "[intense]",
+    "signature": "1f4edbc0eb4c3553c4215b6863f1a2223ee594f16a832c44738c918f370fa556",
+    "leveling": {
+      "source_sha256": "7c834e2cf879a9970d41648845db20a1465bb61b4c4bbf59a10156a0c3b2a0c2",
+      "target_lufs": -18,
+      "true_peak_target_dbtp": -2,
+      "input": {
+        "input_i": "-16.88",
+        "input_tp": "-2.54",
+        "input_lra": "0.00",
+        "input_thresh": "-26.88",
+        "output_i": "-18.01",
+        "output_tp": "-3.66",
+        "output_lra": "0.00",
+        "output_thresh": "-28.01",
+        "normalization_type": "linear",
+        "target_offset": "0.01"
+      },
+      "output_lufs": "-18.03",
+      "output_true_peak_dbtp": "-3.64"
     }
   }
 }

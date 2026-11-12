@@ -42,12 +42,17 @@ func run() -> void:
 	check(p.ammunition == 24 and c.reserves.smg == 0, "Reload transfers reserve into magazine")
 	c.select_item("c4")
 	p.position = Vector2(220, 236)
+	p.mouse_aim=false
+	p.facing=1
 	c.drop_charge()
 	var start_count: int = p.c4_count
 	check(c.planted.size() == 1 and p.c4_count == start_count, "C4 can be placed without detonating")
 	await frames(30)
 	check(c.planted[0].stuck, "A thrown charge sticks where it lands")
+	p.position=c.planted[0].global_position+Vector2(-8,-4)
 	check(c.recover_charge() and p.c4_count == start_count + 1, "E interaction can recover undetonated C4")
+	p.position=Vector2(220,236)
+	p.facing=1
 	c.drop_charge()
 	await frames(3)
 	c.detonate_charges()

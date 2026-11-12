@@ -2,6 +2,10 @@ param([ValidateRange(1, 1000)][int]$StartAt = 1)
 $ErrorActionPreference = 'Stop'
 $engine = 'C:\towerdefense\tools\godot\Godot_v4.7.2-stable_win64_console.exe'
 $checks = @(
+    @('res://tools/test_live_speedrun.gd'),
+    @('res://tools/test_vent_network.gd'),
+    @('res://tools/test_run_reactions.gd'),
+    @('res://tools/test_live_layout.gd'),
     @('res://tools/test_final_gameplay.gd'),
     @('res://tools/test_final_dialogue.gd'),
     @('res://tools/test_guard_chokepoints.gd'),
@@ -82,6 +86,7 @@ $checks = @(
     @('res://tools/test_art_thumbnails.gd'),
     @('res://tools/test_trapdoor_reward.gd'),
     @('res://tools/test_display_startup.gd', '--max-fps', '60')
+    @('res://tools/test_checkpoint_objectives.gd')
 )
 New-Item -ItemType Directory -Force (Join-Path $PSScriptRoot 'tmp') | Out-Null
 & $engine --headless --editor --path $PSScriptRoot --import *> (Join-Path $PSScriptRoot 'tmp/check-import.log')

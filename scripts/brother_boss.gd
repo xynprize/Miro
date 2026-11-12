@@ -112,7 +112,7 @@ func _physics_process(delta: float) -> void:
 			match chosen:
 				"rush":
 					current_phase = Phase.RUSH
-					phase_left = 0.65
+					phase_left = 0.95
 				"throw":
 					projectile = global_position + Vector2(facing * 15, -5)
 					projectile_velocity = (level.player.global_position - projectile).normalized() * (330.0 if engagement >= 4 else 260.0)
@@ -132,15 +132,16 @@ func _physics_process(delta: float) -> void:
 			projectile_velocity = (level.player.global_position - projectile).normalized() * (330.0 if engagement >= 4 else 260.0)
 			projectile_reflected = false
 			projectile_live = true
-			phase_left = 0.0
+			begin_release()
 		if global_position.distance_to(level.player.global_position) < 28:
-			level.player.take_damage(2)
+			if not level.player.controls.block_melee(global_position):
+				level.player.take_damage(2)
 		if phase_left <= 0 or (is_on_wall() and phase_left < 0.4):
 			# Sometimes he comes straight back for a second rush before he gives Miro an opening.
 			if engagement >= 2 and combo < 1 and randf() < (0.35 if engagement < 4 else 0.55):
 				combo += 1
 				facing = 1 if level.player.position.x > position.x else -1
-				phase_left = 0.5
+				phase_left = 0.7
 			else:
 				combo = 0
 				begin_recovery()
@@ -174,7 +175,7 @@ func _physics_process(delta: float) -> void:
 					take_damage(1)
 					projectile_live = false
 			elif not hit.is_empty():
-				if level.player.controls.has_guitar and level.player.controls.active == "guitar":
+				if level.player.controls.guitar_guarding():
 					projectile_velocity = -projectile_velocity
 					projectile_reflected = true
 				else:
@@ -211,7 +212,7 @@ func begin_release() -> void:
 	# A throw remains guarded through the release animation. Reflected shots are
 	# judged on impact, so a shot can connect when the subsequent opening begins.
 	current_phase = Phase.RELEASE
-	phase_left = 0.18
+	phase_left = 0.65 if engagement >= 4 else 0.8
 
 func begin_telegraph() -> void:
 	current_phase = Phase.TELEGRAPH

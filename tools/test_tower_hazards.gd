@@ -29,6 +29,10 @@ func run() -> void:
 		quit(1)
 		return
 
+	# Combat fixture keeps its known shadow lane; authored wall placements have separate physics checks.
+	turret.position = Vector2(1246,868)
+	turret.rotation = 0.0
+	turret.aim = PI
 	var player: IntroPlayer = level.player
 	var starting_health := player.health
 	player.position = spikes.position + Vector2(0, -55)

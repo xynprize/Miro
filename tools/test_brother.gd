@@ -58,7 +58,7 @@ func run() -> void:
 	check(flow.wave_guards[0].gun_taken and level.player.guns.size() == 1, "A sleeping Keeper can be looted")
 	for guard in flow.wave_guards:
 		guard.set_physics_process(true)
-	await frames(150)
+	await clear_second_wave(1)
 	check(is_instance_valid(level.brother) and level.brother.engagement == 1, "Niro appears after the wave")
 	check(level.dialogue_event == "niro_1" and level.dialogue.size() >= 6, "First meeting carries the reveal face to face")
 	level.finish_dialogue()
@@ -80,7 +80,7 @@ func run() -> void:
 	check(flow.step == flow.Step.WAVE and flow.wave_guards.size() == 4, "Wave 2 enters on the second floor")
 	for guard in flow.wave_guards:
 		guard.die()
-	await frames(150)
+	await clear_second_wave(2)
 	boss = level.brother
 	check(is_instance_valid(boss) and boss.engagement == 2 and boss.health == 9 and "throw" in boss.attacks(), "Second meeting keeps damage and adds the throw")
 	level.finish_dialogue()
@@ -92,7 +92,7 @@ func run() -> void:
 	check(flow.wave_guards.size() == 4, "Wave 3 enters")
 	for guard in flow.wave_guards:
 		guard.fall_asleep()
-	await frames(150)
+	await clear_second_wave(3)
 	boss = level.brother
 	level.finish_dialogue()
 	check(boss.engagement == 3 and "call" in boss.attacks(), "Third meeting can call guards")
@@ -159,6 +159,9 @@ func fight_brother() -> void:
 	for tick in range(2400):
 		if boss.is_dead or level.player.is_dead:
 			break
+		Input.action_press("focus_item")
+		level.player.controls.focus = true
+		level.player.facing = signf(boss.position.x - level.player.position.x)
 		var offset: float = boss.position.x - level.player.position.x
 		Input.action_release("move_left")
 		Input.action_release("move_right")
@@ -180,5 +183,16 @@ func fight_brother() -> void:
 		Input.action_release("jump")
 	Input.action_release("move_left")
 	Input.action_release("move_right")
+	Input.action_release("focus_item")
 	print("FINAL_FIGHT_PROBE boss_hp=",boss.health," player_hp=",level.player.health," gear=",level.player.controls.active)
 	check(boss.is_dead and not level.player.is_dead, "Final fight won with movement, melee and guitar deflection")
+
+func clear_second_wave(meeting: int) -> void:
+	for tick in range(600):
+		if is_instance_valid(level.brother) and level.brother.engagement == meeting:
+			break
+		if flow.step == flow.Step.WAVE and flow.waves_on_row == 2:
+			for guard in flow.wave_guards:
+				if is_instance_valid(guard):guard.fall_asleep()
+		await frames(1)
+	check(flow.waves_on_row == 2, "Two waves arrive before Niro meeting %d"%meeting)

@@ -60,7 +60,9 @@ func _draw() -> void:
 			var color := pale if activated else pink
 			draw_polyline(PackedVector2Array([Vector2(-7, 6), Vector2(0, -9), Vector2(7, 6), Vector2(-7, 6)]), color, 2)
 			draw_line(Vector2(0, -12), Vector2(0, 13), color, 2)
-		"exit", "brother":
+		"brother":
+			pass # The voice is a remote trigger, not a physical door.
+		"exit":
 			draw_rect(Rect2(-22, -50, 44, 76), dark)
 			draw_rect(Rect2(-25, -53, 50, 79), purple, false, 3)
 			draw_texture_rect(LIBRARY.texture("bars"), Rect2(-22, -49, 44, 72), false, pink)

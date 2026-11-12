@@ -136,16 +136,21 @@ func start_floor(number: int) -> void:
 	# Re-entering the same floor from its second section (a retry) resumes that second track;
 	# a new floor never inherits the last floor's second track.
 	var was_second := section_id == "floor_%d_second" % number
+	var was_guitar := number == 5 and section_id == "floor_5_guitar"
 	section_id = "floor_%d_entry" % number
 
 	floor_track = FIRST[number]
+	if was_guitar:
+		section_id = "floor_5_guitar"
+		floor_track = GUITAR_TRACK
 	if was_second and SECOND.has(number):
 		floor_track = SECOND[number]
 		section_id = "floor_%d_second" % number
 
-	if FIRST[number].is_empty() and (not was_second or not SECOND.has(number)):
+	if floor_track.is_empty():
 		silence()
 	else:
+		track_id = "" # A retry restarts the floor cue rather than retaining its old playhead.
 		play_track(floor_track)
 	prefetch_track(GUITAR_TRACK if number == 5 and not was_second else str(SECOND.get(number,"")))
 

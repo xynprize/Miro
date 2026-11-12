@@ -13,6 +13,11 @@ var chapter := 2
 var world := Vector2(1120, 756)
 var storeys: Array = []
 var authored := false
+var blueprint: Dictionary = {}
+var furniture_cache: Dictionary = {}
+var furniture_rects: Dictionary = {}
+var fixture_cache: Dictionary = {}
+var dressing_lights: Array[Vector2] = []
 
 # Only shift low furniture; ceiling art, platforms and story stations keep their anchors.
 const BARRACKS_X := {220:188, 1210:1220, 587:674, 917:851, 1247:1292, 1284:1210, 405:378}
@@ -32,6 +37,7 @@ func _ready() -> void:
 		return
 	var data = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if data is Dictionary:
+		blueprint = data
 		chapter = int(data.get("number", 2))
 		world = Vector2(data.world_size[0], data.world_size[1])
 		storeys = data.get("storeys", [])
@@ -44,13 +50,17 @@ func _ready() -> void:
 			var height := floor_y - previous
 			var window_x := 300.0 + float((index * 520) % int(world.x - 400))
 			var top := previous + height * 0.22
-			add_ledge(Rect2(window_x - 6, top + 54 + 3, 38, 4))
+			if fixture_clear(Rect2(window_x-6,top-3,38,64)):
+				add_ledge(Rect2(window_x - 6, top + 54 + 3, 38, 4))
 			# Torches and lamps (same placement as dress_storey) light the blanket's no-go zones.
 			for step in range(3):
-				var lx := 140.0 + step * 560 + (index % 2) * 240
+				var lx := lamp_x(140.0 + step * 560 + (index % 2) * 240, previous, previous + minf(60.0,height*0.35))
 				if lx <= world.x - 60 and get_parent().get("light_points") != null:
-					get_parent().light_points.append(Vector2(lx, previous + minf(60.0, height * 0.35) + 8))
+					var point := Vector2(lx, previous + minf(60.0, height * 0.35) + 8)
+					get_parent().light_points.append(point)
+					dressing_lights.append(point)
 			previous = floor_y + 28.0
+	prepare_furniture()
 	queue_redraw()
 
 func _process(_delta: float) -> void:
@@ -110,7 +120,70 @@ func legacy_draw() -> void:
 	for point in [Vector2(1035, 252), Vector2(350, 448), Vector2(700, 672)]:
 		draw_grounded(SHROOMS, point)
 
+func vent_clear(rect: Rect2) -> bool:
+	var features = get_parent().get("world_features")
+	if is_instance_valid(features):
+		for prop in features.props:
+			if is_instance_valid(prop) and prop.kind == "hide" and rect.intersects(Rect2(prop.position-Vector2(30,48),Vector2(60,68))):return false
+	for hide in blueprint.get("features",{}).get("hides",[]):
+		if hide.title != "CRATE" and rect.intersects(Rect2(Vector2(hide.position[0],hide.position[1])-Vector2(30,48),Vector2(60,68))):return false
+	return true
+
+func refresh_fixture_clearance() -> void:
+	fixture_cache.clear()
+	if not authored:return
+	for point in dressing_lights:get_parent().light_points.erase(point)
+	dressing_lights.clear()
+	var previous := 0.0
+	for index in range(storeys.size()):
+		var floor_y := float(storeys[index])
+		var y := previous+minf(60.0,(floor_y-previous)*0.35)
+		for step in range(3):
+			var anchor := 140.0+step*560+(index%2)*240
+			if anchor > world.x-60:continue
+			var point := Vector2(lamp_x(anchor,previous,y),y+8)
+			dressing_lights.append(point)
+			get_parent().light_points.append(point)
+		previous=floor_y+28.0
+
+func fixture_clear(rect: Rect2) -> bool:
+	if not fixture_cache.has(rect):fixture_cache[rect]=fixture_clear_uncached(rect)
+	return fixture_cache[rect]
+
+func fixture_clear_uncached(rect: Rect2) -> bool:
+	if not vent_clear(rect):return false
+	for tile in blueprint.get("tiles",[]):
+		if rect.intersects(Rect2(float(tile[0])*28,float(tile[1])*28,28,28)):return false
+	for gate in blueprint.get("gates",[]):
+		if rect.intersects(Rect2(Vector2(gate.position[0],gate.position[1])-Vector2(gate.size[0],gate.size[1])/2,Vector2(gate.size[0],gate.size[1])).grow(8)):return false
+	return true
+
+func lamp_x(anchor: float, ceiling: float, y: float) -> float:
+	for step in range(17):
+		var x := anchor + step * 14.0
+		var rect := Rect2(x-12,ceiling,24,y-ceiling+10)
+		if x > world.x-32 or not fixture_clear(rect):continue
+		var clear := true
+		for area in blueprint.get("interactables",[]):
+			if str(area.get("kind","")) in ["sigil","station"] and rect.intersects(Rect2(Vector2(area.position[0],area.position[1])-Vector2(30,55),Vector2(60,70))):clear=false
+		for station in blueprint.get("stations",[]):
+			if str(station.get("id","")) == "WardRelease" and rect.intersects(Rect2(300,305,168,32)):clear=false
+			if rect.intersects(Rect2(Vector2(station.position[0],station.position[1])-Vector2(30,55),Vector2(60,70))):clear=false
+		if clear:return x
+	return anchor
+
 func stamp(id: String, rect: Rect2, tint := Color(1, 1, 1, 0.8)) -> void:
+	if not vent_clear(rect):return
+	# Warning fixtures must not cover a window on a short or crowded storey.
+	if id in ["warning", "beacon"]:
+		var previous := 0.0
+		for index in range(storeys.size()):
+			var floor_y := float(storeys[index])
+			var wx := 300.0 + float((index * 520) % int(world.x - 400))
+			var window := Rect2(wx - 6, previous + (floor_y - previous) * 0.22 - 3, 38, 64)
+			if rect.grow(4).intersects(window):
+				rect.position.x = window.end.x + 10
+			previous = floor_y + 28.0
 	draw_texture_rect(ART.texture(id), rect, false, tint)
 
 ## One storey: pillars, a window onto the woods, light pools, the emblem and themed set pieces.
@@ -120,6 +193,7 @@ func dress_storey(index: int, ceiling: float, floor_y: float, look: Dictionary) 
 	var second_half := index >= 3
 	for column in range(0, int(world.x / 28), 15):
 		var x := column * 28.0 + 6
+		if not vent_clear(Rect2(x,ceiling,16,height)):continue
 		draw_rect(Rect2(x, ceiling, 16, height), look.wall.darkened(0.12))
 		draw_rect(Rect2(x, ceiling, 3, height), look.wall.lightened(0.08))
 	var window_x := 300.0 + float((index * 520) % int(world.x - 400))
@@ -129,6 +203,7 @@ func dress_storey(index: int, ceiling: float, floor_y: float, look: Dictionary) 
 		if x > world.x - 60:
 			continue
 		var y := ceiling + minf(60.0, height * 0.35)
+		x = lamp_x(x,ceiling,y)
 		for ring in range(5):
 			draw_circle(Vector2(x, y + 8), 70.0 - ring * 12, Color(look.light.r, look.light.g, look.light.b, 0.02))
 		draw_rect(Rect2(x - 40, floor_y - 4, 80, 4), Color(look.light.r, look.light.g, look.light.b, 0.08))
@@ -146,6 +221,7 @@ func dress_storey(index: int, ceiling: float, floor_y: float, look: Dictionary) 
 			dress_ward(index, ceiling, floor_y, second_half)
 
 func draw_window(point: Vector2, depth: int) -> void:
+	if not fixture_clear(Rect2(point-Vector2(6,3),Vector2(38,64))):return
 	var size := Vector2(26, 54)
 	draw_rect(Rect2(point - Vector2(3, 3), size + Vector2(6, 6)), Color("1b1b30"))
 	draw_rect(Rect2(point, size), Color("2b3d5c"))
@@ -174,13 +250,63 @@ func draw_lamp(anchor: Vector2, y: float, look: Dictionary) -> void:
 	draw_rect(Rect2(anchor.x - 6, y + 3, 12, 2), look.light)
 
 ## Level 2: cots and bottles in the sick corridor; lockers and laundry in the barracks.
+func prepare_furniture() -> void:
+	if not authored or chapter not in [2,3]:return
+	for row in range(storeys.size()):
+		for step in range(5 if chapter == 2 else 4):
+			var x: float = 220.0 + step * 330 + row * 37 if chapter == 2 else 260.0 + step * 400 + row * 53
+			if x > world.x - (120 if chapter == 2 else 140):continue
+			if chapter == 2:
+				furniture_x(float(BARRACKS_X.get(int(x), x)),52 if row >= 3 else 54,52 if row >= 3 else 23,float(storeys[row]))
+			else:
+				furniture_x(float(CABINET_X.get(int(x+110), x+110)),26,44,float(storeys[row]))
+
+func furniture_x(anchor: float, width: float, height: float, floor_y: float) -> float:
+	var key := Vector3(anchor, floor_y, width)
+	if furniture_cache.has(key):
+		return furniture_cache[key]
+	var blockers: Array[Rect2] = []
+	for tile in blueprint.get("tiles", []):
+		var top := float(tile[1]) * 28.0
+		if top < floor_y and top + 28.0 > floor_y - height - 4.0:
+			blockers.append(Rect2(float(tile[0])*28, top, 28, 28))
+	for step in range(17):
+		for side in [1.0, -1.0]:
+			var x: float = anchor + step * side * 14.0
+			if x < 32 or x + width > world.x - 32:
+				continue
+			var rect := Rect2(x - 4, floor_y - height - 4, width + 8, height + 3)
+			var clear := vent_clear(rect)
+			for tile: Rect2 in blockers:
+				if rect.intersects(tile):
+					clear = false
+			if not clear:continue
+			for area in blueprint.get("interactables", []):
+				var at := Vector2(area.position[0], area.position[1])
+				if rect.intersects(Rect2(at - Vector2(36,56), Vector2(72,78))):clear = false
+			for station in blueprint.get("stations", []):
+				var at := Vector2(station.position[0], station.position[1])
+				if rect.intersects(Rect2(at - Vector2(40,56), Vector2(80,78))):clear = false
+			for port in blueprint.get("features", {}).get("ports", []):
+				var at := Vector2(port[0],port[1])
+				if rect.intersects(Rect2(at - Vector2(34,28), Vector2(68,48))):clear = false
+			for other: Rect2 in furniture_rects.values():
+				if rect.intersects(other):clear = false
+			if clear:
+				furniture_rects[key] = rect
+				furniture_cache[key] = x
+				return x
+	furniture_cache[key] = INF
+	return INF
+
 func dress_barracks(index: int, ceiling: float, floor_y: float, second_half: bool) -> void:
 	var frame := Color("5a4a5e")
 	for step in range(5):
 		var x := 220.0 + step * 330 + index * 37
 		if x > world.x - 120:
 			continue
-		x = BARRACKS_X.get(int(x), x)
+		x = furniture_x(float(BARRACKS_X.get(int(x), x)), 52 if second_half else 54, 52 if second_half else 23, floor_y)
+		if x == INF:continue
 		if second_half:
 			for locker in range(3):
 				var rect := Rect2(x + locker * 18, floor_y - 52, 16, 52)
@@ -205,16 +331,19 @@ func dress_surveillance(index: int, ceiling: float, floor_y: float, second_half:
 		if x > world.x - 140:
 			continue
 		var bank := Rect2(x, ceiling + 30, 84, 34)
+		if not vent_clear(bank.grow(3)):continue
 		draw_rect(bank.grow(3), Color("1b1b30"))
 		for screen in range(3):
 			var glow: Color = look.light.darkened(0.35 + 0.15 * ((screen + index + step) % 3))
 			draw_rect(Rect2(bank.position + Vector2(2 + screen * 28, 2), Vector2(24, 30)), Color(glow.r, glow.g, glow.b, 0.55))
 		# Background furniture is tinted down so it never reads as something to pick up.
-		stamp("cabinet", Rect2(float(CABINET_X.get(int(x + 110), x + 110)), floor_y - 44, 26, 44), Color(0.45, 0.45, 0.6, 0.7))
+		var cabinet_x := furniture_x(float(CABINET_X.get(int(x + 110), x + 110)), 26, 44, floor_y)
+		if cabinet_x != INF:
+			stamp("cabinet", Rect2(cabinet_x, floor_y - 44, 26, 44), Color(0.45, 0.45, 0.6, 0.7))
 		if second_half:
 			stamp("warning", Rect2(x + 150, ceiling + 44, 22, 22), Color(1, 1, 1, 0.7))
 			stamp("beacon", Rect2(x + 180, ceiling + 6, 22, 22), Color(1, 1, 1, 0.8))
-		else:
+		elif vent_clear(Rect2(x+150,floor_y-30,34,30)):
 			draw_rect(Rect2(x + 150, floor_y - 30, 34, 30), Color("1b1b30"))
 			draw_rect(Rect2(x + 153, floor_y - 27, 28, 3), look.light.darkened(0.5))
 
@@ -232,6 +361,7 @@ func dress_ward(index: int, ceiling: float, floor_y: float, second_half: bool) -
 			continue
 		if second_half:
 			var tank := Rect2(x, floor_y - 78, 40, 74)
+			if not vent_clear(tank.grow(3)):continue
 			draw_rect(tank.grow(3), Color("1b1b30"))
 			draw_rect(tank, Color(0.36, 0.72, 0.58, 0.32))
 			for bubble in range(4):
@@ -240,6 +370,7 @@ func dress_ward(index: int, ceiling: float, floor_y: float, second_half: bool) -
 			stamp("smoke", Rect2(x - 10, floor_y - 30, 60, 30), Color(1, 1, 1, 0.08))
 		else:
 			var glass := Rect2(x, ceiling + 26, 92, 40)
+			if not vent_clear(glass.grow(3)) or not vent_clear(Rect2(CART_X[index][step],floor_y-38,40,38)):continue
 			draw_rect(glass.grow(3), Color("8b9bb4"))
 			draw_rect(glass, Color(0.75, 0.86, 0.95, 0.18))
 			draw_line(glass.position + Vector2(12, 34), glass.position + Vector2(34, 6), Color(1, 1, 1, 0.25), 2)

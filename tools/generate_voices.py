@@ -91,6 +91,8 @@ def collect_lines(cast):
             dialogue(line['id'], speakers[line['speaker']], line['text'], tags.get(line['id'], ''))
         for reputation in ('MISSING', 'HUNTED'):
             for index, text in enumerate(branch[reputation]['guard_line']):
+                if reputation == 'HUNTED' and index == 0:
+                    continue  # Replaced by floor-specific, confirmed-victim reports.
                 clip = f'branch_{reputation.lower()}_{index}'
                 dialogue(clip, speakers[index % 2], text, tags.get(clip, ''))
         for leaning, pool in verses.items():
@@ -127,6 +129,11 @@ def collect_lines(cast):
         niro += [branch[reputation]['remote_call'], branch[reputation]['boss_prefight']]
         niro += list(branch[reputation].get('remote_calls', {}).values())
     niro += branch['kill_disappointment']
+    reactions = json.loads((ROOT / 'data/victim_reactions.json').read_text(encoding='utf-8'))
+    niro += list(reactions['family_lines'].values())
+    for report in reactions['reports'].values():
+        for victim in report['victims']:
+            dialogue('victim_' + victim.lower(), report['speaker'], victim + ' is dead.')
     niro.append('...Miro?')  # Level 1 floor report: the remote crackles.
     niro += list(json.loads((ROOT / 'data/interludes.json').read_text(encoding='utf-8')).get('floor_end_lines', {}).values())
     for scene in json.loads((ROOT / 'data/interludes.json').read_text(encoding='utf-8'))['scenes'].values():

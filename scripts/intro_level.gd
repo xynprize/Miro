@@ -381,7 +381,10 @@ func counts_detection() -> bool:
 	return true
 
 func floor_raw_stats() -> Dictionary:
-	return {"kills": player.casualty_count, "detections": floor_detections, "stealth_bonus": stealth_bonus, "loud": loud_events}
+	var named_dead: Array[String] = []
+	for guard in guards():
+		if guard.is_dead and not guard.guard_name.is_empty():named_dead.append(guard.guard_name)
+	return {"kills": player.casualty_count, "detections": floor_detections, "stealth_bonus": stealth_bonus, "loud": loud_events, "named_dead": named_dead}
 
 func objective() -> String:
 	if completed:

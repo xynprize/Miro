@@ -36,7 +36,7 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(-14, -4), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 9, pale)
 	elif kind == "potion":
 		if not used:
-			draw_texture_rect(ART.texture("flask" if get_meta("lab_flask", false) else "bottle"), Rect2(-8, 0, 16, 20) if get_meta("lab_flask", false) else Rect2(-6, 0, 12, 16), false, Color(1, 1, 1, 0.95))
+			draw_texture_rect(ART.texture("flask" if get_meta("lab_flask", false) else "bottle"), Rect2(-8, 0, 16, 20) if (get_meta("lab_flask", false) or get_meta("lab_bottle",false)) else Rect2(-6, 0, 12, 16), false, Color(1, 1, 1, 0.95))
 	elif kind == "crate":
 		# A crate Miro can stand on, or climb inside to hide [E]. Position is 16 px above the floor.
 		draw_texture_rect(preload("res://assets/environment/crate.png"), Rect2(-14, -11, 28, 27), false)

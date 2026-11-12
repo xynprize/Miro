@@ -15,6 +15,8 @@ func run() -> void:
 	var player = level.player
 	player.controls.has_guitar = true
 	player.controls.select_item("guitar")
+	Input.action_press("focus_item")
+	player.controls.focus = true
 	player.position = Vector2(400, 236)
 	var shooter = level.get_node("Guards/EntryClerk")
 	shooter.position = Vector2(520, 236)
@@ -32,6 +34,7 @@ func run() -> void:
 	await frames(40)
 	check(player.health == health_before, "The guitar takes the hit without damage")
 	check(not is_instance_valid(bullet) or not bullet.enemy, "The round is turned back")
+	Input.action_release("focus_item")
 	# Ladder following.
 	var ladder = level.areas.get_node("FifthLadder")
 	player.set_physics_process(false)
@@ -100,18 +103,25 @@ func run() -> void:
 	level.player.controls.select_item("guitar")
 	check(level.player.controls.active == "guitar" and level.player.controls.slots.has("guitar") and not level.player.controls.blanket_removed(), "Guitar uses a weapon slot and Q remains blanket")
 	var flow = level.flow
+	for g in level.guards():g.set_physics_process(false);g.position=Vector2(-1000,-1000)
+	flow.row = 3
 	flow.engagement = 3
 	flow.spawn_niro()
 	flow.final_wave_wait = 0.0
 	var before: int = flow.wave_guards.size()
 	flow.update_final_waves(0.1)
 	check(flow.final_waves_sent == 1 and flow.wave_guards.size() >= before + 4, "A wave of Keepers joins the final Niro fight")
+	for g in flow.wave_guards:g.fall_asleep()
 	flow.final_wave_wait = 0.0
 	flow.update_final_waves(0.1)
 	check(flow.final_waves_sent == 2, "A second wave follows")
+	for g in flow.wave_guards:g.fall_asleep()
 	flow.final_wave_wait = 0.0
 	flow.update_final_waves(0.1)
-	check(flow.final_waves_sent == 2, "No more than two extra waves")
+	check(flow.final_waves_sent == 3, "A third bounded reinforcement wave follows")
+	flow.final_wave_wait = 0.0
+	flow.update_final_waves(0.1)
+	check(flow.final_waves_sent == 3, "No more than three extra waves")
 	# Strangle: only from behind, no blood, not a casualty.
 	level.queue_free()
 	await frames(2)

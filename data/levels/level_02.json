@@ -3863,29 +3863,38 @@
       {
         "kind": "turret",
         "position": [
-          532,
-          434
+          1232,
+          428
         ],
         "legacy_position": [
           826.0,
           448
         ],
-        "mount": "right"
+        "mount": "left"
       },
       {
         "kind": "turret",
         "position": [
+          1036,
+          1044
+        ],
+        "legacy_position": [
           1218.0,
           1064
-        ]
+        ],
+        "mount": "right"
       },
       {
         "kind": "turret",
         "position": [
-          1008.0,
+          1008,
           182.0
         ],
-        "mount": "right"
+        "mount": "right",
+        "legacy_position": [
+          1008.0,
+          182.0
+        ]
       },
       {
         "kind": "spikes",
@@ -3920,10 +3929,14 @@
       {
         "kind": "turret",
         "position": [
-          28.0,
+          28,
           406.0
         ],
-        "mount": "right"
+        "mount": "right",
+        "legacy_position": [
+          28.0,
+          406.0
+        ]
       }
     ],
     "cases": [

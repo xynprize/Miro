@@ -128,11 +128,19 @@ func current_storey() -> int:
 
 var checkpoint_refreshed := 0
 
+## A deeper landing is not a valid retry point while an earlier-storey objective is pending.
+func checkpoint_safe_position(point: Vector2, completed_steps: Dictionary) -> Vector2:
+	for station in definition.stations:
+		if not completed_steps.has(station.id) and float(station.position[1]) < point.y - 100.0:
+			return $LevelPlan/PlayerSpawn.global_position
+	return point
+
 func update_checkpoint() -> void:
 	if flow != null or player.is_dead or not player.is_on_floor() or completed:
 		return
 	var campaign = get_node("/root/Campaign")
 	var storey := current_storey()
+	if checkpoint_safe_position(player.global_position,milestones) != player.global_position:storey=0
 	if storey <= int(campaign.checkpoint.get("storey", 0)) and not campaign.checkpoint.is_empty():
 		# Same storey: keep the checkpoint's place and health, but keep its kit current so guns
 		# and ammo picked up since are not lost on a retry (refreshed every couple of seconds).
@@ -314,6 +322,10 @@ func apply_checkpoint() -> void:
 	if saved.is_empty() or int(saved.get("floor", 0)) != int(definition.number) or flow != null or not saved.get("retry", false):
 		return
 	saved.erase("retry")
+	var safe_position := checkpoint_safe_position(saved.position,saved.get("milestones",{}))
+	if safe_position != saved.position:
+		saved["position"]=safe_position
+		saved["storey"]=0
 	player.global_position = saved.position
 	player.reset_physics_interpolation()
 	player.get_node("Camera2D").reset_smoothing()
@@ -478,7 +490,13 @@ func setup_branch() -> Array:
 	var number := int(definition.number)
 	reputation = campaign.reputation()
 	hunted = reputation == "HUNTED"
-	var data: Dictionary = campaign.branch()[reputation]
+	var data: Dictionary = campaign.branch()[reputation].duplicate(true)
+	var voice_branch: String = "MISSING" if campaign.total("kills") == 0 else reputation
+	if voice_branch == "MISSING":
+		data.pa = campaign.branch().MISSING.pa
+		data.guard_line = campaign.branch().MISSING.guard_line
+		data.remote_call = campaign.branch().MISSING.remote_call
+		data.remote_calls = campaign.branch().MISSING.remote_calls
 	world_features.thoughts[str(number)].insert(0, {"id": "branch", "text": str(data.get("thoughts", {}).get(str(number), data.thought))})
 	poster = Node2D.new()
 	poster.set_script(load("res://scripts/wanted_poster.gd"))
@@ -488,7 +506,16 @@ func setup_branch() -> Array:
 	if not world_features.conversation.is_empty():
 		world_features.conversation = world_features.conversation.duplicate(true)
 		for index in range(data.guard_line.size()):
-			world_features.conversation.append({"id": "branch_%s_%d" % [reputation.to_lower(), index], "speaker": index % 2, "text": data.guard_line[index]})
+			if voice_branch == "HUNTED" and index == 0:
+				var reactions: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/victim_reactions.json"))
+				var report: Dictionary = reactions.reports.get(str(number),{})
+				var victim := ""
+				for name in report.get("victims",[]):
+					if campaign.run_killed(str(name)):victim=str(name)
+				if not victim.is_empty():
+					world_features.conversation.append({"id":"victim_"+victim.to_lower(),"speaker":0,"text":victim+" is dead."})
+				continue
+			world_features.conversation.append({"id": "branch_%s_%d" % [voice_branch.to_lower(), index], "speaker": index % 2, "text": data.guard_line[index]})
 	if hunted and number < 5:
 		# More armed Keepers: one extra patrol by the stair gate, clear of the ladder landings.
 		var extra = load("res://scenes/guard.tscn").instantiate()
@@ -527,7 +554,12 @@ func on_keeper_killed(guard) -> void:
 		return
 	disappointment_heard = true
 	var lines: Array = campaign.branch().kill_disappointment
-	world_features.remote_say(lines[(int(definition.number) + player.casualty_count) % lines.size()], "NIRO" if int(definition.number) >= 3 else "THE VOICE")
+	var reaction: String = lines[(int(definition.number) + player.casualty_count) % lines.size()]
+	if reaction == "That was someone's son, Miro.":
+		var reactions: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/victim_reactions.json"))
+		var term: String = reactions.family_terms.get(str(guard.get("guard_name")),"child")
+		reaction = reactions.family_lines.get(term,reaction)
+	world_features.remote_say(reaction, "NIRO" if int(definition.number) >= 3 else "THE VOICE")
 
 func floor_report() -> String:
 	var campaign = get_node("/root/Campaign")

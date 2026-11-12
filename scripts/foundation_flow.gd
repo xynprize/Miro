@@ -18,6 +18,7 @@ var step := Step.OFFICE
 var row := 0
 var wave_guards: Array[Node] = []
 var next_reinforcement := 0
+var waves_on_row := 0
 var wait_left := 0.0
 var niro_health := 12
 ## Two extra waves of Keepers pour in during the last fight with Niro.
@@ -68,6 +69,7 @@ func on_guitar() -> void:
 
 func request_wave(index: int) -> void:
 	row = index
+	waves_on_row = 0
 	step = Step.WAVE_PENDING
 	wait_left = bar_wait()
 
@@ -101,20 +103,41 @@ func spawn_wave() -> void:
 		if absf(point.x - level.player.position.x) < 90:
 			point.x = clampf(point.x + (160 if point.x >= level.player.position.x else -160), 80, 1040)
 		wave_guards.append(spawn_guard(point, weapons[index % weapons.size()]))
+	waves_on_row += 1
 	step = Step.WAVE
 	wave_started.emit(row)
 	level.notify("Keepers are coming down the stairs.", 4)
 
 func spawn_guard(point: Vector2, weapon: String) -> Node:
 	var guard = load("res://scenes/guard.tscn").instantiate()
-	guard.position = point
-	guard.patrol_left = point.x - 80
-	guard.patrol_right = point.x + 80
+	guard.level = level
+	# Reinforcements stand on this storey, with clearance from Miro and other bodies.
+	var target_y: float = ROW_FLOOR_Y[row_of(point.y)]
+	var chosen := Vector2.INF
+	var cost := INF
+	for stand: Vector2 in guard.navigation().points:
+		if absf(stand.y - target_y) > 3.0 or stand.distance_to(level.player.position) < 90.0:
+			continue
+		if get_tree().get_nodes_in_group("lethal_spikes").any(func(spike): return spike.global_position.distance_to(stand) < 40.0):continue
+		if level.guards().any(func(other): return other.global_position.distance_to(stand) < 36.0):
+			continue
+		if absf(stand.x - point.x) < cost:
+			cost = absf(stand.x - point.x)
+			chosen = stand
+	if chosen == Vector2.INF:
+		guard.free()
+		return null
+	guard.position = chosen
+	guard.patrol_left = chosen.x - 80
+	guard.patrol_right = chosen.x + 80
 	guard.level = level
 	guard.illness_started = true
 	guard.wave_guard = true
 	guard.chase_speed *= 1.2
 	guard.weapon_kind = weapon
+	var names: Array = level.world_features.roster.floors.get("5",[])
+	while next_reinforcement < names.size() and (campaign().run_killed(str(names[next_reinforcement])) or level.guards().any(func(g):return g.guard_name==str(names[next_reinforcement]))):
+		next_reinforcement += 1
 	level.world_features.name_keeper(guard, 5, next_reinforcement)
 	next_reinforcement += 1
 	level.get_node("Guards").add_child(guard)
@@ -130,13 +153,17 @@ func wave_clear() -> bool:
 
 ## Keepers arrive in two waves while Niro is still on his feet (the fight's finale, as asked).
 func update_final_waves(delta: float) -> void:
-	if final_waves_sent >= 2 or not is_instance_valid(level.brother) or level.brother.is_dead:
+	if final_waves_sent >= (3 if engagement >= 4 else 2) or not is_instance_valid(level.brother) or level.brother.is_dead:
 		return
 	final_wave_wait -= delta
 	if final_wave_wait > 0.0:
 		return
+	var awake: Array = level.guards().filter(func(g): return not g.has_method("begin_recovery") and not g.is_dead and not g.asleep and absf(g.position.y - ROW_FLOOR_Y[mini(row,3)]) < 48.0)
+	if awake.size() >= 4:
+		final_wave_wait = 4.0
+		return
 	final_waves_sent += 1
-	final_wave_wait = 22.0
+	final_wave_wait = 14.0
 	var points := [260.0, 520.0, 820.0, 1000.0]
 	var weapons := ["pistol", "smg", "pistol", "smg"]
 	var player_x: float = level.player.position.x
@@ -146,7 +173,8 @@ func update_final_waves(delta: float) -> void:
 		# Never right on top of Miro, never on top of each other.
 		if absf(x - player_x) < 120.0:
 			x = clampf(x + (160.0 if x >= player_x else -160.0), 80.0, 1040.0)
-		spawned.append(spawn_guard(Vector2(x, ROW_FLOOR_Y[3]), weapons[index]))
+		if spawned.size() >= 4 - awake.size():break
+		spawned.append(spawn_guard(Vector2(x, ROW_FLOOR_Y[mini(row,3)]), weapons[index]))
 	wave_guards.append_array(spawned)
 	level.notify("More Keepers pour down the stairs.", 4.0)
 
@@ -178,8 +206,8 @@ func spawn_niro() -> void:
 	boss.retreated.connect(_on_niro_gone)
 	level.add_child(boss)
 	level.brother = boss
-	if engagement >= 4:
-		final_wave_wait = 14.0
+	final_waves_sent = 0
+	final_wave_wait = 0.0 if engagement >= 4 else 10.0
 	step = Step.NIRO if engagement <= 3 else Step.FINAL
 	niro_appeared.emit(engagement)
 	if engagement == 1:
@@ -198,7 +226,9 @@ func appearance_lines(index: int) -> Array:
 		for station in level.definition.stations:
 			if station.id == "BrotherEncounter":
 				lines = station.lines.duplicate(true)
-		lines.insert(0, ["NIRO", campaign().branch_line("boss_prefight")])
+		# A loud but harmless run must not imply kills or an unseen escape.
+		if campaign().total("kills") > 0 or campaign().reputation() == "MISSING":
+			lines.insert(0, ["NIRO", campaign().branch_line("boss_prefight")])
 	else:
 		lines = level.definition.get("niro", {}).get("appear_lines", {}).get(str(index), []).duplicate(true)
 	return lines
@@ -275,7 +305,7 @@ func _physics_process(delta: float) -> void:
 		Step.WAVE:
 			if wave_clear():
 				wave_cleared.emit(row)
-				step = Step.NIRO_PENDING
+				step = Step.WAVE_PENDING if waves_on_row < 2 else Step.NIRO_PENDING
 				wait_left = bar_wait()
 		Step.NIRO_PENDING:
 			wait_left -= delta
@@ -298,7 +328,7 @@ func _physics_process(delta: float) -> void:
 			wait_left -= delta
 			if wait_left <= 0:
 				spawn_niro()
-		Step.FINAL:
+		Step.NIRO, Step.FINAL:
 			update_final_waves(delta)
 
 func objective() -> String:

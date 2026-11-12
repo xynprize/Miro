@@ -187,6 +187,8 @@ def compile_level(number, grid, extra):
     if props:
         data['props'] = props
     data['music_region']['entry'] = {'minimum_y': SUBFLOOR_B_Y, 'requires_landing': True, **extra.get('music_entry', {})}
+    from wall_turrets import mount_turrets
+    mount_turrets(data)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
     maps = ROOT / 'docs/level_maps'
     maps.mkdir(parents=True, exist_ok=True)

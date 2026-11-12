@@ -45,8 +45,8 @@ func _physics_process(delta: float) -> void:
 			target.take_turret_hit()
 			queue_free()
 			return
-		elif enemy and target is IntroPlayer and target.controls.has_guitar and target.controls.active == "guitar":
-			# The guitar deflects every shot: the round turns back toward whoever fired it.
+		elif enemy and target is IntroPlayer and target.controls.guitar_guarding():
+			# Holding guitar guard turns a shot back toward whoever fired it.
 			enemy = false
 			shooter = target
 			direction = -direction

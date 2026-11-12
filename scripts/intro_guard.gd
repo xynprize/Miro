@@ -160,6 +160,9 @@ func cough_sound() -> void:
 func _physics_process(delta: float) -> void:
 	time += delta
 	glance_left = maxf(0.0, glance_left - delta)
+	search_turn_left = maxf(0.0, search_turn_left - delta)
+	obstacle_replan_left = maxf(0.0, obstacle_replan_left - delta)
+	hop_retry_left = maxf(0.0, hop_retry_left - delta)
 	cough_sound()
 	queue_redraw()
 	if not level or level.controls_locked():
@@ -173,6 +176,15 @@ func _physics_process(delta: float) -> void:
 	if asleep:
 		sees_player = false
 		velocity = Vector2(0, velocity.y + 850.0 * delta)
+		move_and_slide()
+		return
+	# A secured victim cannot turn, attack or walk away during the held takedown.
+	var world = level.world_features
+	if is_instance_valid(world) and world.strangle_active() and world.strangle_victim == self:
+		velocity = Vector2(0, velocity.y + 850.0 * delta)
+		windup = 0.0
+		burst_left = 0
+		strike_left = 0.0
 		move_and_slide()
 		return
 	invulnerability_left = maxf(0, invulnerability_left - delta)
@@ -259,7 +271,8 @@ func _physics_process(delta: float) -> void:
 			get_node("/root/SoundFX").play_near("swing", global_position, level.player.global_position, -20)
 			var reach: Vector2 = level.player.global_position - global_position
 			if not level.player.is_dead and absf(reach.y) < 22 and absf(reach.x) <= STRIKE_REACH + 4 and reach.x * facing >= -4:
-				level.player.take_damage(1)
+				if not level.player.controls.block_melee(global_position):
+					level.player.take_damage(1)
 	elif windup > 0:
 		windup -= delta
 		if windup <= 0 and sees_player:
@@ -294,17 +307,17 @@ func _physics_process(delta: float) -> void:
 			begin_sweep(facing)
 		if not search_route.is_empty():
 			goal = movement_goal()
-			facing = signf(goal.x - global_position.x) if absf(goal.x-global_position.x)>2 else facing
+			face_toward(goal.x)
 			velocity.x = facing * (chase_speed if pursuing else 42.0)
 		elif sweep_origin != INF:
 			# No usable route in this direction: look, then try the other side.
 			if (global_position.x-sweep_origin)*sweep_side>196:
 				sweep_side *= -1
-			facing = sweep_side
+			face_toward(global_position.x + sweep_side * 70)
 			velocity.x = facing * 42.0
 		else:
 			if absf(distance) > 12:
-				facing = signf(distance)
+				face_toward(goal.x)
 				velocity.x = facing * (chase_speed if pursuing else 42.0)
 		if search_left <= 0:
 			pursuing = false
@@ -335,7 +348,7 @@ func _physics_process(delta: float) -> void:
 		return
 	var requested := velocity.x
 	velocity.x = spaced_speed(requested)
-	if alert_state == State.PATROL and requested * facing > 0 and velocity.x * facing < 1.0:
+	if alert_state == State.PATROL and turn_wait <= 0.0 and requested * facing > 0 and velocity.x * facing < 1.0:
 		facing *= -1
 		turn_wait = beat_wait(0.8)
 	# Do not walk off a floor or chase between tiers (ladders are followed above).
@@ -344,13 +357,18 @@ func _physics_process(delta: float) -> void:
 	var hop_down := chasing and solid_between(foot, foot + Vector2(0, 48))
 	if velocity.x != 0 and is_on_floor() and not level.has_floor_below(foot) and not hop_down:
 		velocity.x = 0
-		facing *= -1
 		if alert_state == State.SEARCH:
-			begin_sweep(facing)
+			if obstacle_replan_left <= 0.0:
+				obstacle_replan_left = 0.6
+				face_toward(global_position.x - facing * 70)
+				begin_sweep(facing)
+		elif requested != 0 and turn_wait <= 0.0:
+			facing *= -1
 	# A chasing Keeper hops over anything one tile high instead of giving up at it.
 	var searching := alert_state == State.SEARCH or alert_state == State.ALERT
 	var hopping := searching and velocity.x * facing > 0 and is_on_floor() and can_hop()
 	if hopping:
+		hop_retry_left = 0.85
 		velocity.y = -HOP_SPEED
 	velocity.y += 850.0 * delta
 	move_and_slide()
@@ -358,8 +376,10 @@ func _physics_process(delta: float) -> void:
 		if searching:
 			# A crouch passage or tall wall is impassable to this guard.
 			alert_state = State.SEARCH
-			if not plan_search_route(last_known_position):
-				begin_sweep(-facing)
+			if obstacle_replan_left <= 0.0:
+				obstacle_replan_left = 0.6
+				if not plan_search_route(last_known_position):
+					begin_sweep(-facing)
 		else:
 			turn_patrol_from_obstacle()
 
@@ -433,6 +453,9 @@ func update_search_route(delta: float) -> void:
 
 ## Ladders: a hunting Keeper climbs after Miro; an unaware one near the ladder glances up (or down).
 var glance_left := 0.0
+var search_turn_left := 0.0
+var obstacle_replan_left := 0.0
+var hop_retry_left := 0.0
 var ladder_exit_side := 0.0
 var ladder_exit_left := 0.0
 var ladder_stall_time := 0.0
@@ -445,7 +468,11 @@ const SHAFT_OWNER := &"guard_crossing"
 func face_toward(x: float) -> void:
 	# An exactly vertical sightline must not collapse the sprite to zero width.
 	if absf(x - global_position.x) > 3.0:
-		facing = signf(x - global_position.x)
+		var direction := signf(x - global_position.x)
+		if alert_state == State.SEARCH and not sees_player and not pursuing and direction != facing:
+			if search_turn_left > 0.0:return
+			search_turn_left = 0.35
+		facing = direction
 
 func _exit_tree() -> void:
 	release_crossing()
@@ -475,6 +502,21 @@ func wait_for_crossing(ladder: IntroArea, goal: Vector2, delta: float) -> bool:
 		velocity.y += 850.0 * delta
 		move_and_slide()
 		return true
+	if not sees_player and goal.y < global_position.y - 70.0:
+		var upstairs := 0
+		for other: IntroGuard in level.guards():
+			if other != self and not other.is_dead and not other.asleep and absf(other.global_position.y - goal.y) < 42.0 and absf(other.global_position.x - goal.x) < 180.0:
+				upstairs += 1
+		if upstairs >= 2:
+			# Searchers cover the lower floor instead of all piling onto one landing.
+			pursuing = false
+			search_route.clear()
+			route_goal = Vector2.INF
+			last_known_position = global_position + Vector2(facing * 70.0, 0)
+			search_left = minf(search_left, 4.0)
+			velocity = Vector2(0, velocity.y + 850.0 * delta)
+			move_and_slide()
+			return true
 	if gap <= 48.0:
 		crossing = ladder
 		crossing_goal = goal
@@ -520,7 +562,8 @@ func spaced_speed(requested: float) -> float:
 		if other == self or other.is_dead or other.asleep or absf(other.position.y - position.y) > 20.0:
 			continue
 		var gap: float = other.position.x - position.x
-		var limit := (absf(gap) - 36.0) * 4.0
+		var clearance := 52.0 if facing != other.facing else 36.0
+		var limit := (absf(gap) - clearance) * 4.0
 		if gap > 0 or (gap == 0 and other.get_instance_id() > get_instance_id()):
 			right = minf(right, limit)
 		else:
@@ -667,6 +710,7 @@ func solid_between(from: Vector2, to: Vector2, mask := 1) -> bool:
 
 ## Something knee-high directly ahead, with clear space above it to land on.
 func can_hop() -> bool:
+	if hop_retry_left > 0.0:return false
 	var ahead := Vector2(facing * 20, 0)
 	var knee := global_position + Vector2(0, 8)
 	var hit := get_world_2d().direct_space_state.intersect_ray(PhysicsRayQueryParameters2D.create(knee, knee + ahead, 1))
@@ -680,11 +724,11 @@ func can_hop() -> bool:
 	# Reserve the first 28px of landing, not an entire wide platform.
 	var landing := Vector2(float(hit.position.x) + facing * 14.0, global_position.y - 28.0)
 	for other: IntroGuard in level.guards():
-		if other == self or other.is_dead or other.asleep:
+		if other == self:
 			continue
 		if absf(other.global_position.x - landing.x) < 25.0 and absf(other.global_position.y - landing.y) < 19.0:
 			return false
-		if other.hop_landing.distance_squared_to(landing) < 25.0 * 25.0:
+		if not other.asleep and not other.is_dead and other.hop_landing.distance_squared_to(landing) < 25.0 * 25.0:
 			return false
 	hop_landing = landing
 	return true

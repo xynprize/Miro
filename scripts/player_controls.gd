@@ -16,6 +16,7 @@ var has_remote := false
 var smg_achievement_checked := false
 var remote_unlocked := false
 var focus := false
+var block_feedback_left := 0.0
 var pad_aim := false
 var pad_device := -1
 var _pad_prompts := false
@@ -320,7 +321,7 @@ func _physics_process(delta: float) -> void:
 		update_pad_aim(Vector2(Input.get_joy_axis(pad_device, (JOY_AXIS_LEFT_X if get_node("/root/InputBindings").preset == "Southpaw" else JOY_AXIS_RIGHT_X)), Input.get_joy_axis(pad_device, (JOY_AXIS_LEFT_Y if get_node("/root/InputBindings").preset == "Southpaw" else JOY_AXIS_RIGHT_Y))))
 	else:
 		pad_aim = false
-	focus = (focus and Input.is_action_pressed("focus_item")) or (player.guns.has(active) and Input.is_action_pressed("pad_focus"))
+	focus = (focus and Input.is_action_pressed("focus_item")) or ((player.guns.has(active) or active == "guitar") and Input.is_action_pressed("pad_focus"))
 	update_mouse_cursor()
 	if active == "c4" and Input.is_action_just_pressed("pad_focus"):
 		drop_charge()
@@ -369,6 +370,19 @@ func collect_guitar() -> void:
 
 ## A strum puts ordinary Keepers in range to sleep for the rest of the floor and can hurt an
 ## exposed Niro. Strumming on the beat reaches further; missing the beat is never punished.
+func guitar_guarding() -> bool:
+	return has_guitar and active == "guitar" and focus and gameplay_ready()
+
+func block_melee(attacker: Vector2) -> bool:
+	var direction := player.weapon_aim_direction()
+	if not guitar_guarding() or (attacker - player.global_position).dot(direction) < -4.0:
+		return false
+	if block_feedback_left <= 0.0:
+		block_feedback_left = 0.2
+		get_node("/root/SoundFX").play_sound("swing", -18, 0.7)
+		player.level.emit_effect("hit", player.global_position + direction * 12 + Vector2(0,-8))
+	return true
+
 func strum() -> int:
 	if not has_guitar or strum_cooldown > 0:
 		return -1

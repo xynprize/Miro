@@ -63,6 +63,7 @@ const ATTACK = preload("res://assets/characters/miro_attack.png")
 ## Julia's two-frame knife swing: wind-up, then the slash.
 const MELEE_ANIM_TIME := 0.24
 var melee_anim: float = 0.0
+var melee_direction := Vector2.RIGHT
 @onready var sprite: Sprite2D = $Sprite2D
 
 func _ready() -> void:
@@ -276,6 +277,8 @@ func shank() -> void:
 	attack_cooldown = 0.5
 	attack_flash = 0.16
 	melee_anim = MELEE_ANIM_TIME
+	melee_direction = weapon_aim_direction()
+	if absf(melee_direction.x) > 0.1:facing = signf(melee_direction.x)
 	get_node("/root/SoundFX").play_sound("swing", -18)
 	var target: Node2D
 	var reach := INF
@@ -288,7 +291,7 @@ func shank() -> void:
 			continue
 		var point: Vector2 = candidate.target_point() if turret else candidate.global_position
 		var difference := point - global_position
-		if absf(difference.y) < 24 and absf(difference.x) <= 46 and difference.x * facing >= -5:
+		if absf(difference.cross(melee_direction)) < 24 and difference.dot(melee_direction) <= 46 and difference.dot(melee_direction) >= -5:
 			var priority := 0 if candidate is IntroGuard and candidate.asleep else 1
 			if (priority > target_priority or (priority == target_priority and difference.length_squared() < reach)) and level.can_melee_reach(global_position, point):
 				target = candidate
@@ -443,8 +446,11 @@ func _draw() -> void:
 		draw_set_transform(origin + Vector2(0, -5 * scale_y), head_angle, Vector2(head_facing, scale_y))
 		draw_texture_rect_region(sprite.texture, Rect2(-16, -11, 32, 13), Rect2(frame_x, 0, 32, 13), sprite.modulate)
 		draw_set_transform(Vector2.ZERO)
-	if has_supplies and controls.active == "shank" and not is_dead and not in_hiding_spot and melee_anim <= 0:
-		draw_set_transform(Vector2(facing*8, 2), facing*.25, Vector2(facing,1))
+	if has_supplies and controls.active == "shank" and not is_dead and not in_hiding_spot:
+		var direction := knife_aim_direction()
+		var flip := -1.0 if direction.x < 0 else 1.0
+		var swing := sin(melee_anim / MELEE_ANIM_TIME * PI) * 0.7
+		draw_set_transform(Vector2(0,-4) + direction * 8, direction.angle() + flip * (0.25 - swing), Vector2(1,flip))
 		draw_texture_rect(preload("res://scripts/weapon_art.gd").TEXTURES.shank,Rect2(0,-13,18,18),false)
 		draw_set_transform(Vector2.ZERO)
 	if has_gun and controls.active in guns and not is_dead and not in_hiding_spot:
@@ -455,7 +461,7 @@ func _draw() -> void:
 	if controls.has_guitar and controls.active == "guitar" and not is_dead and not in_hiding_spot:
 		var direction := weapon_aim_direction()
 		var flip := -1.0 if direction.x < 0 else 1.0
-		var strum_tilt := sin(controls.strum_flash / 0.35 * PI) * 0.1
+		var strum_tilt := -flip * PI / 3 if controls.guitar_guarding() else sin(controls.strum_flash / 0.35 * PI) * 0.1
 		draw_set_transform(guitar_sound_origin(), direction.angle() + flip * PI / 4 + strum_tilt, Vector2(1, flip))
 		draw_texture_rect(preload("res://scripts/weapon_art.gd").TEXTURES.guitar, Rect2(-10, -20, 30, 30), false)
 		draw_set_transform(Vector2.ZERO)
@@ -522,6 +528,9 @@ func try_mantle() -> bool:
 	return true
 
 ## One normalized direction for the gun artwork, projectile and controller ADS reticle.
+func knife_aim_direction() -> Vector2:
+	return melee_direction if melee_anim > 0.0 else weapon_aim_direction()
+
 func weapon_aim_direction() -> Vector2:
 	var direction := (get_global_mouse_position() - global_position) if mouse_aim else (aim_direction if controls.pad_aim else Vector2(facing, 0))
 	return direction.normalized() if direction.length_squared() > 0.01 else Vector2(-1 if facing < 0 else 1, 0)

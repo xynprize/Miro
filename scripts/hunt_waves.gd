@@ -16,6 +16,7 @@ var next_wave_at := 0.0
 var run_done := false
 var thoughts_said := 0
 var floor_waved := {}
+var next_keeper := 0
 
 var started := false
 var world_width := 1680.0
@@ -39,7 +40,7 @@ func send_runners() -> void:
 		guard.level = level
 		guard.illness_started = true
 		guard.weapon_kind = "pistol"
-		level.world_features.name_keeper(guard, 5, index)
+		name_reinforcement(guard)
 		level.get_node("Guards").add_child(guard)
 		guard.set_physics_process(false)
 		guard.collision_layer = 0
@@ -109,7 +110,16 @@ func spread(points: Array) -> Array:
 func wave_clear() -> bool:
 	return wave_guards.all(func(guard): return not is_instance_valid(guard) or guard.is_dead or guard.asleep or guard.alert_state == 0)
 
+func name_reinforcement(guard: Node) -> void:
+	# Reinforcement identities are unique; a named Keeper cannot die and return in the next wave.
+	var names: Array = level.world_features.roster.get("hunt_reinforcements",[])
+	if next_keeper < names.size():level.world_features.assign_keeper(guard,str(names[next_keeper]))
+	next_keeper += 1
+
 func send_wave() -> void:
+	var player_row: float = level.player.position.y
+	var nearby: Array = level.guards().filter(func(g):return not runners.has(g) and not g.is_dead and not g.asleep and absf(g.position.y-player_row)<48 and absf(g.position.x-level.player.position.x)<220)
+	if nearby.size() >= 4:return
 	waves_sent += 1
 	wave_guards.clear()
 	var player = level.player
@@ -127,7 +137,7 @@ func send_wave() -> void:
 		guard.illness_started = true
 		guard.wave_guard = true
 		guard.weapon_kind = "smg" if index % 3 == 2 else "pistol"
-		level.world_features.name_keeper(guard, 5, index + waves_sent)
+		name_reinforcement(guard)
 		level.get_node("Guards").add_child(guard)
 		guard.alert_state = IntroGuard.State.SEARCH
 		guard.pursuing = true

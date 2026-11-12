@@ -3673,17 +3673,26 @@
       {
         "kind": "turret",
         "position": [
+          1092,
+          624
+        ],
+        "legacy_position": [
           966,
           644
-        ]
+        ],
+        "mount": "left"
       },
       {
         "kind": "turret",
         "position": [
+          1652,
+          624
+        ],
+        "mount": "left",
+        "legacy_position": [
           1302,
           672
-        ],
-        "mount": "ceiling"
+        ]
       },
       {
         "kind": "spikes",
@@ -3718,22 +3727,32 @@
       {
         "kind": "turret",
         "position": [
+          28,
+          820
+        ],
+        "legacy_position": [
           300,
           868
-        ]
+        ],
+        "mount": "right"
       },
       {
         "kind": "turret",
         "position": [
+          28,
+          1016
+        ],
+        "legacy_position": [
           140,
           1064
-        ]
+        ],
+        "mount": "right"
       },
       {
         "kind": "turret",
         "position": [
           1652,
-          1022
+          1016
         ],
         "legacy_position": [
           1540,
@@ -3744,15 +3763,20 @@
       {
         "kind": "turret",
         "position": [
+          0,
+          1212
+        ],
+        "legacy_position": [
           140,
           1260
-        ]
+        ],
+        "mount": "left"
       },
       {
         "kind": "turret",
         "position": [
           1652,
-          1204
+          1212
         ],
         "legacy_position": [
           1540,

@@ -17,7 +17,7 @@ func floor_scene(number: int) -> void:
  level.world_features.set_process(false)
 
 func run() -> void:
- for number in [2,3,5]:
+ for number in [2,3,4,5]:
   await floor_scene(number)
   var moved:=0
   for turret in get_nodes_in_group("tower_turrets"):
@@ -33,7 +33,7 @@ func run() -> void:
    check(level.security_checkpoint.has(id),"Moved turret retains legacy checkpoint identity")
    level.restore_checkpoint_security({"security":level.security_checkpoint.duplicate(true)})
    check(turret.disabled,"Moved turret restores hacked/disabled state")
-  check(moved==(2 if number==3 else 1),"All moved turrets verified on floor %d"%number)
+  check(moved==level.definition.get("features",{}).get("hazards",[]).filter(func(h):return h.kind=="turret" and h.has("legacy_position")).size(),"All moved turrets verified on floor %d"%number)
  for number in [4,5]:
   await floor_scene(number)
   var w=level.world_features
@@ -41,6 +41,17 @@ func run() -> void:
   var flasks=w.props.filter(func(n):return n.get_meta("lab_flask",false))
   check(flasks.size()==(12 if number==4 else 2),"Exactly the existing red flasks on floor %d" % number)
   var nav=load("res://scripts/guard_navigation.gd").new(level)
+  for bottle in w.props.filter(func(n):return n.get_meta("lab_bottle",false)):
+   p.global_position=bottle.global_position+Vector2(-4,-2)
+   p.health=p.max_health
+   check(w.try_interact() and not bottle.used,"Full health preserves the pale lab bottle")
+   p.health=p.max_health-1
+   check(w.try_interact() and bottle.used and p.health==p.max_health,"Pale lab bottle heals half a heart")
+   var consumed:Array=level.used_potion_positions()
+   bottle.used=false
+   level.restore_checkpoint_loot({"used_potions":consumed})
+   await frames(5)
+   check(bottle.used,"Pale bottle consumption survives checkpoint restore")
   for flask in flasks:
    var found:=false
    for point in nav.points:

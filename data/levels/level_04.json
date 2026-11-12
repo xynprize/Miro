@@ -3782,31 +3782,50 @@
       {
         "kind": "turret",
         "position": [
+          980,
+          848
+        ],
+        "legacy_position": [
           1246,
           868
-        ]
-      },
-      {
-        "kind": "turret",
-        "position": [
-          910,
-          448
-        ]
-      },
-      {
-        "kind": "turret",
-        "position": [
-          1190,
-          1064
-        ]
+        ],
+        "mount": "right"
       },
       {
         "kind": "turret",
         "position": [
           672,
-          350
+          400
+        ],
+        "legacy_position": [
+          910,
+          448
         ],
         "mount": "right"
+      },
+      {
+        "kind": "turret",
+        "position": [
+          812,
+          1044
+        ],
+        "legacy_position": [
+          1190,
+          1064
+        ],
+        "mount": "right"
+      },
+      {
+        "kind": "turret",
+        "position": [
+          616,
+          350
+        ],
+        "mount": "left",
+        "legacy_position": [
+          672,
+          350
+        ]
       },
       {
         "kind": "spikes",
@@ -3841,18 +3860,28 @@
       {
         "kind": "turret",
         "position": [
+          28,
+          820
+        ],
+        "disabled": true,
+        "legacy_position": [
           260,
           868
         ],
-        "disabled": true
+        "mount": "right"
       },
       {
         "kind": "turret",
         "position": [
+          1652,
+          1016
+        ],
+        "disabled": true,
+        "legacy_position": [
           1480,
           1064
         ],
-        "disabled": true
+        "mount": "left"
       }
     ],
     "conversation": null,

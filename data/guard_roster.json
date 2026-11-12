@@ -974,7 +974,7 @@
     "Mott": {
       "alert": "Down here? Nobody comes down here. Except you, apparently.",
       "lost": "Check the shadows. He's close.",
-      "body": "Bram? Bram, get up. This isn't funny.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[gruff]",
       "idle": [
         "Bottom floor, bottom pay. Story of my life.",
@@ -1198,7 +1198,7 @@
     "Dara": {
       "alert": "Records are off limits! Step away from the screen!",
       "lost": "Where did he go?",
-      "body": "Dara's down. Somebody tell the desk, they'll want the keys.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[stern]",
       "idle": [
         "The screen hums at night. I've started humming back.",
@@ -1296,7 +1296,7 @@
     "Fenna": {
       "alert": "Halt! Don't read that file!",
       "lost": "Where'd he get to?",
-      "body": "Fenna's down. The file stays closed.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[firm]",
       "idle": [
         "The sick ward files are the worst to guard.",
@@ -1324,7 +1324,7 @@
     "Pru": {
       "alert": "Intruder at the ward terminal!",
       "lost": "Check the shadows. He's close.",
-      "body": "Pru? Somebody get the nurse, now!",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[urgent]",
       "idle": [
         "I keep the ward terminal warm for the doctor.",
@@ -1338,7 +1338,7 @@
     "Garrick": {
       "alert": "Hands off the foundation terminal!",
       "lost": "Where did he go?",
-      "body": "Garrick down at the foundation! Send the doctor!",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[gruff]",
       "idle": [
         "Everything above rests on this terminal. I keep it that way.",
@@ -1352,7 +1352,7 @@
     "Brandt": {
       "alert": "Hold that corridor! Intruder in my section!",
       "lost": "He was just here!",
-      "body": "Brandt is down! Medic, move!",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[commanding]",
       "idle": [
         "Eyes front. The records do not guard themselves.",
@@ -1366,7 +1366,7 @@
     "Sable": {
       "alert": "Found you. Your file says you'd run.",
       "lost": "Where'd he get to?",
-      "body": "Sable down. Somebody log that, and fetch the nurse.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[dry]",
       "idle": [
         "I have read every file on this floor. Yours was the dullest.",
@@ -1380,7 +1380,7 @@
     "Tolliver": {
       "alert": "There. By the sealed door. Quietly now.",
       "lost": "He can't have just vanished.",
-      "body": "Tolliver is hurt. Keep it quiet, and get help.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[whispers]",
       "idle": [
         "Sealed rooms hold their breath. I hold mine with them.",
@@ -1394,7 +1394,7 @@
     "Maren": {
       "alert": "Oh no. Not on my shift. Stop right there.",
       "lost": "Check the shadows. He's close.",
-      "body": "Maren is down. Somebody wake the doctor.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[tired]",
       "idle": [
         "Four nights without sleep. The ward lights start to hum.",
@@ -1408,7 +1408,7 @@
     "Voss": {
       "alert": "Not on my corridor, friend. Stop!",
       "lost": "Where did he go?",
-      "body": "Voss is down. Great. Somebody bring a stretcher.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[sarcastic]",
       "idle": [
         "They gave me the quiet corridor. Quiet is when things go wrong.",
@@ -1422,7 +1422,7 @@
     "Hobb": {
       "alert": "Not on my last shift, you don't! Stop!",
       "lost": "He was just here!",
-      "body": "Hobb's down. Somebody tell my wife I tried.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[grumbling]",
       "idle": [
         "Eleven days to retirement. Do not make it twelve.",
@@ -1436,7 +1436,7 @@
     "Tamsin": {
       "alert": "Come on, then. Show me what you've got.",
       "lost": "Where'd he get to?",
-      "body": "Tamsin is down. Lucky punch. Get the medic.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[confident]",
       "idle": [
         "Fear is a habit. I never picked it up.",
@@ -1450,7 +1450,7 @@
     "Corvin": {
       "alert": "Intruder! Section four, on the double!",
       "lost": "He can't have just vanished.",
-      "body": "Corvin is down. Section four needs relief.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[clipped]",
       "idle": [
         "Regulations are not suggestions. Remember that.",
@@ -1464,7 +1464,7 @@
     "Ilka": {
       "alert": "I see you. Stop where you are.",
       "lost": "Check the shadows. He's close.",
-      "body": "Ilka is down. Quietly, now. Get help.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[calm]",
       "idle": [
         "Quiet floors are the loud ones. Remember that.",
@@ -1478,7 +1478,7 @@
     "Dunmore": {
       "alert": "I've seen worse than you. Halt!",
       "lost": "Where did he go?",
-      "body": "Dunmore is hit. Tell the others I held the line.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[gruff]",
       "idle": [
         "Back in the border war we had no ward. We had ditches.",
@@ -1492,7 +1492,7 @@
     "Perrin": {
       "alert": "Well, I'll be. Hold it right there, friend!",
       "lost": "He was just here!",
-      "body": "Perrin's down. Tell my mama it was quick.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[drawling]",
       "idle": [
         "I miss the creek behind our house. This place has no creek.",
@@ -1506,7 +1506,7 @@
     "Yara": {
       "alert": "Not in my corridor. Stop at once!",
       "lost": "Where'd he get to?",
-      "body": "Yara is down. Somebody fetch the doctor, now.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[stern]",
       "idle": [
         "I inspect every post twice. Then I inspect the inspectors.",
@@ -1520,7 +1520,7 @@
     "Rocco": {
       "alert": "Hey! Hey, you! Get back here!",
       "lost": "He can't have just vanished.",
-      "body": "Rocco's down! Somebody get the doctor!",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[cocky]",
       "idle": [
         "I bet the new guy ten bucks you wouldn't come this way.",
@@ -1534,7 +1534,7 @@
     "Ormond": {
       "alert": "Oi! Over here, everyone, he's on the ledge!",
       "lost": "Check the shadows. He's close.",
-      "body": "Ormond's down! Somebody put the kettle on and fetch a medic!",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[chatty]",
       "idle": [
         "Proper cold up here. I keep a flask under the ledge, mind.",
@@ -1548,7 +1548,7 @@
     "Delphine": {
       "alert": "There you are. I knew the tower would give you away.",
       "lost": "Where did he go?",
-      "body": "Delphine is down. The tower will remember this.",
+      "body": "A Keeper is down. Get help.",
       "delivery": "[cold]",
       "idle": [
         "The tower keeps its order. I keep the tower's order.",
@@ -1611,5 +1611,8 @@
     "5": [
       "Garrick"
     ]
-  }
+  },
+  "hunt_reinforcements": [
+    "Rocco"
+  ]
 }

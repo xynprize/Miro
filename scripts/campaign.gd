@@ -248,6 +248,11 @@ func total(key: String) -> int:
 	return sum
 
 ## MISSING (stealth) or HUNTED (offense), from committed floors only. Level 1 is neutral.
+func run_killed(keeper_name: String) -> bool:
+	for stats: Dictionary in floor_stats.values():
+		if keeper_name in stats.get("named_dead", []):return true
+	return false
+
 func reputation() -> String:
 	if floor_stats.is_empty():
 		return "MISSING"
