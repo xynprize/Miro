@@ -353,8 +353,9 @@ func fire_gun() -> void:
 	# Gunfire is always loud: kills cost noise.
 	level.make_noise(global_position, 600.0)
 	aim_direction = weapon_aim_direction()
-	var spread := (0.006 if controls.focus else 0.018) if equipped_gun == "pistol" else (0.014 if controls.focus else 0.04)
-	if climbing and not is_on_floor():spread += 0.09 if controls.focus else 0.14
+	var spread := (0.006 if controls.focus else 0.018) if equipped_gun == "pistol" else (0.022 if controls.focus else 0.075)
+	if climbing and not is_on_floor():
+		spread += 0.16 if controls.focus else 0.24
 	var bullet_direction := aim_direction.rotated(randf_range(-spread, spread))
 	if absf(aim_direction.x) > 0.01:
 		facing = signf(aim_direction.x)
