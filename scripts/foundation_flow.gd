@@ -75,11 +75,11 @@ func request_wave(index: int) -> void:
 
 func spawn_wave() -> void:
 	var waves: Array = level.definition.get("waves", [])
-	if row >= waves.size() and row != 3:
+	if row >= waves.size():
 		step = Step.NIRO_PENDING
 		wait_left = bar_wait()
 		return
-	var wave: Dictionary = {"spawn": [[260, 852], [820, 852]], "weapons": ["pistol", "smg"]} if row == 3 else waves[row]
+	var wave: Dictionary = waves[row]
 	var points: Array = wave.spawn.duplicate()
 	var weapons: Array = wave.weapons.duplicate()
 	# HUNTED: one extra armed Keeper per wave.
@@ -153,7 +153,7 @@ func wave_clear() -> bool:
 
 ## Keepers arrive in two waves while Niro is still on his feet (the fight's finale, as asked).
 func update_final_waves(delta: float) -> void:
-	if final_waves_sent >= (3 if engagement >= 4 else 2) or not is_instance_valid(level.brother) or level.brother.is_dead:
+	if engagement < 3 or final_waves_sent >= (3 if engagement >= 4 else 2) or not is_instance_valid(level.brother) or level.brother.is_dead:
 		return
 	final_wave_wait -= delta
 	if final_wave_wait > 0.0:
@@ -207,7 +207,7 @@ func spawn_niro() -> void:
 	level.add_child(boss)
 	level.brother = boss
 	final_waves_sent = 0
-	final_wave_wait = 0.0 if engagement >= 4 else 10.0
+	final_wave_wait = 0.0 if engagement >= 3 else 10.0
 	step = Step.NIRO if engagement <= 3 else Step.FINAL
 	niro_appeared.emit(engagement)
 	if engagement == 1:
@@ -305,7 +305,7 @@ func _physics_process(delta: float) -> void:
 		Step.WAVE:
 			if wave_clear():
 				wave_cleared.emit(row)
-				step = Step.WAVE_PENDING if waves_on_row < (4 if row == 3 else 2) else Step.NIRO_PENDING
+				step = Step.WAVE_PENDING if waves_on_row < 2 else Step.NIRO_PENDING
 				wait_left = bar_wait()
 		Step.NIRO_PENDING:
 			wait_left -= delta
@@ -318,7 +318,9 @@ func _physics_process(delta: float) -> void:
 					# Second half of the level: Robot Attack leads into the final fight.
 					music().second_section(5)
 				if current >= 3:
-					request_wave(3)
+					row = 3
+					step = Step.FINAL_PENDING
+					wait_left = bar_wait()
 					final_fight_started.emit()
 				else:
 					request_wave(current)
@@ -326,6 +328,8 @@ func _physics_process(delta: float) -> void:
 			wait_left -= delta
 			if wait_left <= 0:
 				spawn_niro()
+		Step.NIRO, Step.FINAL:
+			update_final_waves(delta)
 
 func objective() -> String:
 	match step:

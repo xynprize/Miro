@@ -96,6 +96,8 @@ func run() -> void:
 	boss = level.brother
 	level.finish_dialogue()
 	check(boss.engagement == 3 and "call" in boss.attacks(), "Third meeting can call guards")
+	await frames(2)
+	check(flow.final_waves_sent == 1 and not boss.is_dead, "Reinforcements arrive while the third Niro fight is active")
 	var before: int = flow.wave_guards.size()
 	boss.forced_attack = "call"
 	boss.current_phase = boss.Phase.TELEGRAPH
@@ -108,24 +110,9 @@ func run() -> void:
 		if not guard.is_dead and not guard.asleep and guard != boss:
 			guard.fall_asleep()
 	check(await descend_ladder(952, 200, 830), "Climb down to the deepest floor")
-	level.player.health = 99
-	var waves_seen: Dictionary = {}
-	for tick in range(1800):
-		if is_instance_valid(level.brother):
-			break
-		if flow.step == flow.Step.WAVE and not waves_seen.has(flow.waves_on_row):
-			waves_seen[flow.waves_on_row] = true
-			check(not flow.wave_clear(), "Deepest wave has active guards before Niro")
-			for guard in flow.wave_guards:
-				if is_instance_valid(guard):
-					guard.fall_asleep()
-		await frames(1)
-	check(waves_seen.size() == 4, "Four separate waves clear before the final fight")
 	level.player.health = 6
+	await frames(150)
 	boss = level.brother
-	if not is_instance_valid(boss):
-		quit(1)
-		return
 	check(boss.engagement == 4 and boss.health == 6, "Final fight on the deepest floor")
 	check(level.dialogue_event == "niro_4" and str(level.dialogue[0][1]).length() > 10, "Final meeting opens with the branch line")
 	level.finish_dialogue()
