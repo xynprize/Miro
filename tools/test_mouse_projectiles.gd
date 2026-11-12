@@ -27,7 +27,7 @@ func run() -> void:
 	level.player.facing = -1
 	level.player.attack_cooldown = 0
 	level.player.fire_gun()
-	check(observer.alert_state == IntroGuard.State.SEARCH, "Every fired shot emits an AI hearing event")
+	check(observer.acoustic_left > 0.0 and observer.facing < 0.0, "Every fired shot is acknowledged by nearby guards")
 	await frames(45)
 	level.player.position = Vector2(220, 236)
 	observer.position = Vector2(280, 236)

@@ -45,7 +45,7 @@ func run() -> void:
 		check(min_x<900,"Blocked search covers a wider reachable area at %dHz"%rate)
 		# Visible Miro stands on the actual two-block structure; the guard has a gun.
 		g.set_physics_process(false);g.position=Vector2(950,236);g.velocity=Vector2.ZERO;g.facing=1;g.distracted=false
-		level.player.position=Vector2(1036,180);level.player.in_hiding_spot=false;level.player.is_concealed=false;level.player.crouching=false
+		level.player.position=Vector2(1036,180);level.player.in_hiding_spot=false;level.player.end_stealth();level.player.crouching=false
 		level.player.set_physics_process(true)
 		await frames(rate/5)
 		level.player.set_physics_process(false)

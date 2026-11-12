@@ -153,6 +153,7 @@ func controls_locked() -> bool:
 	return is_instance_valid(get_node("/root/InputBindings").panel) or (is_instance_valid(player.controls) and player.controls.locked()) or is_instance_valid(player.pending_guard) or paused or not dialogue.is_empty() or completed or (is_instance_valid(world_features) and world_features.modal_open())
 
 func _unhandled_input(event: InputEvent) -> void:
+	if player.controls.watching_cameras():return
 	if is_instance_valid(get_node("/root/InputBindings").panel): return
 	if event.is_pressed() and get_node("/root/InputBindings").matches(event, "return_menu"):
 		get_tree().paused = false
@@ -201,6 +202,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if not paused:
 		elapsed += delta
+		advance_jev_search_plan()
 		update_stuck(delta)
 		message_left = maxf(0, message_left - delta)
 		shot_flash = maxf(0, shot_flash - delta)
@@ -740,7 +742,10 @@ func plant_c4() -> void:
 		shot_flash = 0.4
 		emit_effect("breach", $Interactables/CellLock.global_position)
 		get_node("/root/SoundFX").play_sound("collapse", -20)
-		make_noise(player.global_position, 700)
+		# Preserve the scripted tutorial breach response.
+		for guard in guards():
+			if not guard.is_dead and guard.global_position.distance_to(player.global_position) < 700.0:
+				guard.investigate(player.global_position)
 		notify("The lock bursts. Keepers heard it! Find shadow or fight your way through.", 7)
 	else:
 		notify("Out of optional C4. The marked support still has its story charge.")
@@ -752,10 +757,319 @@ func open_door() -> void:
 	$Interactables/CellLock.activated = true
 	$Interactables/CellLock.queue_redraw()
 
+var response_point := Vector2.INF
+var response_tick := -100000
+var response_urgent := false
+var incident_id := 0
+var model_log_ready := false
+## Godot owns the first response. Qwen can select the immediate cover post;
+## Jev is deliberately delayed until the sighting has become a search.
+var jev_plan_due_tick := -1
+var jev_plan_point := Vector2.INF
+var jev_plan_radius := 0.0
+var jev_plan_trace := -1
+
+# One reservation per guard and one guard per post. Positions also conflict
+# across different incidents when their posts are too close.
+var guard_assignments: Dictionary[int, Dictionary] = {}
+
+func prune_guard_assignments(tick: int) -> void:
+	for id: int in guard_assignments.keys():
+		var guard := instance_from_id(id) as IntroGuard
+		var job: Dictionary = guard_assignments[id]
+		if guard == null or guard.is_dead or guard.asleep or guard.sees_player or guard.alert_state == IntroGuard.State.ALERT or tick >= int(job.until):
+			guard_assignments.erase(id)
+		elif job.role == "investigate" and (guard.alert_state != IntroGuard.State.SEARCH or guard.sweep_origin != INF):
+			guard_assignments.erase(id)
+
+func guard_post_free(point: Vector2) -> bool:
+	for job: Dictionary in guard_assignments.values():
+		var gap: Vector2 = job.point - point
+		if absf(gap.y) < 28.0 and absf(gap.x) < 56.0:
+			return false
+	return true
+
+func reserve_guard_post(guard: IntroGuard, role: String, point: Vector2, tick: int, seconds: float) -> void:
+	guard_assignments[guard.get_instance_id()] = {
+		"role": role, "point": point,
+		"until": tick + ceili(Engine.physics_ticks_per_second * seconds),
+	}
+
 func make_noise(point: Vector2, radius: float) -> void:
+	# Everyone in earshot acknowledges the sound, while only the coordinator's
+	# investigator moves to it. This prevents both obliviousness and pileups.
 	for guard in guards():
-		if not guard.is_dead and guard.global_position.distance_to(point) < radius:
-			guard.investigate(point)
+		if guard.is_dead or guard.asleep or guard.sees_player or guard.has_method("begin_recovery"):continue
+		var gap: Vector2 = guard.global_position - point
+		var same_storey: bool = world_features.security_storey(guard.global_position.y)==world_features.security_storey(point.y)
+		if same_storey and gap.length() < radius:
+			guard.distracted = false
+			guard.conversation_hold = false
+			guard.turn_away_left = 0.0
+			guard.face_toward(point.x)
+			guard.turn_wait = maxf(guard.turn_wait, 0.8)
+			guard.acoustic_left = 1.2
+	coordinate_search(point, radius)
+
+## One investigator and one nearby sentry. Unassigned guards keep their posts.
+## Only this incident's known location is shared; the live player position is not used.
+func coordinate_search(point: Vector2, radius: float, urgent := false, witness: IntroGuard = null) -> void:
+	var tick := Engine.get_physics_frames()
+	prune_guard_assignments(tick)
+	if tick - response_tick < Engine.physics_ticks_per_second * 2 and response_point.distance_to(point) < 72.0 and (not urgent or response_urgent):
+		return
+	var available: Array[IntroGuard] = []
+	for node in guards():
+		var guard := node as IntroGuard
+		if guard == null or guard.has_method("begin_recovery") or guard.is_dead or guard.asleep or guard.sees_player or guard.alert_state == IntroGuard.State.ALERT or guard.crossing != null:
+			continue
+		if not guard_assignments.has(guard.get_instance_id()) and guard.global_position.distance_to(point) < radius:
+			available.append(guard)
+	if available.is_empty():
+		return
+	available.sort_custom(func(a: IntroGuard, b: IntroGuard) -> bool:
+		if a == witness or b == witness:
+			return a == witness and b != witness
+		var da := a.global_position.distance_squared_to(point)
+		var db := b.global_position.distance_squared_to(point)
+		return a.get_instance_id() < b.get_instance_id() if is_equal_approx(da, db) else da < db)
+	var nav = available[0].navigation()
+	var node_id: int = nav.nearest(point)
+	if node_id < 0:
+		# A ceiling-mounted watcher makes noise above walking height. Project
+		# that report onto its own storey's reachable floor, never another tier.
+		var best := INF
+		for id in nav.points.size():
+			var stand: Vector2 = nav.points[id]
+			if world_features.security_storey(stand.y)!=world_features.security_storey(point.y):continue
+			var distance := stand.distance_squared_to(point)
+			if distance<best:
+				best=distance
+				node_id=id
+	if node_id < 0:
+		return
+	var target: Vector2 = nav.points[node_id]
+	if not guard_post_free(target):
+		return
+	for investigator: IntroGuard in available:
+		var path: Array[Dictionary] = nav.route(investigator.global_position, target)
+		if investigator.global_position.distance_to(target) > 24.0 and (path.is_empty() or path[-1].point.distance_to(target) > 24.0):
+			continue
+		investigator.investigate(target)
+		investigator.pursuing = urgent
+		reserve_guard_post(investigator, "investigate", target, tick, 12.0 if urgent else 6.0)
+		if urgent:
+			investigator.search_left = 12.0
+			investigator.suspicion = 1.0
+		var cover_ids: Array[int] = []
+		for sentry: IntroGuard in available:
+			var gap := sentry.global_position - target
+			if sentry == investigator or absf(gap.y) > 24.0 or absf(gap.x) < 56.0 or absf(gap.x) > 220.0:
+				continue
+			if cover_post_available(sentry):
+				cover_ids.append(sentry.get_instance_id())
+		incident_id += 1
+		response_point = point
+		response_tick = tick
+		response_urgent = urgent
+		assign_cover(cover_ids, target)
+		# Keep Jev's wider search as an open future assignment, rather than a
+		# second opinion on Qwen's immediate cover decision.
+		jev_plan_due_tick = tick + ceili(Engine.physics_ticks_per_second * 1.25)
+		jev_plan_point = target
+		jev_plan_radius = radius
+		jev_plan_trace = Time.get_ticks_usec()
+		return
+
+var local_tactics_busy := false
+var jev_shadow: Node
+
+func advance_jev_search_plan() -> void:
+	prune_guard_assignments(Engine.get_physics_frames())
+	if not model_log_ready:
+		model_log_ready = true
+		print("GUARD_AI_READY qwen=%s jev=%s key_present=%s" % ["--local-guard-model" in OS.get_cmdline_user_args(), "--jev-guard-shadow" in OS.get_cmdline_user_args(), not OS.get_environment("JEV_API_KEY").is_empty() or not OS.get_environment("TYPESAFE_API_KEY").is_empty()])
+	if jev_plan_due_tick < 0 or Engine.get_physics_frames() < jev_plan_due_tick:
+		return
+	if local_tactics_busy:return
+	var point := jev_plan_point
+	var radius := jev_plan_radius
+	var trace := jev_plan_trace
+	var incident := incident_id
+	jev_plan_due_tick = -1
+	# Direct sight always wins. A late suggestion must never interrupt pursuit.
+	if point == Vector2.INF or Engine.get_physics_frames() - response_tick > Engine.physics_ticks_per_second * 10:
+		return
+	for node in guards():
+		var seen := node as IntroGuard
+		if seen != null and seen.sees_player:
+			return
+	var candidates: Array[IntroGuard] = []
+	for node in guards():
+		var guard := node as IntroGuard
+		if perimeter_post_available(guard) and guard.global_position.distance_to(point) < radius:
+			candidates.append(guard)
+	if candidates.is_empty():
+		return
+	var fallback := "left" if int(absf(point.x)) % 2 == 0 else "right"
+	if "--jev-guard-shadow" not in OS.get_cmdline_user_args():
+		apply_jev_search_assignment(candidates, point, fallback)
+		return
+	if jev_shadow == null:
+		jev_shadow = preload("res://scripts/jev_guard_shadow.gd").new()
+		add_child(jev_shadow)
+	var facts: Array[Dictionary] = []
+	for guard in candidates:
+		facts.append({"id": str(guard.get_instance_id()), "xy": [guard.global_position.x, guard.global_position.y], "distance_to_incident": guard.global_position.distance_to(point)})
+	var approaches: Array[Dictionary] = []
+	for strategy in ["left","right","up","down"]:
+		var post := search_strategy_point(candidates[0], point, strategy)
+		if post != Vector2.INF:approaches.append({"strategy":strategy,"xy":[post.x,post.y]})
+	var state := {"incident": [point.x, point.y], "candidates": facts, "assigned_posts": guard_assignments.values(), "reachable_approaches":approaches}
+	jev_shadow.plan_search(trace, state, func(strategy: String) -> void:
+		if not model_incident_valid(incident):
+			print("JEV: rejected stale trace=%d incident=%d" % [trace, incident])
+			return
+		# Rebuild eligibility at application time: Jev is advisory and may be late.
+		var fresh: Array[IntroGuard] = []
+		for node in guards():
+			var guard := node as IntroGuard
+			if perimeter_post_available(guard) and guard.global_position.distance_to(point) < radius:
+				fresh.append(guard)
+		if apply_jev_search_assignment(fresh, point, strategy):
+			print("JEV: perimeter applied trace=%d strategy=%s" % [trace, strategy])
+	)
+
+func apply_jev_search_assignment(candidates: Array[IntroGuard], point: Vector2, strategy: String) -> bool:
+	if candidates.is_empty():
+		return false
+	for guard in candidates:
+		if not perimeter_post_available(guard):continue
+		var nav = guard.navigation()
+		var post: Vector2 = search_strategy_point(guard, point, strategy)
+		if post == Vector2.INF:continue
+		if not guard_post_free(post):
+			continue
+		var path: Array[Dictionary] = nav.route(guard.global_position, post)
+		if guard.global_position.distance_to(post) > 24.0 and (path.is_empty() or path[-1].point.distance_to(post) > 24.0):
+			continue
+		if strategy == "hold":
+			guard.face_toward(point.x)
+			guard.turn_wait = maxf(guard.turn_wait, 7.0)
+		else:guard.investigate(post)
+		guard.pursuing = false
+		guard.search_left = maxf(guard.search_left, 7.0)
+		reserve_guard_post(guard, "perimeter", post, Engine.get_physics_frames(), 7.0)
+		return true
+	return false
+
+func search_strategy_point(guard: IntroGuard, point: Vector2, strategy: String) -> Vector2:
+	if strategy == "hold":return guard.global_position
+	var nav = guard.navigation()
+	if strategy in ["left","right"]:
+		return nav.search_goal(point, -1.0 if strategy=="left" else 1.0, guard.get_instance_id())
+	var best := Vector2.INF
+	var distance := INF
+	for post: Vector2 in nav.points:
+		var dy: float = (post.y-point.y)*(-1.0 if strategy=="up" else 1.0)
+		if dy < 80.0 or dy > 280.0 or absf(post.x-point.x)>280.0 or not guard_post_free(post):continue
+		var path: Array[Dictionary] = nav.route(point,post)
+		if path.is_empty() or path[-1].point.distance_to(post)>24.0:continue
+		if point.distance_squared_to(post)<distance:
+			distance=point.distance_squared_to(post)
+			best=post
+	return best
+
+func cover_post_available(guard: IntroGuard) -> bool:
+	return is_instance_valid(guard) and not guard.is_dead and not guard.asleep and not guard.sees_player and guard.alert_state == IntroGuard.State.PATROL and not guard_assignments.has(guard.get_instance_id()) and ladder_at(guard.global_position) == null and guard_post_free(guard.global_position)
+
+func perimeter_post_available(guard: IntroGuard) -> bool:
+	# A guard who has only become suspicious can still take the later perimeter;
+	# never pull an active alert, pursuit, ladder crossing, or reserved guard.
+	return is_instance_valid(guard) and not guard.is_dead and not guard.asleep and not guard.sees_player and not guard.pursuing and guard.alert_state != IntroGuard.State.ALERT and not guard_assignments.has(guard.get_instance_id()) and guard.crossing == null and ladder_at(guard.global_position) == null
+
+func apply_cover(ids: Array[int], target: Vector2, preferred := 0) -> bool:
+	var tick := Engine.get_physics_frames()
+	prune_guard_assignments(tick)
+	if preferred != 0 and ids.has(preferred):
+		ids.erase(preferred)
+		ids.push_front(preferred)
+	for id: int in ids:
+		var guard := instance_from_id(id) as IntroGuard
+		if cover_post_available(guard) and guard.global_position.distance_to(target) < 224.0:
+			guard.face_toward(target.x)
+			guard.turn_wait = maxf(guard.turn_wait, 2.5)
+			reserve_guard_post(guard, "cover", guard.global_position, tick, 2.5)
+			return true
+	return false
+
+func assign_cover(ids: Array[int], target: Vector2) -> void:
+	if ids.size() < 2 or local_tactics_busy or "--local-guard-model" not in OS.get_cmdline_user_args():
+		apply_cover(ids, target)
+		return
+	var choices: Array[String] = []
+	var facts: Array[Dictionary] = []
+	for id: int in ids:
+		var guard := instance_from_id(id) as IntroGuard
+		var point := guard.global_position
+		choices.append(str(id))
+		var ladder_gap := 9999.0
+		for area in areas.get_children():
+			if area.kind == "ladder" and absf(area.global_position.y - point.y) < area.area_size.y * 0.5 + 24.0:
+				ladder_gap = minf(ladder_gap, absf(area.global_position.x - point.x))
+		facts.append({"id": str(id), "xy": [point.x, point.y], "distance_to_incident": point.distance_to(target), "ladder_distance_x": ladder_gap})
+	var reserved: Array[Dictionary] = []
+	for job: Dictionary in guard_assignments.values():
+		var at: Vector2 = job.point
+		reserved.append({"role": job.role, "xy": [at.x, at.y]})
+	var state := {"incident": [target.x, target.y], "candidates": facts, "assigned_posts": reserved}
+	var trace := Time.get_ticks_usec()
+	var incident := incident_id
+	var decision_state := {"assigned": false}
+	var request := HTTPRequest.new()
+	request.timeout = 1.5
+	request.body_size_limit = 16384
+	add_child(request)
+	local_tactics_busy = true
+	request.request_completed.connect(func(result: int, status: int, _headers: PackedStringArray, bytes: PackedByteArray) -> void:
+		local_tactics_busy = false
+		request.queue_free()
+		if not model_incident_valid(incident):
+			print("LOCAL_GUARD_MODEL: stale trace=%d" % trace)
+			return
+		var chosen := 0
+		if result == HTTPRequest.RESULT_SUCCESS and status == 200:
+			var envelope = JSON.parse_string(bytes.get_string_from_utf8())
+			if envelope is Dictionary and envelope.get("message") is Dictionary:
+				var decision = JSON.parse_string(str(envelope.message.get("content", "")))
+				if decision is Dictionary:
+					var choice := str(decision.get("guard", ""))
+					if choices.has(choice):
+						chosen = int(choice)
+						print("LOCAL_GUARD_MODEL: cover accepted trace=%d cover=%s" % [trace, choice])
+		if not decision_state.assigned:
+			if chosen == 0:print("LOCAL_GUARD_MODEL: fallback trace=%d result=%d status=%d" % [trace, result, status])
+			decision_state.assigned = apply_cover(ids, target, chosen)
+	, CONNECT_ONE_SHOT)
+	var payload := {
+		"model": "qwen3:0.6b", "stream": false, "think": false, "keep_alive": "30m",
+		"options": {"temperature": 0, "num_ctx": 1024, "num_predict": 24},
+		"format": {"type": "object", "required": ["guard"], "properties": {"guard": {"type": "string", "enum": choices}}},
+		"messages": [{"role": "system", "content": "Choose one candidate to cover the approach from their current post. The investigator is already assigned. Prefer useful distance from the incident. Return only the candidate ID."},
+			{"role": "user", "content": JSON.stringify(state)}],
+	}
+	print("LOCAL_GUARD_MODEL: request trace=%d incident=%d candidates=%d" % [trace, incident, ids.size()])
+	if request.request("http://127.0.0.1:11434/api/chat", PackedStringArray(["Content-Type: application/json"]), HTTPClient.METHOD_POST, JSON.stringify(payload)) != OK:
+		local_tactics_busy = false
+		request.queue_free()
+		if not decision_state.assigned:
+			decision_state.assigned = apply_cover(ids, target)
+
+func model_incident_valid(expected: int) -> bool:
+	if expected != incident_id or player.is_dead or completed or Engine.get_physics_frames()-response_tick > Engine.physics_ticks_per_second*10:return false
+	for guard in guards():
+		if not guard.is_dead and guard.sees_player:return false
+	return true
 
 func notify(text: String, duration: float = 4.0) -> void:
 	message = text

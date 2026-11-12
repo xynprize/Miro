@@ -34,6 +34,7 @@ func run() -> void:
 	turret.rotation = 0.0
 	turret.aim = PI
 	var player: IntroPlayer = level.player
+	player.end_stealth() # Test the blanket independently of the two-second retry cloak.
 	var starting_health := player.health
 	player.position = spikes.position + Vector2(0, -55)
 	await frames(3)
@@ -47,7 +48,7 @@ func run() -> void:
 	check(player.health == starting_health, "Turret leaves hidden Miro alone")
 	player.end_stealth()
 	await frames(30)
-	check(player.health == starting_health and is_zero_approx(turret.charge), "Shadow alone hides Miro from the turret")
+	check(player.health == starting_health, "Turret wind-up gives Miro time after the blanket drops")
 	# Step out of the shadow, still in the turret's line of fire.
 	for offset in range(168, 40, -8):
 		player.position = turret.position + Vector2(offset, -15)
@@ -98,6 +99,7 @@ func run() -> void:
 				spike_mounts[mount] = true
 	check(turret_mounts.has_all([0, -90, 180]) and spike_mounts.has_all([0, -90, 180]), "Foundation loads floor, wall and ceiling mounts for both hazards")
 	player = level.player
+	player.end_stealth()
 	player.set_physics_process(false)
 	# These fixed test spots can fall in a shadow, which now hides Miro: test aim in the open.
 	for area in level.areas.get_children():

@@ -51,7 +51,7 @@ func _draw() -> void:
 	for point in TORCHES:
 		torch(point)
 	# Crates are real props now (world_features.spawn_crate): solid on top, hide inside with E.
-	for point in [Vector2(350, 448), Vector2(700, 672), Vector2(1035, 252)]:
+	for point in [Vector2(450, 448), Vector2(700, 672), Vector2(1035, 252)]:
 		draw_grounded(SHROOMS, point)
 	for point in [Vector2(730, 206), Vector2(295, 402), Vector2(995, 619)]:
 		draw_polyline(PackedVector2Array([point + Vector2(-5, 0), point + Vector2(0, 5), point + Vector2(5, 0)]), WARM, 1)

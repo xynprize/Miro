@@ -114,6 +114,9 @@ func use_station(id: String) -> bool:
 	# A guard who followed this combat route can intercept E with a takedown
 	# or loot action. Finish that real interaction before trying the station.
 	for attempt in range(20):
+		if attempt==19:
+			var prop = level.world_features.nearby_prop()
+			print("ROUTE_INTERACTION_DIAGNOSTIC id=",id," hint=",level.context_hint()," hidden=",level.player.in_hiding_spot," locked=",level.controls_locked()," prop=",prop.kind if prop!=null else "none", " message=",level.message," milestones=",level.milestones)
 		level.interact()
 		if id == "RemoteTerminal":
 			level.world_features.submit_password("root")

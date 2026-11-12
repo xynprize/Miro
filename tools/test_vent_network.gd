@@ -19,6 +19,11 @@ func run() -> void:
   for vent in vents:
    check(vent.title=="VENT" and features.vent_wall_clear(vent.position),"Vent title and full wall clearance")
   var network:Node=features.vent_network
+  # Connectivity is checked after progression; locked links are covered by
+  # test_security_sessions rather than requiring a fresh run to bypass them.
+  if floor_number>1:
+   for station in level.definition.stations:level.milestones[station.id]=true
+   for gate in level.get_node("Gates").get_children():gate.unlock()
   var travelled:=false
   for vent in vents:
    network.enter(vent)

@@ -7,6 +7,7 @@ const ROUND := preload("res://assets/misc/turret_projectile.png")
 const PROJECTILE := preload("res://scripts/weapon_projectile.gd")
 const PIVOT := Vector2(0, -17)
 const RANGE := 185.0
+const HACK_GUARD_RANGE := 360.0
 const STUN_TIME := 5.0
 
 var level: Node2D
@@ -17,6 +18,7 @@ var charge := 0.0
 var health := 10
 var disabled := false
 var stun_left := 0.0
+var hack_left := 0.0
 
 func _ready() -> void:
 	collision_layer = 0
@@ -52,10 +54,45 @@ func _physics_process(delta: float) -> void:
 			level.player.die()
 		return
 	stun_left = maxf(0.0, stun_left - delta)
+	hack_left = maxf(0.0, hack_left - delta)
 	if health <= 0 or disabled or stun_left > 0.0:
 		queue_redraw()
 		return
 	var muzzle := target_point()
+	if hack_left > 0.0:
+		var victim: Node2D
+		var nearest := HACK_GUARD_RANGE
+		for guard in level.guards():
+			if guard.is_dead or guard.asleep:continue
+			var gap: float = muzzle.distance_to(guard.global_position)
+			if gap < nearest and level.clear_sight(muzzle, guard.global_position):
+				victim = guard
+				nearest = gap
+		var player_gap: float = muzzle.distance_to(level.player.global_position)
+		if player_gap < RANGE and player_gap < nearest and not level.player.is_concealed and not level.player.in_hiding_spot and level.clear_sight(muzzle, level.player.global_position):
+			victim = level.player
+		if victim != null:
+			aim = rotate_toward(aim, (victim.global_position-muzzle).angle(), delta * 4.0)
+			if absf(angle_difference(aim, (victim.global_position-muzzle).angle())) < 0.08:
+				charge += delta
+				if charge >= 0.4:
+					charge = 0.0
+					var shot := Node2D.new()
+					shot.set_script(PROJECTILE)
+					shot.level = level
+					shot.shooter = self
+					shot.override_turret = self
+					shot.crossfire = true
+					shot.niro_round = true
+					shot.damage = 1
+					shot.position = level.to_local(muzzle)
+					shot.direction = Vector2.from_angle(aim)
+					shot.remaining = HACK_GUARD_RANGE
+					shot.sprite = ROUND
+					level.add_child(shot)
+		else:charge = 0.0
+		queue_redraw()
+		return
 	var offset: Vector2 = level.player.global_position - muzzle
 	# Turrets read heat and motion in the open: the blanket, a hiding spot or a patch of
 	# shadow hides Miro from them.

@@ -9,6 +9,8 @@ var remaining := 420.0
 var damage := 2
 var enemy := false
 var niro_round := false
+var override_turret: Node2D
+var crossfire := false
 ## SMG rounds lose punch over distance (down to 40% at long range); pistols don't.
 var falloff := false
 var travelled := 0.0
@@ -19,6 +21,9 @@ func _ready() -> void:
 	trail_start = position
 
 func _physics_process(delta: float) -> void:
+	if override_turret != null and (not is_instance_valid(override_turret) or override_turret.hack_left <= 0.0 or override_turret.disabled):
+		queue_free()
+		return
 	if not is_instance_valid(level) or level.controls_locked():
 		return
 	var distance := minf(remaining, speed * delta)
@@ -29,7 +34,7 @@ func _physics_process(delta: float) -> void:
 	if is_instance_valid(shooter):
 		query.exclude = [shooter.get_rid()]
 	var hit := get_world_2d().direct_space_state.intersect_ray(query)
-	if enemy:
+	if enemy or crossfire:
 		var player_hit := find_player_hit(level.player, global_position, hit.position if not hit.is_empty() else destination)
 		if not player_hit.is_empty():
 			hit = player_hit
@@ -45,7 +50,7 @@ func _physics_process(delta: float) -> void:
 			target.take_turret_hit()
 			queue_free()
 			return
-		elif enemy and target is IntroPlayer and target.controls.guitar_guarding():
+		elif (enemy or crossfire) and target is IntroPlayer and target.controls.guitar_guarding():
 			# Holding guitar guard turns a shot back toward whoever fired it.
 			enemy = false
 			shooter = target
@@ -55,7 +60,7 @@ func _physics_process(delta: float) -> void:
 			level.emit_effect("hit", global_position)
 			get_node("/root/SoundFX").play_near("hit", global_position, level.player.global_position, -10, 560.0, 1.6)
 			return
-		elif enemy and target is IntroPlayer:
+		elif (enemy or crossfire) and target is IntroPlayer:
 			# A pistol round or a turret bolt takes a heart; an SMG round takes half of one.
 			var smg: bool = is_instance_valid(shooter) and shooter.get("weapon_kind") == "smg"
 			target.take_damage(player_damage(target, hit.position, smg))
@@ -147,6 +152,7 @@ func strike_guard(from: Vector2, to: Vector2) -> bool:
 			var body := Rect2(-10.0 - (reach if guard.facing < 0 else 0.0), -22.0, 20.0 + reach, 40.0)
 			var head := Rect2(-9.0, -30.0, 18.0, 14.0)
 			if head.has_point(local) or body.has_point(local):
+				guard.damage_origin = shooter.global_position if is_instance_valid(shooter) else from-direction*20.0
 				# Regular Keeper headshots retain their existing lethal hit; Niro respects recovery.
 				if head.has_point(local) and not guard.has_method("begin_recovery"):
 					guard.invulnerability_left = 0.0

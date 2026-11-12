@@ -132,6 +132,7 @@ func detect_player() -> bool:
 ## Footsteps at a run: a Keeper who hears Miro pounding along close by, for about half a second,
 ## turns on him even unseen. A quick last step in for a pickpocket is too brief to be heard.
 var heard_time := 0.0
+var acoustic_left := 0.0
 func hears_player() -> bool:
 	if distracted or conversation_hold:
 		return false  # absorbed in a huddle or conversation, they only notice Miro right on top of them
@@ -159,6 +160,7 @@ func cough_sound() -> void:
 
 func _physics_process(delta: float) -> void:
 	time += delta
+	acoustic_left = maxf(0.0, acoustic_left-delta)
 	glance_left = maxf(0.0, glance_left - delta)
 	search_turn_left = maxf(0.0, search_turn_left - delta)
 	obstacle_replan_left = maxf(0.0, obstacle_replan_left - delta)
@@ -222,6 +224,7 @@ func _physics_process(delta: float) -> void:
 		alert_state = State.SEARCH
 		search_left = 8.0 if pursuing else 5.0
 		suspicion = maxf(0.0, suspicion - delta)
+		if pursuing:level.coordinate_search(last_known_position, 500.0, true, self)
 	for body in get_tree().get_nodes_in_group("discoverable_guards"):
 		if body != self and body.asleep and not body.is_dead and not seen_sleepers.has(body.get_instance_id()) and notices_body(body.global_position):
 			seen_sleepers[body.get_instance_id()] = true
@@ -240,21 +243,8 @@ func _physics_process(delta: float) -> void:
 		elif body != self and body.is_dead and not seen_bodies.has(body.get_instance_id()) and notices_body(body.global_position):
 			seen_bodies[body.get_instance_id()] = true
 			body_reported = true
-			if not sees_player:
-				investigate(body.global_position)
 			level.notify("%s found %s. The Keepers are searching." % [display_name, body.display_name])
-			# High alert: grieve out loud (over anything else being said), turn on the area at
-			# a run, and rouse every Keeper within earshot.
-			if alert_state != State.ALERT:
-				alert_state = State.SEARCH
-			pursuing = true
-			lost_barked = false
-			search_left = 12.0
-			suspicion = 1.0
-			for other in level.guards():
-				if other != self and not other.is_dead and not other.asleep and other.global_position.distance_to(global_position) < 380.0 and absf(other.global_position.y - global_position.y) < 90.0:
-					other.investigate(body.global_position)
-					other.pursuing = true
+			level.coordinate_search(body.global_position, 380.0, true, self)
 			if level.world_features:
 				level.world_features.bark(self, "body", true)
 	velocity.x = 0
@@ -333,11 +323,11 @@ func _physics_process(delta: float) -> void:
 			return
 		if sick_guard and not illness_started:
 			return
-		if global_position.x <= patrol_left:
+		if global_position.x <= patrol_left and turn_wait <= 0.0:
 			if facing < 0:
 				turn_wait = beat_wait(1.8 if sick_guard else 0.8)
 			facing = 1
-		elif global_position.x >= patrol_right:
+		elif global_position.x >= patrol_right and turn_wait <= 0.0:
 			if facing > 0:
 				turn_wait = beat_wait(1.0)
 			facing = -1
@@ -348,9 +338,10 @@ func _physics_process(delta: float) -> void:
 		return
 	var requested := velocity.x
 	velocity.x = spaced_speed(requested)
-	if alert_state == State.PATROL and turn_wait <= 0.0 and requested * facing > 0 and velocity.x * facing < 1.0:
+	if alert_state == State.PATROL and turn_wait <= 0.0 and requested * facing > 0 and velocity.x * facing < 1.0 and search_turn_left <= 0.0:
 		facing *= -1
 		turn_wait = beat_wait(0.8)
+		search_turn_left = 0.8
 	# Do not walk off a floor or chase between tiers (ladders are followed above).
 	var foot := global_position + Vector2(signf(velocity.x) * 15, 12)
 	var chasing := velocity.x != 0 and (alert_state == State.ALERT or pursuing)
@@ -381,7 +372,9 @@ func _physics_process(delta: float) -> void:
 				if not plan_search_route(last_known_position):
 					begin_sweep(-facing)
 		else:
-			turn_patrol_from_obstacle()
+			if turn_wait <= 0.0 and search_turn_left <= 0.0:
+				turn_patrol_from_obstacle()
+				search_turn_left = 0.8
 
 func turn_patrol_from_obstacle() -> void:
 	# A chase can leave a guard on the opposite side of an impassable wall
@@ -461,6 +454,9 @@ var ladder_exit_left := 0.0
 var ladder_stall_time := 0.0
 var crossing: IntroArea
 var crossing_goal := Vector2.INF
+var crossing_previous := Vector2.INF
+var crossing_stalled := 0.0
+var crossing_retry_left := 0.0
 var waiting_at_ladder := false
 var hop_landing := Vector2.INF
 const SHAFT_OWNER := &"guard_crossing"
@@ -482,6 +478,8 @@ func release_crossing() -> void:
 		crossing.remove_meta(SHAFT_OWNER)
 	crossing = null
 	crossing_goal = Vector2.INF
+	crossing_previous = Vector2.INF
+	crossing_stalled = 0.0
 
 func wait_for_crossing(ladder: IntroArea, goal: Vector2, delta: float) -> bool:
 	if crossing == ladder:
@@ -573,6 +571,20 @@ func spaced_speed(requested: float) -> float:
 	return clampf(requested, left, right)
 
 func ladder_search(delta: float) -> bool:
+	crossing_retry_left = maxf(0.0, crossing_retry_left-delta)
+	if crossing != null:
+		if crossing_previous != Vector2.INF and global_position.distance_to(crossing_previous) < 1.0:
+			crossing_stalled += delta
+		else:
+			crossing_stalled = 0.0
+			crossing_previous = global_position
+		if crossing_stalled > 2.0:
+			release_crossing()
+			crossing_retry_left = 1.5
+			pursuing = false
+			begin_sweep(-facing)
+			return false
+	if crossing_retry_left > 0.0:return false
 	if ladder_exit_left > 0.0:
 		ladder_exit_left = maxf(0.0, ladder_exit_left - delta)
 		velocity.x = ladder_exit_side * 120.0
@@ -822,7 +834,31 @@ func notices_body(point: Vector2) -> bool:
 	if absf(difference.y) >= 45: return false
 	var distance := difference.length()
 	if distance >= BODY_SIGHT or (difference.x * facing < -8 and distance >= BODY_NEARBY): return false
-	return level.clear_sight(global_position + Vector2(0, -8), point + Vector2(0, -8))
+	# Bodies lie at floor height; raised aim points avoid the ground obscuring
+	# an otherwise plainly visible corpse after a fall or checkpoint restore.
+	return level.clear_sight(global_position + Vector2(0, -8), point + Vector2(0, -8)) or level.clear_sight(global_position + Vector2(0, -14), point + Vector2(0, -18))
+
+var damage_origin := Vector2.INF
+
+func take_damage(amount: int, ignore_recovery := false) -> void:
+	if is_dead:return
+	var before := health
+	super.take_damage(amount, ignore_recovery)
+	var origin: Vector2 = level.player.global_position if damage_origin == Vector2.INF else damage_origin
+	damage_origin = Vector2.INF
+	if health == before or is_dead or asleep:return
+	distracted = false
+	conversation_hold = false
+	turn_away_left = 0.0
+	turn_wait = 0.0
+	alert_state = State.SEARCH
+	suspicion = 1.0
+	# A hit establishes the attacker's last reported location, not future sight.
+	last_known_position = origin
+	search_left = 8.0
+	search_turn_left = 0.0
+	face_toward(last_known_position.x)
+	level.make_noise(global_position, 380.0)
 
 func investigate(point: Vector2) -> void:
 	if is_dead or asleep or sees_player:
@@ -927,7 +963,7 @@ func _draw() -> void:
 	if coughing:
 		draw_line(Vector2(facing * 8, 2), Vector2(facing * 6, -4), pale, 3)
 		draw_circle(Vector2(facing * 14, -5 - fmod(time * 9, 12)), 1.5, Color("c69fa5"))
-	if alert_state != State.PATROL:
+	if alert_state != State.PATROL or acoustic_left > 0.0:
 		var reaction: Texture2D = preload("res://assets/library/alert.png") if alert_state == State.ALERT else preload("res://assets/library/question.png")
 		draw_texture_rect(reaction, Rect2(-8, -35, 16, 16), false, pale)
 	draw_carried_key()

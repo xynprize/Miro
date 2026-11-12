@@ -2,6 +2,9 @@ param([ValidateRange(1, 1000)][int]$StartAt = 1)
 $ErrorActionPreference = 'Stop'
 $engine = 'C:\towerdefense\tools\godot\Godot_v4.7.2-stable_win64_console.exe'
 $checks = @(
+    @('res://tools/test_security_sessions.gd'),
+    @('res://tools/test_guard_security_regressions.gd'),
+    @('res://tools/test_guard_incidents.gd'),
     @('res://tools/test_live_speedrun.gd'),
     @('res://tools/test_vent_network.gd'),
     @('res://tools/test_run_reactions.gd'),

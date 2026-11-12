@@ -169,9 +169,18 @@ func spawn_terminal_guard(terminal_point: Vector2) -> void:
 	var hit := level.get_world_2d().direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return
-	var x := terminal_point.x + 48.0
-	if not level.has_floor_below(Vector2(x, hit.position.y - 3.0)) or not level.has_floor_below(Vector2(x + 30.0, hit.position.y - 3.0)):
-		x = terminal_point.x - 48.0
+	var x := INF
+	var y := float(hit.position.y) - 16.0
+	for offset: float in [48.0, -48.0, 96.0, -96.0, 144.0, -144.0]:
+		var candidate := Vector2(terminal_point.x + offset, y)
+		if not placement_clear(candidate) or not level.has_floor_below(candidate + Vector2(0, 13)):
+			continue
+		if level.guards().any(func(g): return g.global_position.distance_to(candidate) < 40.0):
+			continue
+		x = candidate.x
+		break
+	if x == INF:
+		return
 	var keeper = load("res://scenes/guard.tscn").instantiate()
 	keeper.set_script(preload("res://scripts/terminal_guard.gd"))
 	keeper.name = "TerminalGuard%d" % slot
@@ -364,6 +373,9 @@ func spawn_crate(point: Vector2) -> void:
 	add_child(body)
 
 func spawn_prop(point: Vector2, kind: String, title: String) -> Node2D:
+	# The starting cell is a prison, not a shortcut into the duct network.
+	if kind == "hide" and floor_number == 1 and point.y < 280 and point.x < 300:return null
+	if kind == "hide" and floor_number == 1 and absf(point.y-432.0)<24.0:point.x=384.0
 	if kind == "hide":title = "VENT"
 	if kind in ["case", "hide", "crate"]:
 		point = free_spot(point, kind)
@@ -372,7 +384,11 @@ func spawn_prop(point: Vector2, kind: String, title: String) -> Node2D:
 	prop.set_script(load("res://scripts/review_prop.gd"))
 	prop.position = point
 	prop.kind = kind
-	prop.z_index = -1 # Dressing sits behind characters, never over their bodies.
+	# Interactive props must sit above the floor tile.  A negative z-index made
+	# crates usable but invisible, leaving Miro apparently hiding in open air.
+	# Characters render on their own higher layers, so this still keeps props
+	# behind them.
+	prop.z_index = 1
 	prop.title = title
 	add_child(prop)
 	props.append(prop)
@@ -397,27 +413,49 @@ func security_terminal(radius := 48.0) -> Node2D:
 			distance = gap
 	return nearest
 
-## Every security camera on this floor goes dark (records terminals and the MP3 at one).
-func disable_cameras() -> int:
+## A wireless connection can reach an adjacent storey; the connected terminal
+## determines which devices are wired to the command.
+func security_storey(y: float) -> int:
+	var definition = level.get("definition")
+	if definition == null:
+		return 0
+	var storeys: Array = definition.get("storeys", [252, 448, 672, 868] if floor_number == 5 else [])
+	for index in range(storeys.size()):
+		if y <= float(storeys[index]):
+			return index
+	return maxi(0, storeys.size() - 1)
+
+func disable_cameras(terminal: Node2D) -> int:
+	if not is_instance_valid(terminal):
+		return 0
+	var storey := security_storey(terminal.global_position.y)
 	var count := 0
 	for node in level.find_children("*", "", true, false):
-		if node.get_script() == preload("res://scripts/security_camera.gd") and node.is_active:
+		if node.get_script() == preload("res://scripts/security_camera.gd") and node.is_active and security_storey(node.global_position.y) == storey:
 			node.disable()
 			count += 1
 	return count
 
-func disable_turrets() -> int:
+func disable_turrets(terminal: Node2D) -> int:
+	if not is_instance_valid(terminal):
+		return 0
+	var storey := security_storey(terminal.global_position.y)
 	var count := 0
 	for turret in get_tree().get_nodes_in_group("tower_turrets"):
-		if level.is_ancestor_of(turret) and not turret.disabled and not turret.is_in_group("security_cameras"):
+		if level.is_ancestor_of(turret) and not turret.disabled and not turret.is_in_group("security_cameras") and security_storey(turret.global_position.y) == storey:
 			turret.disable()
 			count += 1
 	return count
 
 func story_distance() -> float:
 	var closest := 48.0
+	if level.has_method("station_nearby"):
+		var station: Dictionary = level.station_nearby()
+		if not station.is_empty():
+			var marker = level.areas.get_node_or_null(NodePath(station.id))
+			if marker != null:closest=minf(closest,level.player.global_position.distance_to(marker.global_position))
 	for area in level.areas.get_children():
-		if area.kind in ["bed", "door", "sigil", "exit", "brother", "note"]:
+		if area.kind in ["bed", "door", "sigil", "station", "exit", "brother", "note"]:
 			closest = minf(closest, level.player.global_position.distance_to(area.global_position))
 	return closest
 
@@ -496,7 +534,7 @@ func nearby_prop():
 		var candidate: float = level.player.global_position.distance_to(prop.global_position)
 		# Let Miro stand beside the bottle to select it, even near a station.
 		# The station wins when it is at least as close as the bottle.
-		if prop.kind == "potion" and story_range <= candidate:
+		if prop.kind == "potion" and (story_range < 48.0 or story_range <= candidate):
 			continue
 		if candidate < distance and reachable(prop.global_position) and not (prop.kind in ["case", "potion", "note"] and prop.used):
 			best = prop

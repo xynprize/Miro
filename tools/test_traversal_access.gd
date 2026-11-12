@@ -121,7 +121,8 @@ func run() -> void:
 		var world = level.world_features
 		var clean := true
 		for prop in world.props:
-			if prop.get_meta("lab_flask", false):continue # Table surface supports this collectible.
+			if prop.get_meta("lab_flask", false) or prop.get_meta("lab_bottle",false):continue # Table surface supports these collectibles.
+			if not world.placement_clear(prop.position) or not level.has_floor_below(prop.position+Vector2(0,13)):print("BLOCKED_PROP: ",number," ",prop.kind," ",prop.position)
 			clean = clean and world.placement_clear(prop.position)
 			clean = clean and level.has_floor_below(prop.position + Vector2(0, 13))
 		check(clean, "Floor %d crates, hides and service ports have clear standing space and ladder clearance" % number)

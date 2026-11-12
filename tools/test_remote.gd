@@ -36,7 +36,7 @@ func run() -> void:
 		else:
 			await frames(65)
 			level.finish_dialogue()
-			check(level.milestones.has("RemoteTerminal") and level.connected_cameras.all(func(camera): return not camera.is_active), "Remote completes required floor 3 checkpoint through existing hack sequence")
+			check(level.milestones.has("RemoteTerminal") and level.connected_cameras.filter(func(camera): return level.world_features.security_storey(camera.global_position.y)==level.world_features.security_storey(level.player.global_position.y)).all(func(camera): return not camera.is_active), "Remote completes checkpoint and disables cameras on its storey")
 	var c = level.player.controls
 	var turrets := get_nodes_in_group("tower_turrets").filter(func(node): return not node.is_in_group("security_cameras"))
 	check(not turrets.is_empty() and turrets.all(func(turret): return not turret.disabled), "Cameras off does not disable turrets")
@@ -46,6 +46,6 @@ func run() -> void:
 	check(turrets.all(func(turret): return not turret.disabled), "Remote cannot disable turrets out of terminal range")
 	level.player.position = level.areas.get_node("RemoteTerminal").position + Vector2(0, 8)
 	c.run_command("turrets off")
-	check(turrets.all(func(turret): return turret.disabled), "Remote can disable turrets at the authenticated checkpoint")
+	check(turrets.filter(func(turret): return level.world_features.security_storey(turret.global_position.y)==level.world_features.security_storey(level.player.global_position.y)).all(func(turret): return turret.disabled), "Remote disables only checkpoint-storey turrets")
 	print("REMOTE_RESULT: ", checks - failures.size(), "/", checks, " passed")
 	quit(0 if failures.is_empty() else 1)

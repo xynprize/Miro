@@ -31,6 +31,8 @@ func _ready() -> void:
 	player.get_node("Camera2D").limit_right = int(definition.world_size[0])
 	player.get_node("Camera2D").limit_bottom = int(definition.world_size[1])
 	player.has_supplies = true
+	player.respawn_cloak_left = 2.0
+	player.is_concealed = true
 	player.c4_count = 3 # Carried explosives; authored support placements are story events.
 	door_open = true
 	brother_heard = true
@@ -142,27 +144,12 @@ func update_checkpoint() -> void:
 	var storey := current_storey()
 	if checkpoint_safe_position(player.global_position,milestones) != player.global_position:storey=0
 	if storey <= int(campaign.checkpoint.get("storey", 0)) and not campaign.checkpoint.is_empty():
-		# Same storey: keep the checkpoint's place and health, but keep its kit current so guns
-		# and ammo picked up since are not lost on a retry (refreshed every couple of seconds).
-		if int(campaign.checkpoint.get("floor", 0)) == int(definition.number) and Time.get_ticks_msec() - checkpoint_refreshed > 2000:
-			checkpoint_refreshed = Time.get_ticks_msec()
-			var kit := player_snapshot()
-			kit["health"] = int(campaign.checkpoint.get("player", {}).get("health", player.health))
-			campaign.checkpoint["player"] = kit
-			campaign.checkpoint["dead"] = dead_guards()
-			campaign.checkpoint["security"] = security_checkpoint.duplicate(true)
-			campaign.checkpoint["milestones"] = milestones.duplicate()
-			campaign.checkpoint["sigil"] = sigil_placed
-			campaign.checkpoint["thoughts"] = world_features.thought_seen.keys()
-			campaign.checkpoint["used_cases"] = used_ammo_cases()
-			campaign.checkpoint["used_potions"] = used_potion_positions()
-			campaign.checkpoint["looted_guards"] = looted_guard_names()
-			campaign.checkpoint["guard_ammo"] = guard_ammo_snapshot()
-			campaign.save_checkpoint()
+		# Retry restores one coherent snapshot, not later events at an old position.
 		return
 	if storey == 0 and campaign.checkpoint.is_empty():
 		return
 	campaign.checkpoint = {"floor": int(definition.number), "storey": storey, "position": player.global_position, "milestones": milestones.duplicate(), "sigil": sigil_placed, "player": player_snapshot(), "dead": dead_guards(), "thoughts": world_features.thought_seen.keys(), "used_cases": used_ammo_cases(), "used_potions": used_potion_positions(), "looted_guards": looted_guard_names(), "guard_ammo": guard_ammo_snapshot(), "security": security_checkpoint.duplicate(true)}
+	campaign.checkpoint["guards"] = guard_condition_snapshot()
 	get_node("/root/MusicDirector").checkpoint_music()
 	campaign.save_checkpoint()
 	notify("Checkpoint.")
@@ -185,6 +172,13 @@ func dead_guards() -> Array:
 		if guard.is_dead and guard.get_parent() == $Guards:
 			dead.append({"name": str(guard.name), "position": guard.global_position, "looted": guard.gun_taken})
 	return dead
+
+func guard_condition_snapshot() -> Dictionary:
+	var states := {}
+	for guard in guards():
+		if guard.has_method("begin_recovery"):continue
+		states[str(guard.name)] = {"health":guard.health, "asleep":guard.asleep, "strangled":guard.strangled, "position":guard.global_position}
+	return states
 
 ## Loot already included in the saved kit cannot be collected a second time after a retry.
 func used_ammo_cases() -> Array:
@@ -217,18 +211,23 @@ func guard_ammo_snapshot() -> Dictionary:
 	return saved
 
 func record_guard_ammo_checkpoint() -> void:
-	var campaign = get_node("/root/Campaign")
-	if campaign.checkpoint.get("floor",0) != int(definition.number):return
-	var kit := player_snapshot()
-	kit["health"] = int(campaign.checkpoint.get("player",{}).get("health",player.health))
-	campaign.checkpoint["player"] = kit
-	campaign.checkpoint["guard_ammo"] = guard_ammo_snapshot()
-	campaign.save_checkpoint()
+	# Inventory and guard ammunition are captured together at the next eligible
+	# landing; a pickpocket cannot partially rewrite a previous retry snapshot.
+	pass
 
 func restore_checkpoint_loot(saved: Dictionary) -> void:
 	# Cases and terminal posts are authored asynchronously after the first physics frames.
 	for tick in range(4):
 		await get_tree().physics_frame
+	for name in saved.get("guards",{}):
+		var guard = $Guards.get_node_or_null(str(name))
+		if guard == null or guard.is_dead:continue
+		var state: Dictionary = saved.guards[name]
+		guard.health = int(state.health)
+		if state.asleep:
+			guard.global_position = state.position
+			guard.strangled = bool(state.get("strangled",false))
+			guard.fall_asleep()
 	for guard_name in saved.get("guard_ammo", {}):
 		var guard = $Guards.get_node_or_null(str(guard_name))
 		if guard != null:
@@ -368,8 +367,8 @@ func apply_checkpoint() -> void:
 			if body.is_dead:guard.seen_bodies[body.get_instance_id()] = true
 			elif body.asleep:guard.seen_sleepers[body.get_instance_id()] = true
 	# A moment of grace so the respawned Keepers can't strip health the instant he appears.
-	player.invulnerability_left = 3.5
-	player.respawn_cloak_left = 4.0
+	player.invulnerability_left = 0.0
+	player.respawn_cloak_left = 2.0
 	player.is_concealed = true
 	sigil_placed = bool(saved.get("sigil", false)) and definition.stations.any(func(station): return station.kind == "sigil" and saved.get("milestones", {}).has(station.id))
 	for id in saved.milestones:
@@ -449,10 +448,7 @@ func _process(delta: float) -> void:
 		else:
 			hack_remaining = maxf(0, hack_remaining - delta)
 			if hack_remaining == 0:
-				for camera in connected_cameras:
-					# A watcher Miro already destroyed is simply gone: skip it.
-					if is_instance_valid(camera):
-						camera.disable()
+				var camera_count: int = world_features.disable_cameras(areas.get_node("RemoteTerminal"))
 				# The hack counts the moment it completes, so no other scene starting at the same
 				# time (a remote threat, a Keeper's bark) can swallow it and leave the gate locked.
 				milestones["RemoteTerminal"] = true
@@ -464,7 +460,7 @@ func _process(delta: float) -> void:
 				if terminal_area != null:
 					terminal_area.activated = true
 					terminal_area.queue_redraw()
-				notify("Checkpoint linked cameras disabled. Gate open. Other systems use their service terminals.", 6.0)
+				notify("Cameras disabled on this floor: %d. Checkpoint gate open." % camera_count, 6.0)
 				if dialogue.is_empty():
 					start_dialogue([["MIRO", "I hacked the system and nobody has even realized.", "thought"]])
 	if completed:
@@ -738,11 +734,8 @@ func plant_c4() -> void:
 func camera_alert(point: Vector2) -> void:
 	floor_alerts += 1
 	var called := spawn_watcher_reserves(point)
-	for guard in guards():
-		if not guard.is_dead:
-			guard.investigate(point)
-			guard.pursuing = true
-	notify("WATCHER ALERT • Reinforcements incoming." if called else "WATCHER ALERT • Every Keeper is closing in on your last seen position.")
+	coordinate_search(point, INF, true)
+	notify("WATCHER ALERT • Reinforcements incoming." if called else "WATCHER ALERT • Keepers are checking your last seen position.")
 
 ## One reserve squad per floor. Repeated sweeps redirect the squad without spawning endlessly.
 func spawn_watcher_reserves(point: Vector2) -> bool:
@@ -814,14 +807,29 @@ func finish_ending() -> void:
 var security_checkpoint: Dictionary = {}
 var checkpoint_grace_until := 0
 
+func complete_security_hack() -> void:
+	if milestones.has("RemoteTerminal"):return
+	milestones["RemoteTerminal"] = true
+	for gate in $Gates.get_children():
+		if gate.unlock_milestone == "RemoteTerminal":gate.unlock()
+	var station = areas.get_node_or_null("RemoteTerminal")
+	if station != null:
+		station.activated = true
+		station.queue_redraw()
+	hack_remaining = 0.0
+	notify("Checkpoint controls reprogrammed. Gate open.", 6.0)
+
 func record_security_checkpoint(device: Node2D, destroyed: bool) -> void:
 	var kind := "camera" if device.get_script() == preload("res://scripts/security_camera.gd") else "turret"
 	var campaign = get_node("/root/Campaign")
 	var id: String = campaign.security_device_id(int(definition.number), kind, device.get_meta("security_origin", device.position))
 	security_checkpoint[id] = {"destroyed": destroyed, "kind": kind, "position": device.position}
-	if int(campaign.checkpoint.get("floor", 0)) == int(definition.number):
-		campaign.checkpoint["security"] = security_checkpoint.duplicate(true)
-		campaign.save_checkpoint()
+
+func record_security_enabled(device: Node2D) -> void:
+	var campaign = get_node("/root/Campaign")
+	var kind := "camera" if device.is_in_group("security_cameras") else "turret"
+	var id: String = campaign.security_device_id(int(definition.number), kind, device.get_meta("security_origin", device.position))
+	security_checkpoint[id] = {"destroyed": false, "enabled": true, "kind": kind, "position": device.position}
 
 func restore_checkpoint_security(saved: Dictionary) -> void:
 	security_checkpoint = Dictionary(saved.get("security", {})).duplicate(true)
@@ -834,6 +842,9 @@ func restore_checkpoint_security(saved: Dictionary) -> void:
 		if not security_checkpoint.has(id):continue
 		if bool(security_checkpoint[id].get("destroyed", false)):
 			device.queue_free()
+		elif bool(security_checkpoint[id].get("enabled", false)):
+			if camera:device.is_active = true
+			else:device.disabled = false
 		elif camera:
 			device.is_active = false
 			device.cone_points = PackedVector2Array()

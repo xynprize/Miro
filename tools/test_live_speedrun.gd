@@ -130,12 +130,12 @@ func run() -> void:
   flow.final_waves_sent=0
   flow.final_wave_wait=0
   flow.update_final_waves(0.1)
-  check(flow.wave_guards.size()==4,"Reinforcement wave exists on storey %d"%row)
+  check(flow.wave_guards.size()==(0 if row==0 else 4),"Reinforcements respect encounter stage on storey %d"%row)
   for g in flow.wave_guards:
    check(is_instance_valid(g) and absf(g.position.y-flow.ROW_FLOOR_Y[row])<3,"Reinforcement stands on its current storey")
   flow.final_wave_wait=0
   flow.update_final_waves(0.1)
-  check(flow.wave_guards.size()==4,"Crowd cap holds additional waves until space clears")
+  check(flow.wave_guards.size()==(0 if row==0 else 4),"Crowd cap holds additional waves until space clears")
  check(level.areas.get_node("FinalOffer").kind=="brother","Remote offer retains automatic story trigger identity")
  print("LIVE_SPEEDRUN_RESULT: ",checks-failures.size(),"/",checks)
  quit(0 if failures.is_empty() else 1)

@@ -49,6 +49,10 @@ func run() -> void:
 	await frames(50)
 	check(climber.global_position.y < start_y - 20.0, "A hunting Keeper climbs the ladder after Miro")
 	player.climbing = false
+	# Finish the independent pursuit fixture before testing a different climber.
+	climber.release_crossing()
+	climber.set_physics_process(false)
+	climber.position = Vector2(300,1048)
 	# A searching Keeper walks to the ladder and climbs down to where he last saw Miro.
 	var searcher = level.get_node("Guards/VaultWestKeeper")
 	searcher.set_physics_process(true)

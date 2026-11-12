@@ -75,7 +75,7 @@ func run() -> void:
 	victim.asleep=false
 	victim.is_dead=true
 	observer._physics_process(1.0/60)
-	check(nearby.pursuing,"A corpse still rouses nearby Keepers")
+	check(level.guard_assignments.has(nearby.get_instance_id()) and (nearby.search_left>0 or nearby.turn_wait>0),"Corpse discovery gives a nearby Keeper a coordinated search or cover job")
 	check(observer.pursuing and observer.suspicion==1 and observer.search_left>10,"A dead guard still triggers the stronger grief and pursuit response")
 	observer.seen_bodies.clear()
 	observer.seen_sleepers.clear()

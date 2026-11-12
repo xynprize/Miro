@@ -158,6 +158,23 @@ func fixture_clear_uncached(rect: Rect2) -> bool:
 		if rect.intersects(Rect2(Vector2(gate.position[0],gate.position[1])-Vector2(gate.size[0],gate.size[1])/2,Vector2(gate.size[0],gate.size[1])).grow(8)):return false
 	return true
 
+func background_clear(rect: Rect2) -> bool:
+	if not fixture_clear(rect):return false
+	for station in blueprint.get("stations", []):
+		if rect.intersects(Rect2(Vector2(station.position[0],station.position[1])-Vector2(38,56),Vector2(76,78))):return false
+	var features = get_parent().get("world_features")
+	if is_instance_valid(features):
+		for prop in features.props:
+			if is_instance_valid(prop) and rect.intersects(Rect2(prop.position-Vector2(24,42),Vector2(48,62))):return false
+	var previous := 0.0
+	for index in range(storeys.size()):
+		var floor_y := float(storeys[index])
+		var wx := 300.0+float((index*520)%int(world.x-400))
+		var window := Rect2(wx-6, previous+(floor_y-previous)*0.22-3,38,64)
+		if rect.intersects(window.grow(4)):return false
+		previous = floor_y+28.0
+	return true
+
 func lamp_x(anchor: float, ceiling: float, y: float) -> float:
 	for step in range(17):
 		var x := anchor + step * 14.0
@@ -277,6 +294,9 @@ func furniture_x(anchor: float, width: float, height: float, floor_y: float) -> 
 				continue
 			var rect := Rect2(x - 4, floor_y - height - 4, width + 8, height + 3)
 			var clear := vent_clear(rect)
+			# Both feet must rest on the same authored floor, including at ladder gaps.
+			for foot in [x+2.0,x+width-2.0]:
+				if not blueprint.get("tiles", []).any(func(tile): return int(tile[0]) == int(floor(foot/28.0)) and absf(float(tile[1])*28.0-floor_y)<2.0):clear=false
 			for tile: Rect2 in blockers:
 				if rect.intersects(tile):
 					clear = false
@@ -290,6 +310,14 @@ func furniture_x(anchor: float, width: float, height: float, floor_y: float) -> 
 			for port in blueprint.get("features", {}).get("ports", []):
 				var at := Vector2(port[0],port[1])
 				if rect.intersects(Rect2(at - Vector2(34,28), Vector2(68,48))):clear = false
+			# Live props can be shifted or added after the authored dressing pass.
+			var features = get_parent().get("world_features")
+			if is_instance_valid(features):
+				for prop in features.props:
+					if not is_instance_valid(prop):continue
+					var bounds := Rect2(prop.position-Vector2(22,36),Vector2(44,55))
+					if prop.kind == "access":bounds = Rect2(prop.position-Vector2(20,26),Vector2(40,48))
+					if prop.kind in ["hide","crate","access","case"] and rect.intersects(bounds.grow(4)):clear=false
 			for other: Rect2 in furniture_rects.values():
 				if rect.intersects(other):clear = false
 			if clear:
@@ -331,7 +359,7 @@ func dress_surveillance(index: int, ceiling: float, floor_y: float, second_half:
 		if x > world.x - 140:
 			continue
 		var bank := Rect2(x, ceiling + 30, 84, 34)
-		if not vent_clear(bank.grow(3)):continue
+		if not background_clear(bank.grow(3)):continue
 		draw_rect(bank.grow(3), Color("1b1b30"))
 		for screen in range(3):
 			var glow: Color = look.light.darkened(0.35 + 0.15 * ((screen + index + step) % 3))
@@ -343,7 +371,7 @@ func dress_surveillance(index: int, ceiling: float, floor_y: float, second_half:
 		if second_half:
 			stamp("warning", Rect2(x + 150, ceiling + 44, 22, 22), Color(1, 1, 1, 0.7))
 			stamp("beacon", Rect2(x + 180, ceiling + 6, 22, 22), Color(1, 1, 1, 0.8))
-		elif vent_clear(Rect2(x+150,floor_y-30,34,30)):
+		elif fixture_clear(Rect2(x+150,floor_y-30,34,30)) and not furniture_rects.values().any(func(rect): return rect.intersects(Rect2(x+150,floor_y-30,34,30).grow(4))):
 			draw_rect(Rect2(x + 150, floor_y - 30, 34, 30), Color("1b1b30"))
 			draw_rect(Rect2(x + 153, floor_y - 27, 28, 3), look.light.darkened(0.5))
 
@@ -360,8 +388,10 @@ func dress_ward(index: int, ceiling: float, floor_y: float, second_half: bool) -
 		if x > world.x - 150:
 			continue
 		if second_half:
+			x = furniture_x(x,40,78,floor_y)
+			if x == INF:continue
 			var tank := Rect2(x, floor_y - 78, 40, 74)
-			if not vent_clear(tank.grow(3)):continue
+			if not background_clear(tank.grow(3)):continue
 			draw_rect(tank.grow(3), Color("1b1b30"))
 			draw_rect(tank, Color(0.36, 0.72, 0.58, 0.32))
 			for bubble in range(4):
@@ -370,10 +400,11 @@ func dress_ward(index: int, ceiling: float, floor_y: float, second_half: bool) -
 			stamp("smoke", Rect2(x - 10, floor_y - 30, 60, 30), Color(1, 1, 1, 0.08))
 		else:
 			var glass := Rect2(x, ceiling + 26, 92, 40)
-			if not vent_clear(glass.grow(3)) or not vent_clear(Rect2(CART_X[index][step],floor_y-38,40,38)):continue
-			draw_rect(glass.grow(3), Color("8b9bb4"))
-			draw_rect(glass, Color(0.75, 0.86, 0.95, 0.18))
-			draw_line(glass.position + Vector2(12, 34), glass.position + Vector2(34, 6), Color(1, 1, 1, 0.25), 2)
+			if background_clear(glass.grow(3)):
+				draw_rect(glass.grow(3), Color("8b9bb4"))
+				draw_rect(glass, Color(0.75, 0.86, 0.95, 0.18))
+				draw_line(glass.position + Vector2(12, 34), glass.position + Vector2(34, 6), Color(1, 1, 1, 0.25), 2)
+			if not vent_clear(Rect2(CART_X[index][step],floor_y-38,40,38)):continue
 			var cart_x: float = CART_X[index][step]
 			draw_rect(Rect2(cart_x, floor_y - 20, 40, 4), Color("8b9bb4"))
 			stamp("microscope", Rect2(cart_x + 20, floor_y - 38, 18, 18), Color(1, 1, 1, 0.8))

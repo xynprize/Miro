@@ -29,7 +29,7 @@ func run() -> void:
 	guards[0].sees_player = false
 	guards[0].alert_state = IntroGuard.State.PATROL
 	p.fire_gun()
-	check(p.ammunition == 2 and guards[0].alert_state == IntroGuard.State.SEARCH, "Pistol shot is always audible")
+	check(p.ammunition == 2 and guards[0].acoustic_left > 0.0 and guards[0].facing < 0.0, "Pistol shot is heard and faced even when another guard investigates")
 	p.select_gun(1)
 	check(p.equipped_gun == "smg" and p.ammunition == 12, "Switching back preserves the scarce SMG pickup magazine")
 	p.ammunition = 0

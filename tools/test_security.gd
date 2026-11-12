@@ -6,6 +6,7 @@ func run() -> void:
 	current_scene = level
 	await frames(3)
 	level.finish_dialogue()
+	level.player.end_stealth()
 	var camera = level.connected_cameras[0]
 	var terminal: Vector2 = level.areas.get_node("RemoteTerminal").position
 	var at_terminal := terminal + Vector2(0, 8)
@@ -27,8 +28,9 @@ func run() -> void:
 	camera._physics_process(1.0 / 60.0)
 	check(level.guards().size() == original_count + 2, "Watcher detection calls two reserves")
 	check(level.floor_alerts == 1, "Detection raises floor alert")
+	var responders: Array = level.guards().filter(func(guard): return guard.alert_state == IntroGuard.State.SEARCH and guard.pursuing)
+	check(responders.size() == 1, "Watcher alert calls reserves and assigns a single investigator")
 	for guard in level.guards():
-		check(guard.alert_state == IntroGuard.State.SEARCH, "Floor alert reaches every guard")
 		guard.set_physics_process(false)
 	level.camera_alert(level.player.position)
 	check(level.guards().size() == original_count + 2, "Repeated sighting does not duplicate the reserve squad")
@@ -50,8 +52,16 @@ func run() -> void:
 	level.player.position = at_terminal
 	level.interact()
 	await frames(65)
+	var terminal_storey: int = level.world_features.security_storey(terminal.y)
+	var on_storey := 0
+	var elsewhere_active := 0
 	for linked in level.connected_cameras:
-		check(not linked.is_active, "Completed hack disables linked camera")
+		if level.world_features.security_storey(linked.global_position.y) == terminal_storey:
+			on_storey += 1
+			check(not linked.is_active, "Completed hack disables camera on the terminal's storey")
+		elif linked.is_active:
+			elsewhere_active += 1
+	check(on_storey > 0 and elsewhere_active > 0, "Hack affects its storey and leaves other storeys active")
 	level.finish_dialogue()
 	check(level.milestones.has("RemoteTerminal"), "Skipping completion dialogue preserves hack")
 	check(not camera.detects_player(), "Disabled camera cannot detect")

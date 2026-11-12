@@ -52,7 +52,7 @@ func run() -> void:
 	world.submit_password("root")
 	check(not world.modal_open() and level.hack_remaining > 0, "Root starts interruptible hack")
 	await frames(65)
-	check(level.connected_cameras.all(func(camera): return not camera.is_active), "Authenticated hack disables cameras")
+	check(level.connected_cameras.filter(func(camera): return world.security_storey(camera.global_position.y)==world.security_storey(terminal.y)).all(func(camera): return not camera.is_active), "Authenticated hack disables cameras on the terminal storey")
 	level.finish_dialogue()
 	# Down the checkpoint stairs: landing in the lower sub-floor brings in the second song.
 	var stairs = level.areas.get_node("ThirdLadder")

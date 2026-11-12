@@ -21,7 +21,7 @@ func run() -> void:
 		var hides: Array = world.props.filter(func(prop): return prop.kind in ["hide", "crate"])
 		check(not potions.is_empty() and not cases.is_empty() and not hides.is_empty(), "Floor %d has tonics, ammo and hiding boxes" % number)
 		for tonic in potions:
-			check((tonic.get_meta("lab_flask", false) and level.has_floor_below(tonic.global_position + Vector2(0, 38))) or (world.placement_clear(tonic.global_position) and level.has_floor_below(tonic.global_position + Vector2(0, 13))), "Floor %d tonic %s is clear and supported" % [number, tonic.global_position])
+			check(((tonic.get_meta("lab_flask", false) or tonic.get_meta("lab_bottle",false)) and level.has_floor_below(tonic.global_position + Vector2(0, 38))) or (world.placement_clear(tonic.global_position) and level.has_floor_below(tonic.global_position + Vector2(0, 13))), "Floor %d tonic %s is clear and supported" % [number, tonic.global_position])
 		var selected = potions[0]
 		player.health = player.max_health - 2
 		for tonic in potions:

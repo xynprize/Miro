@@ -157,7 +157,8 @@ func run() -> void:
 			check("incorrect" not in controls.console_echo.text and "****" in controls.console_echo.text, "Echo hides the password")
 			controls.run_command("login root")
 			controls.run_command("turrets off")
-			check(not turrets.is_empty() and turrets.all(func(turret): return turret.disabled), "Authenticated physical console disables floor turrets")
+			var local_turrets = turrets.filter(func(turret): return level.world_features.security_storey(turret.global_position.y)==level.world_features.security_storey(level.player.global_position.y))
+			check(not local_turrets.is_empty() and local_turrets.all(func(turret): return turret.disabled), "Authenticated physical console disables storey turrets")
 		controls.close_panels()
 		for prop in director().lore_props():
 			print("Floor %d %s at %s" % [number, prop.name, prop.global_position])

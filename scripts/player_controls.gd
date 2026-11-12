@@ -7,6 +7,17 @@ var active := "shank"
 var inventory_open := false
 var remote_open := false
 var local_console := false
+var security_session: Node
+
+func security() -> Node:
+	if security_session == null:
+		security_session = preload("res://scripts/security_session.gd").new()
+		add_child(security_session)
+		security_session.setup(self)
+	return security_session
+
+func watching_cameras() -> bool:
+	return is_instance_valid(security_session) and security_session.viewing
 ## Records terminals Miro has logged into on this floor: one login per terminal, kept after closing it.
 var logged_in: Dictionary = {}
 var console_title: Label
@@ -120,7 +131,7 @@ func select_item(item: String) -> void:
 		player.select_gun(player.guns.find(item))
 
 func gameplay_ready() -> bool:
-	return is_instance_valid(player.level) and not get_tree().paused and (DisplayServer.get_name() == "headless" or DisplayServer.window_is_focused()) and not locked() and not player.level.controls_locked() and not player.is_dead and not player.in_hiding_spot and not player.level.world_features.strangle_active()
+	return is_instance_valid(player.level) and not watching_cameras() and not get_tree().paused and (DisplayServer.get_name() == "headless" or DisplayServer.window_is_focused()) and not locked() and not player.level.controls_locked() and not player.is_dead and not player.in_hiding_spot and not player.level.world_features.strangle_active()
 
 func direct_melee() -> void:
 	if not gameplay_ready() or melee_left > 0: return
@@ -135,6 +146,9 @@ func direct_blanket() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not is_instance_valid(player.level): return
+	if watching_cameras():
+		security_session.handle_input(event)
+		return
 	if event is InputEventJoypadMotion and absf(event.axis_value) > float(controller_settings.preferences.deadzone):
 		pad_device = event.device
 		pad_prompts = true
@@ -310,7 +324,7 @@ func _physics_process(delta: float) -> void:
 		refresh_slots()
 	if panel == null and is_instance_valid(player.level.hud):
 		build_panels()
-	if player.level.controls_locked() or player.is_dead or player.in_hiding_spot or player.level.world_features.strangle_active():
+	if watching_cameras() or player.level.controls_locked() or player.is_dead or player.in_hiding_spot or player.level.world_features.strangle_active():
 		focus = false
 		reload_left = 0
 		return
@@ -587,6 +601,9 @@ func close_panels() -> void:
 
 func open_remote(at_port := false) -> void:
 	held_buttons.clear()
+	if at_port:
+		show_console(true, true)
+		return
 	if not has_remote:
 		player.level.notify("Judas, the first Keeper, carries an MP3 player. Loot or pickpocket him.")
 		return
@@ -658,6 +675,10 @@ func show_page() -> void:
 
 func run_command(raw: String) -> void:
 	var text := raw.strip_edges()
+	if text in ["cameras hack", "cameras watch", "cameras on", "turrets on", "turrets hack", "cameras off", "turrets off"]:
+		output.text = security().execute(text)
+		command.clear()
+		return
 	if text.is_empty() and pager_index > 0 and pager_index < pager.size():
 		command.clear()
 		show_page()
@@ -722,7 +743,7 @@ func run_command(raw: String) -> void:
 	elif not remote_unlocked and not local_console:
 		output.text = "Service port locked. Type hack to run your unlock script."
 	elif text == "help":
-		output.text = "scan · login <password> · ls · cat <file> · pwd · whoami · cameras off · turrets off · next"
+		output.text = "scan · login <password> · ls · cat <file> · cameras off/on/watch · turrets off/on · next" + ("\nMP3: cameras hack · turrets hack (1.5s, cooldown 10s)" if not local_console else "")
 	elif text == "next":
 		output.text = next_beat()
 	elif text == "music":
@@ -747,11 +768,11 @@ func run_command(raw: String) -> void:
 	elif text == "scan":
 		var terminal: Node2D = connected_terminal()
 		if at_checkpoint():
-			output.text = "checkpoint.local · linked cameras and floor turrets · login required"
+			output.text = "checkpoint.local · floor %d · login required\nCameras on this floor: cameras off\nTurrets on this floor: turrets off" % (player.level.world_features.security_storey(terminal.global_position.y) + 1)
 		elif terminal != null:
-			output.text = "records.local · floor turret controls · login required"
+			output.text = "records.local · floor %d · login required\nCameras on this floor: cameras off\nTurrets on this floor: turrets off" % (player.level.world_features.security_storey(terminal.global_position.y) + 1)
 		elif at_early_port():
-			output.text = "service.local · maintenance account\nSticker: user root · password root\n" + ("Practice lamp: lights test" if get_node("/root/Campaign").current_floor == 1 else "Optional corridor camera: cameras off")
+			output.text = "service.local · floor %d · maintenance account\nSticker: user root · password root\n" % (player.level.world_features.security_storey(connection_target().global_position.y) + 1) + ("Practice lamp: lights test" if get_node("/root/Campaign").current_floor == 1 else "Cameras on this floor: cameras off")
 		else:
 			output.text = "No writable access point in range."
 	elif is_login:
@@ -773,7 +794,7 @@ func run_command(raw: String) -> void:
 		if not ((terminal != null and logged_in.has(terminal.get_instance_id())) or (at_checkpoint() and player.level.world_features.terminal_authenticated) or (at_early_port() and player.level.world_features.early_authenticated)):
 			output.text = "Stay at an authenticated terminal: login <password>"
 			return
-		var count: int = player.level.world_features.disable_turrets()
+		var count: int = player.level.world_features.disable_turrets(connection_target())
 		if count > 0:
 			record_mp3_hack()
 		output.text = "Turrets disabled on this floor: %d" % count if count > 0 else "No active turrets on this floor."
@@ -790,26 +811,15 @@ func run_command(raw: String) -> void:
 			player.level.hack_remaining = 1.0
 			return
 		if at_early_port() and player.level.world_features.early_authenticated:
-			if not is_instance_valid(player.level.world_features.practice_camera):
-				var count: int = player.level.world_features.disable_cameras() if get_node("/root/Campaign").current_floor > 1 else 0
-				if count > 0: record_mp3_hack()
-				output.text = "Cameras disabled on this floor: %d" % count if count > 0 else "Authenticated. No active cameras are linked to this service port."
-				return
-			var was_active: bool = player.level.world_features.practice_camera.is_active
-			player.level.world_features.practice_camera.disable()
-			if was_active:
+			var count: int = player.level.world_features.disable_cameras(connection_target())
+			if count > 0:
 				record_mp3_hack()
-			output.text = "Corridor camera disabled."
-			return
-		if at_checkpoint() and player.level.world_features.terminal_authenticated:
-			record_mp3_hack()
-			close_panels()
-			player.level.hack_remaining = 1.0
+			output.text = "Cameras disabled on this floor: %d" % count if count > 0 else "No active cameras on this floor."
 			return
 		# Any records terminal you've logged into controls this floor's cameras too.
 		var terminal: Node2D = connected_terminal()
 		if terminal != null and logged_in.has(terminal.get_instance_id()):
-			var count: int = player.level.world_features.disable_cameras()
+			var count: int = player.level.world_features.disable_cameras(connection_target())
 			if count > 0:
 				record_mp3_hack()
 			output.text = "Cameras disabled on this floor: %d" % count if count > 0 else "No active cameras on this floor."

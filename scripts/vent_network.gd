@@ -14,6 +14,7 @@ func setup(owner_features: Node) -> void:
 		if features.props.any(func(p): return p.kind == "hide" and absf(p.position.y-y)<32):continue
 		for x in range(180, int(level.definition.get("world_size", [1120,900])[0]) - 80, 28) if level.get("definition") != null else range(180,1040,28):
 			var point := Vector2(float(x),y)
+			if features.floor_number == 1 and y < 280 and point.x < 300:continue
 			if features.placement_clear(point) and features.vent_wall_clear(point) and not features.spot_taken(point,"hide") and level.has_floor_below(point+Vector2(0,13)):
 				features.spawn_prop(point,"hide","VENT")
 				break
@@ -49,6 +50,16 @@ func opening(direction: int) -> Node2D:
 func passage_open(target: Node2D) -> bool:
 	var level: Node = features.level
 	if features.floor_number == 1 and not level.door_open:return false
+	if level.get("definition") != null:
+		var rows: Array = level.definition.get("storeys", [])
+		var from_row: int = features.security_storey(current.global_position.y)
+		var to_row: int = features.security_storey(target.global_position.y)
+		if absi(to_row-from_row) != 1:return false
+		if to_row > from_row:
+			for station in level.definition.stations:
+				if not level.milestones.has(station.id) and float(station.position[1]) < target.global_position.y-100.0:
+					level.notify("Duct locked: %s first." % station.title)
+					return false
 	var gates := level.get_node_or_null("Gates")
 	if gates != null:
 		for gate in gates.get_children():
@@ -71,7 +82,7 @@ func travel(direction: int) -> bool:
 	var target := opening(direction)
 	if target == null:return false
 	if not passage_open(target):
-		features.level.notify("The duct is sealed beyond the checkpoint.")
+		if features.level.message_left <= 0:features.level.notify("The duct is sealed beyond the checkpoint.")
 		return false
 	current=target
 	features.level.player.global_position=target.global_position

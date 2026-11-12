@@ -3728,18 +3728,6 @@
         "kind": "turret",
         "position": [
           28,
-          820
-        ],
-        "legacy_position": [
-          300,
-          868
-        ],
-        "mount": "right"
-      },
-      {
-        "kind": "turret",
-        "position": [
-          28,
           1016
         ],
         "legacy_position": [
@@ -3796,6 +3784,13 @@
         "position": [
           630.0,
           236
+        ],
+        "title": "CRATE"
+      },
+      {
+        "position": [
+          700.0,
+          628
         ],
         "title": "CRATE"
       },

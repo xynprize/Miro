@@ -92,7 +92,7 @@ func _physics_process(delta: float) -> void:
 	if dodge_left < 0.000001: dodge_left = 0.0
 	attack_flash = maxf(0.0, attack_flash - delta)
 	melee_anim = maxf(0.0, melee_anim - delta)
-	if level.controls_locked() or is_dead or (is_instance_valid(level.world_features) and level.world_features.strangle_active()):
+	if level.controls_locked() or controls.watching_cameras() or is_dead or (is_instance_valid(level.world_features) and level.world_features.strangle_active()):
 		pad_jump_queued = false
 		wall_sliding = false
 		velocity = Vector2.ZERO

@@ -34,6 +34,7 @@ func target_point() -> Vector2:
 func take_turret_hit(amount := 1) -> void:
 	if health <= 0:
 		return
+	level.make_noise(global_position, 600.0)
 	health = maxi(0, health - amount)
 	level.emit_effect("hit", global_position)
 	if health <= 0:
