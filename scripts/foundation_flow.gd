@@ -153,7 +153,7 @@ func wave_clear() -> bool:
 
 ## Keepers arrive in two waves while Niro is still on his feet (the fight's finale, as asked).
 func update_final_waves(delta: float) -> void:
-	if engagement < 3 or final_waves_sent >= (3 if engagement >= 4 else 2) or not is_instance_valid(level.brother) or level.brother.is_dead:
+	if engagement < 2 or final_waves_sent >= engagement - 1 or not is_instance_valid(level.brother) or level.brother.is_dead:
 		return
 	final_wave_wait -= delta
 	if final_wave_wait > 0.0:
@@ -207,7 +207,7 @@ func spawn_niro() -> void:
 	level.add_child(boss)
 	level.brother = boss
 	final_waves_sent = 0
-	final_wave_wait = 0.0 if engagement >= 3 else 10.0
+	final_wave_wait = 0.0 if engagement >= 2 else 10.0
 	step = Step.NIRO if engagement <= 3 else Step.FINAL
 	niro_appeared.emit(engagement)
 	if engagement == 1:
