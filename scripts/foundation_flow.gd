@@ -75,11 +75,11 @@ func request_wave(index: int) -> void:
 
 func spawn_wave() -> void:
 	var waves: Array = level.definition.get("waves", [])
-	if row >= waves.size():
+	if row >= waves.size() and row != 3:
 		step = Step.NIRO_PENDING
 		wait_left = bar_wait()
 		return
-	var wave: Dictionary = waves[row]
+	var wave: Dictionary = {"spawn": [[260, 852], [820, 852]], "weapons": ["pistol", "smg"]} if row == 3 else waves[row]
 	var points: Array = wave.spawn.duplicate()
 	var weapons: Array = wave.weapons.duplicate()
 	# HUNTED: one extra armed Keeper per wave.
@@ -305,7 +305,7 @@ func _physics_process(delta: float) -> void:
 		Step.WAVE:
 			if wave_clear():
 				wave_cleared.emit(row)
-				step = Step.WAVE_PENDING if waves_on_row < 2 else Step.NIRO_PENDING
+				step = Step.WAVE_PENDING if waves_on_row < (4 if row == 3 else 2) else Step.NIRO_PENDING
 				wait_left = bar_wait()
 		Step.NIRO_PENDING:
 			wait_left -= delta
@@ -318,9 +318,7 @@ func _physics_process(delta: float) -> void:
 					# Second half of the level: Robot Attack leads into the final fight.
 					music().second_section(5)
 				if current >= 3:
-					row = 3
-					step = Step.FINAL_PENDING
-					wait_left = bar_wait()
+					request_wave(3)
 					final_fight_started.emit()
 				else:
 					request_wave(current)
@@ -328,8 +326,6 @@ func _physics_process(delta: float) -> void:
 			wait_left -= delta
 			if wait_left <= 0:
 				spawn_niro()
-		Step.NIRO, Step.FINAL:
-			update_final_waves(delta)
 
 func objective() -> String:
 	match step:

@@ -587,7 +587,7 @@
           "The illness is real. That does not excuse this room."
         ]
       ],
-      "requires": [],
+      "requires": ["WardRelease"],
       "status": "draft evidence; exact illness remains open"
     },
     {
@@ -3863,7 +3863,7 @@
           28,
           820
         ],
-        "disabled": true,
+        "disabled": false,
         "legacy_position": [
           260,
           868
@@ -3876,7 +3876,7 @@
           1652,
           1016
         ],
-        "disabled": true,
+        "disabled": false,
         "legacy_position": [
           1480,
           1064

@@ -106,12 +106,12 @@ func draw_crawlspaces() -> void:
 ## The original blockout (The Foundation).
 func legacy_draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, world), Color("272744"))
-	for row in range(int(world.y / 28) + 1):
+	for row in range(32):
 		for column in range(24):
 			var x := column * 48 - (24 if row % 2 else 0)
 			draw_rect(Rect2(x + 1, row * 28 + 1, 46, 26), Color("494d7e").darkened(0.35 + (column % 3) * 0.04))
 	for x in [28, 420, 812, 1092]:
-		draw_rect(Rect2(x, 0, 20, world.y), Color("494d7e"))
+		draw_rect(Rect2(x, 0, 20, 896), Color("494d7e"))
 	for point in [Vector2(180, 155), Vector2(530, 155), Vector2(950, 155), Vector2(450, 350), Vector2(850, 350), Vector2(200, 575), Vector2(700, 575)]:
 		draw_circle(point + Vector2(4, 2), 22, Color(0.95, 0.83, 0.67, 0.025))
 		draw_torch(Rect2(point - Vector2(16, 14), Vector2(32, 32)))

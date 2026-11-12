@@ -3763,14 +3763,14 @@
       {
         "kind": "turret",
         "position": [
-          0,
-          1212
+          28,
+          1144
         ],
         "legacy_position": [
           140,
           1260
         ],
-        "mount": "left"
+        "mount": "right"
       },
       {
         "kind": "turret",

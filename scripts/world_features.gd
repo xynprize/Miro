@@ -203,6 +203,21 @@ func convert_cover_zones() -> void:
 	for piece in level.definition.get("props", []) if level.get("definition") != null else []:
 		if piece.kind != "ward_chamber":continue
 		var table_at := Vector2(piece.position[0], piece.position[1])
+		if floor_number == 5:
+			# Match the drawn tabletop. Only Miro collides with layer 6;
+			# guards and Niro can walk through the dressing.
+			var tabletop := StaticBody2D.new()
+			tabletop.position = table_at
+			tabletop.collision_layer = 1 << 5
+			tabletop.collision_mask = 0
+			var surface := CollisionShape2D.new()
+			var shape := RectangleShape2D.new()
+			shape.size = Vector2(70, 4)
+			surface.shape = shape
+			surface.position.y = -3
+			surface.one_way_collision = true
+			tabletop.add_child(surface)
+			add_child(tabletop)
 		spawn_red_flask(table_at + Vector2(10, -25))
 		var bottle: Node2D = spawn_prop(table_at+Vector2(-10,-25),"potion","TONIC")
 		bottle.set_meta("lab_bottle",true)
@@ -478,9 +493,11 @@ func nearby_prop():
 	var distance := minf(36, story_range)
 	for prop in props:
 		# A bottle must never consume E beside a story interaction.
-		if prop.kind == "potion" and story_range < 48.0:
-			continue
 		var candidate: float = level.player.global_position.distance_to(prop.global_position)
+		# Let Miro stand beside the bottle to select it, even near a station.
+		# The station wins when it is at least as close as the bottle.
+		if prop.kind == "potion" and story_range <= candidate:
+			continue
 		if candidate < distance and reachable(prop.global_position) and not (prop.kind in ["case", "potion", "note"] and prop.used):
 			best = prop
 			distance = candidate
